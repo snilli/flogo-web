@@ -1,3 +1,5 @@
+import { ValueType } from '../value-types';
+
 export interface Resource<TResourceData = unknown> {
   id: string;
   name: string;
@@ -16,6 +18,6 @@ export interface Metadata {
 
 export interface MetadataAttribute {
   name: string;
-  type: string;
+  type: ValueType;
   value?: any;
 }
