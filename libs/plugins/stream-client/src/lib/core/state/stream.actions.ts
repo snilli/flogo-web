@@ -2,10 +2,10 @@ import { Action } from '@ngrx/store';
 import { FlogoStreamState } from './stream.state';
 
 export enum StreamActionType {
-  Init = '[Stream] Init'
+  Init = '[Stream] Init',
 }
 
-interface BaseStreamAction extends Action{
+interface BaseStreamAction extends Action {
   readonly type: StreamActionType;
 }
 

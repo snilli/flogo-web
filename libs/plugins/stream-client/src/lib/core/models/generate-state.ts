@@ -1,3 +1,1 @@
-export function generateState() {
-  
-}
+export function generateState() {}

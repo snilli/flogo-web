@@ -13,7 +13,12 @@ import { streamReducer } from './core/state/stream.reducers';
     CommonModule,
     StoreModule.forFeature('stream', streamReducer),
     RouterModule.forChild([
-      { path: '', pathMatch: 'full', component: StreamDesignerComponent, resolve: {streamData: StreamDataResolver} },
+      {
+        path: '',
+        pathMatch: 'full',
+        component: StreamDesignerComponent,
+        resolve: { streamData: StreamDataResolver },
+      },
     ]),
   ],
   providers: [StreamService, StreamDataResolver],
