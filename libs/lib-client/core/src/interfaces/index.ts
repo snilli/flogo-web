@@ -4,3 +4,4 @@ export * from './runner';
 export * from './app';
 export * from './graph';
 export * from './resource';
+export * from './trigger';

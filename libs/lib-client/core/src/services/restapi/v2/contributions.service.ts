@@ -23,6 +23,10 @@ export class ContributionsService {
     return this.restApi.get<T[]>(this.getApiPath() + '?filter[shim]=' + true);
   }
 
+  listAllContribs<T extends ContributionSchema = ContributionSchema>() {
+    return this.restApi.get<T[]>(this.getApiPath());
+  }
+
   listContribs<T extends ContributionSchema = ContributionSchema>(
     type: FLOGO_CONTRIB_TYPE
   ) {
