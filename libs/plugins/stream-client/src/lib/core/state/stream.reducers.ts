@@ -11,6 +11,16 @@ export function streamReducer(
         ...INITIAL_STREAM_STATE,
         ...action.payload,
       };
+    case StreamActionType.ChangeName:
+      return {
+        ...state,
+        name: action.payload,
+      };
+    case StreamActionType.ChangeDescription:
+      return {
+        ...state,
+        description: action.payload,
+      };
   }
   return state;
 }
