@@ -5,11 +5,13 @@ import {
   TriggerHandler,
 } from '@flogo-web/lib-client/core';
 
+import { Item } from '../interfaces';
+
 export interface StreamStoreState {
   stream: FlogoStreamState;
 }
 
-export interface FlogoStreamState extends BaseResourceState {
+export interface FlogoStreamState extends BaseResourceState<Item> {
   triggers: Dictionary<Trigger>;
   handlers: Dictionary<TriggerHandler>;
 }
