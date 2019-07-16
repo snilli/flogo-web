@@ -23,3 +23,10 @@ export const ERROR_CONSTRAINT = {
   NOT_INSTALLED_ACTIVITY: 'notInstalledActivity',
   WRONG_INPUT_JSON_FILE: 'wrongInputJSONFile',
 };
+
+export enum TASK_TYPE {
+  TASK = 1,
+  TASK_ITERATOR = 2,
+  TASK_BRANCH,
+  TASK_SUB_PROC,
+}

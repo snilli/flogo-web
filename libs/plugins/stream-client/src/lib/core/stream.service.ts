@@ -3,6 +3,7 @@ import { tap, take, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { ContributionsService, ResourceService } from '@flogo-web/lib-client/core';
+import { ContributionType } from '@flogo-web/core';
 
 import { Init, StreamStoreState } from './state';
 import * as streamSelectors from './state/stream.selectors';
@@ -21,7 +22,14 @@ export class StreamService {
     return this.contribService.listAllContribs().pipe(
       tap(contributions => {
         /* streams-plugin-todo: need to process only app name and app id in app object in designer page */
-        this.store.dispatch(new Init(generateStateFromResource(resource, contributions)));
+        this.store.dispatch(
+          new Init(
+            generateStateFromResource(
+              resource,
+              contributions.filter(schema => schema.type === ContributionType.Activity)
+            )
+          )
+        );
       })
     );
   }
