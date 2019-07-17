@@ -4,7 +4,8 @@ import { FlogoStreamState } from './stream.state';
 export enum StreamActionType {
   Init = '[Stream] Init',
   ChangeName = '[Stream] Name changed',
-  ChangeDescription = '[Stream] Name changed',
+  RevertName = '[Stream] Revert name',
+  ChangeDescription = '[Stream] Description changed',
   StreamSaveSuccess = '[Stream] Save success',
 }
 
@@ -22,6 +23,11 @@ export class ChangeName implements BaseStreamAction {
   constructor(public payload: string) {}
 }
 
+export class RevertName implements BaseStreamAction {
+  readonly type = StreamActionType.RevertName;
+  constructor(public payload: string) {}
+}
+
 export class ChangeDescription implements BaseStreamAction {
   readonly type = StreamActionType.ChangeDescription;
   constructor(public payload: string) {}
@@ -34,5 +40,6 @@ export class StreamSaveSuccess implements BaseStreamAction {
 export type StreamActionsUnion =
   | Init
   | ChangeName
+  | RevertName
   | ChangeDescription
   | StreamSaveSuccess;

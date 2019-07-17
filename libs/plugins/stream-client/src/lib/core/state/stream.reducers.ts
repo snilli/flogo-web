@@ -12,6 +12,7 @@ export function streamReducer(
         ...action.payload,
       };
     case StreamActionType.ChangeName:
+    case StreamActionType.RevertName:
       return {
         ...state,
         name: action.payload,

@@ -10,16 +10,24 @@ import { StreamSaveSuccess, StreamActionType } from '../state';
 @Injectable()
 export class StreamSaveEffects {
   @Effect()
+  saveStreamName$: Observable<Action> = this.actions$.pipe(
+    ofType(StreamActionType.ChangeName),
+    switchMap(() => this.streamOps.saveStreamName()),
+    filter(isSaved => isSaved),
+    map(() => new StreamSaveSuccess())
+  );
+
+  @Effect()
   saveStream$: Observable<Action> = this.actions$.pipe(
-    ofType(StreamActionType.ChangeName, StreamActionType.ChangeDescription),
-    switchMap(() => this.saveFlow()),
+    ofType(StreamActionType.ChangeDescription),
+    switchMap(action => this.saveStream(action)),
     filter(isSaved => isSaved),
     map(() => new StreamSaveSuccess())
   );
 
   constructor(private streamOps: StreamService, private actions$: Actions) {}
 
-  private saveFlow() {
-    return this.streamOps.saveStream();
+  private saveStream(action?: Action) {
+    return this.streamOps.saveStream(action);
   }
 }
