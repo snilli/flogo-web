@@ -12,8 +12,5 @@ import { Sources, Dist } from './config';
 async function updatePkgJson(from, to) {
   const pkgJson = await readPkg({ cwd: from });
   pkgJson.version = process.env.FLOGO_LIB_VERSION || `dev-${pkgJson.version}`;
-  pkgJson.scripts = {
-    start: 'node main.js',
-  };
   await writePkg(to, pkgJson);
 }
