@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 
 import { parseMetadata } from '@flogo-web/lib-client/core';
-import { Metadata, MetadataAttribute } from '@flogo-web/core';
+import { Metadata } from '@flogo-web/core';
 
 import { FlogoStreamState } from '../state';
 import { createStagesFromGraph } from './graph-and-items';
@@ -32,16 +32,5 @@ function normalizeMetadata(source: Metadata): Metadata {
   if (isEmpty(source)) {
     return null;
   }
-  const { input, output } = parseMetadata(source);
-  const groupedBy: MetadataAttribute = (source.input || []).find(
-    srcInput => srcInput.groupBy
-  );
-  return {
-    input: input.map(normalizedInput =>
-      groupedBy && groupedBy.name === normalizedInput.name
-        ? { ...normalizedInput, groupBy: true }
-        : normalizedInput
-    ),
-    output,
-  };
+  return parseMetadata(source);
 }

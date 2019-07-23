@@ -1,19 +1,16 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LanguageService } from '@flogo-web/lib-client/language';
 import {
   animateChild,
   transition,
   trigger as animationTrigger,
 } from '@angular/animations';
-import { NotificationsService } from '@flogo-web/lib-client/notifications';
 import { select, Store } from '@ngrx/store';
 import {
   ChangeDescription,
   ChangeName,
   FlogoStreamState,
   selectStreamState,
-  StreamService,
 } from '../core';
 import { StreamStoreState as AppState } from '../core';
 import { takeUntil } from 'rxjs/operators';
@@ -29,17 +26,14 @@ import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 export class StreamDesignerComponent implements OnInit, OnDestroy {
   @HostBinding('@initialAnimation') initialAnimation = true;
 
-  public streamState: FlogoStreamState;
-  public isStreamMenuOpen = false;
+  streamState: FlogoStreamState;
+  isStreamMenuOpen = false;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(
     private store: Store<AppState>,
-    private _streamService: StreamService,
-    public translate: LanguageService,
-    private notifications: NotificationsService,
-    private _router: Router
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -51,15 +45,15 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       });
   }
 
-  public navigateToApp() {
-    this._router.navigate(['/apps', this.streamState.app.id]);
+  navigateToApp() {
+    this.router.navigate(['/apps', this.streamState.app.id]);
   }
 
-  public changeStreamDescription(description) {
+  changeStreamDescription(description) {
     this.store.dispatch(new ChangeDescription(description));
   }
 
-  public changeStreamName(name) {
+  changeStreamName(name) {
     this.store.dispatch(new ChangeName(name));
   }
 

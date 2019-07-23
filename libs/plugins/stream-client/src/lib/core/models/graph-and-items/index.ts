@@ -1,3 +1,3 @@
-export * from './items-creater';
-export * from './graph-creater';
-export * from './stage-creater';
+export * from './items-creator';
+export * from './graph-creator';
+export * from './stage-creator';

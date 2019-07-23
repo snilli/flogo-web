@@ -20,5 +20,4 @@ export interface MetadataAttribute {
   name: string;
   type: ValueType;
   value?: any;
-  groupBy?: boolean;
 }

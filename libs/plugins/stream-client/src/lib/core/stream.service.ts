@@ -57,7 +57,7 @@ export class StreamService {
               }
               /* streams-plugin-todo: create reusable method for success/error notifications */
               this.notifications.error({
-                key: 'CANVAS:STREAM-NAME-EXISTS',
+                key: 'STREAMS.DESIGNER:ERROR-STREAM-NAME-EXISTS',
                 params: { value: state.name },
               });
               this.store.dispatch(new RevertName(this.previousStream.name));
@@ -68,7 +68,7 @@ export class StreamService {
                 tap(() => {
                   this.previousStream = updatedStream;
                   this.notifications.success({
-                    key: 'CANVAS:SUCCESS-MESSAGE-UPDATE-STREAM',
+                    key: 'STREAMS.DESIGNER:SUCCESS-UPDATE-STREAM',
                     params: { value: 'name' },
                   });
                 })
@@ -77,7 +77,7 @@ export class StreamService {
           }),
           catchError(() => {
             this.notifications.error({
-              key: 'CANVAS:ERROR-MESSAGE-UPDATE-STREAM',
+              key: 'STREAMS.DESIGNER:ERROR-UPDATE-STREAM',
               params: { value: 'name' },
             });
             return of(false);
@@ -97,7 +97,7 @@ export class StreamService {
             this.previousStream = updatedStream;
             if (action && action.type === StreamActionType.ChangeDescription) {
               this.notifications.success({
-                key: 'CANVAS:SUCCESS-MESSAGE-UPDATE-STREAM',
+                key: 'STREAMS.DESIGNER:SUCCESS-UPDATE-STREAM',
                 params: { value: 'description' },
               });
             }
@@ -105,7 +105,7 @@ export class StreamService {
           catchError(() => {
             if (action.type === StreamActionType.ChangeDescription) {
               this.notifications.error({
-                key: 'CANVAS:ERROR-MESSAGE-UPDATE-STREAM',
+                key: 'STREAMS.DESIGNER:ERROR-UPDATE-STREAM',
                 params: { value: 'description' },
               });
             }
