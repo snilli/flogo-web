@@ -23,14 +23,13 @@ export class ContributionsService {
     return this.restApi.get<T[]>(this.getApiPath() + '?filter[shim]=' + true);
   }
 
-  listAllContribs<T extends ContributionSchema = ContributionSchema>() {
-    return this.restApi.get<T[]>(this.getApiPath());
-  }
-
   listContribs<T extends ContributionSchema = ContributionSchema>(
-    type: FLOGO_CONTRIB_TYPE
+    type?: FLOGO_CONTRIB_TYPE
   ) {
-    return this.restApi.get<T[]>(this.getApiPath() + '?filter[type]=' + type).toPromise();
+    const apiPath = type
+      ? this.getApiPath() + '?filter[type]=' + type
+      : this.getApiPath();
+    return this.restApi.get<T[]>(apiPath).toPromise();
   }
 
   installContributions({

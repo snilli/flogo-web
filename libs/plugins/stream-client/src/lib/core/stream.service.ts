@@ -24,20 +24,18 @@ export class StreamService {
 
   /* streams-plugin-todo: Replace any with API resource interface of Stream */
   loadStream(resource: any) {
-    return this.contribService.listAllContribs().pipe(
-      tap(contributions => {
-        this.previousStream = resource;
-        /* streams-plugin-todo: need to process only app name and app id in app object in designer page */
-        this.store.dispatch(
-          new Init(
-            generateStateFromResource(
-              resource,
-              contributions.filter(schema => schema.type === ContributionType.Activity)
-            )
+    return this.contribService.listContribs().then(contributions => {
+      this.previousStream = resource;
+      /* streams-plugin-todo: need to process only app name and app id in app object in designer page */
+      this.store.dispatch(
+        new Init(
+          generateStateFromResource(
+            resource,
+            contributions.filter(schema => schema.type === ContributionType.Activity)
           )
-        );
-      })
-    );
+        )
+      );
+    });
   }
 
   listStreamsByName(appId, name) {

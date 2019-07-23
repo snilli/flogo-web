@@ -31,10 +31,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
-  constructor(
-    private store: Store<AppState>,
-    private router: Router
-  ) {}
+  constructor(private store: Store<AppState>, private router: Router) {}
 
   ngOnInit() {
     this.store
