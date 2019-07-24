@@ -1,0 +1,64 @@
+<bs-modal
+  [cssClass]="'flogo-add-trigger_modal'"
+  [size]="'lg'"
+  #addTriggerModal
+  (onClose)="onModalCloseOrDismiss()"
+  (onDismiss)="onModalCloseOrDismiss()"
+>
+  <i class="flogo-icon-close flogo-add-trigger__close" (click)="closeModal()"></i>
+  <div class="flogo-select-trigger">
+    <div class="flogo-select-trigger__header">
+      <h1>{{ 'SELECT-TRIGGER:SELECT-TRIGGER-TO-START' | translate }}</h1>
+    </div>
+    <div class="triggers-container">
+      <div class="triggers-container_flex">
+        <div class="triggers-container__trigger-types">
+          <div class="triggers-container__header">
+            <div>{{ 'SELECT-TRIGGER:TRIGGER-TYPES' | translate }}</div>
+            <div>
+              <button
+                (click)="openInstallTriggerDialog()"
+                class="flogo-button--secondary"
+              >
+                {{ 'SELECT-TRIGGER:INSTALL-NEW' | translate }}
+              </button>
+            </div>
+          </div>
+          <hr />
+        </div>
+        <div *ngIf="displayExisting" class="triggers-container__existing-triggers">
+          <div class="triggers-container__header">
+            <div>{{ 'SELECT-TRIGGER:MY-EXISTING-TRIGGERS' | translate }}</div>
+          </div>
+          <hr />
+        </div>
+      </div>
+      <div class="triggers-container_flex triggers-container__scrollable">
+        <div class="triggers-container__trigger-types">
+          <div
+            *ngFor="let trigger of installedTriggers"
+            class="trigger trigger--types"
+            (click)="sendAddTriggerMsg(trigger, 'installed')"
+          >
+            <div class="trigger__content">
+              <div class="icon"><i class="flogo-icon-trigger"></i></div>
+              <div class="label-icon">{{ trigger.name }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="displayExisting" class="triggers-container__existing-triggers">
+          <ul class="arrow-div">
+            <li
+              *ngFor="let trigger of existingTriggers"
+              (click)="sendAddTriggerMsg(trigger, 'existing')"
+            >
+              <div class="icon"><i class="flogo-icon-trigger"></i></div>
+              <div class="label-icon">{{ trigger.name }}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</bs-modal>
