@@ -1,4 +1,4 @@
-import { Resource, CONTRIB_REFS, ContributionType } from '@flogo-web/core';
+import { Resource, CONTRIB_REFS, ContributionType, ValueType } from '@flogo-web/core';
 import { createActionImporter } from './create-action-importer';
 import { ImportsRefAgent } from '@flogo-web/lib-server/core';
 
@@ -61,17 +61,17 @@ function getSampleFlowResource(): Resource {
       input: [
         {
           name: 'id',
-          type: 'string',
+          type: ValueType.String,
         },
       ],
       output: [
         {
           name: 'status',
-          type: 'object',
+          type: ValueType.Object,
         },
         {
           name: 'code',
-          type: 'integer',
+          type: ValueType.Integer,
         },
       ],
     },

@@ -1,5 +1,41 @@
-<p>
-  stream-designer works! <br />
-
-  {{ activatedResource | json }}
-</p>
+<div class="canvas-stream" *ngIf="streamState">
+  <flogo-designer-header
+    [name]="streamState?.name"
+    [appName]="streamState?.app?.name"
+    [description]="streamState?.description"
+    (goBack)="navigateToApp()"
+    (changeName)="changeStreamName($event, 'name')"
+    (changeDescription)="changeStreamDescription($event)"
+  >
+    <svg class="stream-logo" viewBox="-3 -11 48 48" header-role="resource-logo">
+      <use xlink:href="/assets/svg/plugin-flows.svg#flowIcon"></use>
+    </svg>
+    <flogo-logs header-role="right-block"></flogo-logs>
+    <div
+      header-role="right-block"
+      class="menu-dropdown"
+      (fgClickOutside)="closeStreamMenu()"
+    >
+      <i
+        class="flogo-icon-kebabmenu kebabmenu-icon menu-dropdown-more-button"
+        [class.active]="isStreamMenuOpen"
+        (click)="toggleStreamMenu()"
+        role="button"
+        id="streamMenuButton"
+        aria-haspopup="true"
+        [attr.aria-expanded]="isStreamMenuOpen"
+      ></i>
+      <div
+        class="menu-dropdown__content menu-dropdown__content--more"
+        aria-labelledby="streamMenuButton"
+        [class.active]="isStreamMenuOpen"
+      >
+        <ul class="dropdown-list">
+          <li class="dropdown-list__item" (click)="deleteStream()">
+            <i class="flogo-icon flogo-icon-delete"></i>{{ 'CANVAS:DELETE' | translate }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </flogo-designer-header>
+</div>

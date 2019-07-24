@@ -283,5 +283,10 @@
   "BRANCH-CONFIGURATOR:CANCEL": "Cancel",
   "BRANCH-CONFIGURATOR:AVAILABLE-DATA": "Available Data",
   "PLUGIN-FLOW:TRIGGERS:DELETE-CONFIRMATION-TITLE": "Delete trigger",
-  "PLUGIN-FLOW:TRIGGERS:DELETE-CONFIRMATION-MESSAGE": "Are you sure you want to delete this trigger?"
+  "PLUGIN-FLOW:TRIGGERS:DELETE-CONFIRMATION-MESSAGE": "Are you sure you want to delete this trigger?",
+  "STREAMS": {
+    "DESIGNER:ERROR-STREAM-NAME-EXISTS": "Stream with name \"{{value}}\" already exists, please choose another name.",
+    "DESIGNER:ERROR-UPDATE-STREAM": "Update stream's {{value}} error",
+    "DESIGNER:SUCCESS-UPDATE-STREAM": "Stream's {{value}} successfully updated"
+  }
 }
