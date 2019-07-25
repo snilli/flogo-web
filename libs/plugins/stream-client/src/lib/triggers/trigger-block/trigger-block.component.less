@@ -1,0 +1,142 @@
+@import '~@flogo-web/assets/styles/_variables';
+@trigger-padding-vertical: 14px;
+@trigger-padding-horizontal: 16px;
+@trigger-icon-clickable-padding: 8px;
+
+.trigger {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .bg-placeholder {
+    fill: @color-trigger-bg-color;
+  }
+
+  .lambda-icon {
+    display: none;
+    color: #1b4874;
+    height: 20px;
+  }
+
+  .flogo-icon-trigger {
+    display: block;
+    color: #1b4874;
+    font-size: 20px;
+  }
+
+  .flogo-icon-trigger,
+  .lambda-icon {
+    margin: (14px - @trigger-icon-clickable-padding)
+      (16px - @trigger-icon-clickable-padding);
+  }
+
+  &.--lambda {
+    .bg-placeholder {
+      fill: #ecc99b;
+    }
+
+    .flogo-icon-trigger {
+      display: none;
+    }
+
+    .lambda-icon {
+      display: block;
+    }
+  }
+}
+
+.trigger-icon-background {
+  position: absolute;
+  z-index: 0;
+}
+
+.trigger-content {
+  z-index: 1;
+  margin-right: 3px;
+}
+
+.icon-svg__def {
+  display: block;
+}
+
+.trigger_block {
+  position: relative;
+
+  &:hover {
+    .flogo-icon-trigger,
+    .lambda-icon {
+      color: #fff;
+      &:hover {
+        color: @pumpkin-orange;
+      }
+    }
+  }
+
+  .trigger_menu {
+    transform: scale(0);
+    transform-origin: top left;
+    opacity: 0;
+    transition: all 250ms ease-in;
+    position: absolute;
+    left: 40px;
+    width: 135px;
+
+    .trigger_menu-list {
+      margin: 0;
+      border: solid 1px #d8d8d8;
+      border-radius: 0 5px 5px 5px;
+      background: #ffffff;
+
+      .trigger_menu-item {
+        margin: 5px 0;
+        border: 0;
+        font-size: 12px;
+        padding: 5px 5px 5px 20px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(197, 202, 233, 0.2);
+        }
+
+        .trigger_menu-icon {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+.trigger_block--menu-open {
+  .trigger {
+    z-index: 3;
+  }
+
+  .trigger_menu {
+    transform: scale(1);
+    opacity: 1;
+    z-index: 2;
+  }
+}
+
+.trigger_block--selected {
+  .trigger {
+    .flogo-icon-trigger {
+      color: #fff;
+    }
+
+    .lambda-icon {
+      color: #fff;
+    }
+  }
+
+  .bg-placeholder,
+  .trigger.--lambda .bg-placeholder {
+    fill: @color-trigger-selected-bg-color;
+  }
+}
