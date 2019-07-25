@@ -3,3 +3,4 @@
 *.yml
 # todo: re-enable and format all
 *.less
+tools/schematics/**/files/**

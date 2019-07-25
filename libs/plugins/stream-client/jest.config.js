@@ -7,5 +7,5 @@ module.exports = {
     'jest-preset-angular/HTMLCommentSerializer.js',
   ],
   // todo: switch for setupFilesAfterEnv after https://github.com/nrwl/nx/issues/1343 is fixed
-  setupTestFrameworkScriptFile: '../../../jest.setup.ts',
+  setupTestFrameworkScriptFile: './src/test.setup.ts',
 };
