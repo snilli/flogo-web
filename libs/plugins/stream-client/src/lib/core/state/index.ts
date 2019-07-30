@@ -2,10 +2,12 @@ import { Action, ActionReducer } from '@ngrx/store';
 import { FlogoStreamState, INITIAL_STREAM_STATE } from './stream.state';
 import { streamReducer } from './stream.reducers';
 import { triggersReducer } from './triggers/triggers.reducer';
+import { reducer as triggerConfigureReducer } from './triggers-configure/trigger-configure.reducer';
 
 const reducers: ActionReducer<FlogoStreamState, Action>[] = [
   streamReducer,
   triggersReducer,
+  triggerConfigureReducer,
 ];
 export function featureReducer(state = INITIAL_STREAM_STATE, action: Action) {
   return reducers.reduce((nextState, reducer) => reducer(nextState, action), state);

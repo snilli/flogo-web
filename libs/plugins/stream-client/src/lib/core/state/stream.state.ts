@@ -5,7 +5,7 @@ import {
   TriggerHandler,
 } from '@flogo-web/lib-client/core';
 
-import { Item } from '../interfaces';
+import { Item, TriggerConfigureState } from '../interfaces';
 import { CurrentSelection } from '../models/selection';
 
 export interface StreamStoreState {
@@ -16,6 +16,7 @@ export interface FlogoStreamState extends BaseResourceState<Item> {
   triggers: Dictionary<Trigger>;
   handlers: Dictionary<TriggerHandler>;
   currentSelection: null | CurrentSelection;
+  triggerConfigure: TriggerConfigureState,
 }
 
 export const INITIAL_STREAM_STATE: FlogoStreamState = {
@@ -29,4 +30,5 @@ export const INITIAL_STREAM_STATE: FlogoStreamState = {
   handlers: null,
   schemas: null,
   currentSelection: null,
+  triggerConfigure: null,
 };

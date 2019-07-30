@@ -9,12 +9,15 @@ import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common'
 import {
   StreamService,
   StreamSaveEffects,
+  TriggerMappingsEffects,
   featureReducer,
   FlogoProfileService,
+  MicroServiceModelConverter,
 } from './core';
 import { StreamDesignerComponent } from './stream-designer';
 import { StreamDataResolver } from './stream-data.resolver';
 import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers.module';
+import { MonacoEditorModule } from './shared/monaco-editor';
 
 @NgModule({
   imports: [
@@ -25,7 +28,7 @@ import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers
     FlogoSharedModule,
     FlogoStreamTriggersModule,
     StoreModule.forFeature('stream', featureReducer),
-    EffectsModule.forFeature([StreamSaveEffects]),
+    EffectsModule.forFeature([StreamSaveEffects, TriggerMappingsEffects]),
     RouterModule.forChild([
       {
         path: '',
@@ -34,8 +37,14 @@ import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers
         resolve: { streamData: StreamDataResolver },
       },
     ]),
+    MonacoEditorModule.forRoot(),
   ],
-  providers: [StreamService, StreamDataResolver, FlogoProfileService],
+  providers: [
+    StreamService,
+    StreamDataResolver,
+    FlogoProfileService,
+    MicroServiceModelConverter
+  ],
   declarations: [StreamDesignerComponent],
 })
 export class StreamClientModule {}
