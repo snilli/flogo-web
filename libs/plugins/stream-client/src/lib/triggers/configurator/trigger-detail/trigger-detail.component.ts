@@ -41,7 +41,7 @@ export class TriggerDetailComponent implements OnInit, OnDestroy {
   tabs$: Observable<TriggerConfigureTab[]>;
   currentTabType: TriggerConfigureTabType;
 
-  flowInputMapperController?: MapperController;
+  streamInputMapperController?: MapperController;
   replyMapperController?: MapperController;
   settingsForm: FormGroup;
   settingsTriggerInformation: TriggerInformation;
@@ -117,8 +117,8 @@ export class TriggerDetailComponent implements OnInit, OnDestroy {
           isPending: false,
         });
 
-        if (this.flowInputMapperController) {
-          this.flowInputMapperController.resetStatus();
+        if (this.streamInputMapperController) {
+          this.streamInputMapperController.resetStatus();
         }
         if (this.replyMapperController) {
           this.replyMapperController.resetStatus();
@@ -150,7 +150,7 @@ export class TriggerDetailComponent implements OnInit, OnDestroy {
     this.selectedTriggerId = state.trigger.id;
     const {
       settings,
-      flowInputMapper,
+      streamInputMapper,
       replyMapper,
       triggerInformation,
     } = this.detailsService.build(state);
@@ -170,17 +170,17 @@ export class TriggerDetailComponent implements OnInit, OnDestroy {
 
     const subscribeToUpdates = this.createMapperStatusUpdateSubscriber();
 
-    this.flowInputMapperController = flowInputMapper;
+    this.streamInputMapperController = streamInputMapper;
     this.reconfigureMapperController(
-      this.flowInputMapperController,
-      TriggerConfigureTabType.FlowInputMappings,
+      this.streamInputMapperController,
+      TriggerConfigureTabType.StreamInputMappings,
       subscribeToUpdates
     );
 
     this.replyMapperController = replyMapper;
     this.reconfigureMapperController(
       this.replyMapperController,
-      TriggerConfigureTabType.FlowOutputMappings,
+      TriggerConfigureTabType.StreamOutputMappings,
       subscribeToUpdates
     );
 
@@ -192,7 +192,7 @@ export class TriggerDetailComponent implements OnInit, OnDestroy {
 
     this.configuratorService.setParams({
       settings: this.settingsForm,
-      flowInputMapper: this.flowInputMapperController,
+      streamInputMapper: this.streamInputMapperController,
       replyMapper: this.replyMapperController,
     });
   }

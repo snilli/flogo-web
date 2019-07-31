@@ -45,7 +45,7 @@ export const selectAppInfo = createSelector(
   }
 );
 
-export const selectFlowMetadata = createSelector(
+export const selectStreamMetadata = createSelector(
   selectStreamState,
   (streamState: FlogoStreamState) => streamState.metadata
 );

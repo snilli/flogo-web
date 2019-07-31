@@ -8,7 +8,7 @@ import {
   CurrentTriggerState,
 } from '../../../triggers/configurator/interfaces';
 import {
-  selectFlowMetadata,
+  selectStreamMetadata,
   selectHandlers,
   selectTriggerConfigure,
   selectTriggers,
@@ -149,14 +149,14 @@ const getCurrentHandler = createSelector(
 );
 
 export const getConfigureState = createSelector(
-  selectFlowMetadata,
+  selectStreamMetadata,
   getCurrentSchema,
   getCurrentTrigger,
   getCurrentHandler,
   selectApp,
   getInstalledFunctions,
   (
-    flowMetadata,
+    streamMetadata,
     schema,
     currentTrigger,
     currentHandler,
@@ -172,7 +172,7 @@ export const getConfigureState = createSelector(
       settings: normalizeSettings(currentHandler.settings),
     };
     return {
-      flowMetadata,
+      streamMetadata,
       schema,
       trigger,
       handler,

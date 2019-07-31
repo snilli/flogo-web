@@ -5,14 +5,14 @@ import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
 import { FakeRootLanguageModule } from '@flogo-web/lib-client/language/testing';
 
-import { featureReducer, FlowState, INITIAL_STATE } from '../../core/state';
+import { featureReducer, FlogoStreamState, INITIAL_STREAM_STATE } from '../../core/state';
 import { ConfiguratorModule } from './configurator.module';
 import { TriggersMock } from './mocks/triggers.mock';
 import { ConfiguratorStatus } from './interfaces';
 import { OpenConfigureWithSelection } from '../../core/state/triggers-configure/trigger-configure.actions';
 
-const TEST_STATE: FlowState = {
-  ...INITIAL_STATE,
+const TEST_STATE: FlogoStreamState = {
+  ...INITIAL_STREAM_STATE,
   id: 'abc',
   app: <any>{},
   triggers: {
@@ -138,7 +138,7 @@ xdescribe('ConfiguratorComponent component', () => {
   let component: ConfiguratorComponent;
   let fixture: ComponentFixture<ConfiguratorComponent>;
   let de: DebugElement;
-  let store: Store<FlowState>;
+  let store: Store<FlogoStreamState>;
   const MockData: ConfiguratorStatus = {
     selectedTriggerId: 'trigger_1',
     isOpen: true,
@@ -153,10 +153,10 @@ xdescribe('ConfiguratorComponent component', () => {
         FakeRootLanguageModule,
         StoreModule.forRoot(
           {
-            flow: featureReducer,
+            stream: featureReducer,
           },
           {
-            initialState: { flow: TEST_STATE },
+            initialState: { stream: TEST_STATE },
           }
         ),
       ],

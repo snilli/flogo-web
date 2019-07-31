@@ -21,8 +21,8 @@ export function createTriggerConfigureFields(
       triggerSettings: groupBySettings(triggerSettingsSchema || [], common),
       handlerSettings: groupBySettings(handlerSettingsSchema || [], handlerSettings),
     },
-    flowInputMappings: null,
-    flowOutputMappings: null,
+    streamInputMappings: null,
+    streamOutputMappings: null,
   };
 }
 

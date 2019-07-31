@@ -8,14 +8,14 @@ import { convertSettingsFormValues } from './convert-setting-form-values';
 
 export function extractHandlerChanges(
   oldHandler: TriggerHandler,
-  { settings, flowInputMapper, replyMapper }: SaveParams
+  { settings, streamInputMapper, replyMapper }: SaveParams
 ) {
   const changes = [];
   const settingChanges = checkForSettingChanges(settings);
   if (settingChanges) {
     changes.push(['settings', settingChanges]);
   }
-  const mappingChanges = checkForMappingChanges(oldHandler, flowInputMapper, replyMapper);
+  const mappingChanges = checkForMappingChanges(oldHandler, streamInputMapper, replyMapper);
   if (mappingChanges) {
     changes.push(['actionMappings', mappingChanges]);
   }
@@ -35,13 +35,13 @@ function checkForSettingChanges(settings: FormGroup) {
 
 function checkForMappingChanges(
   prevHandler: TriggerHandler,
-  flowInputMapper?: MapperController,
+  streamInputMapper?: MapperController,
   replyMapper?: MapperController
 ) {
   const originalMappings = prevHandler.actionMappings;
   let newMappings = originalMappings;
-  if (flowInputMapper) {
-    newMappings = { ...newMappings, input: extractMappings(flowInputMapper) };
+  if (streamInputMapper) {
+    newMappings = { ...newMappings, input: extractMappings(streamInputMapper) };
   }
   if (replyMapper) {
     newMappings = { ...newMappings, output: extractMappings(replyMapper) };

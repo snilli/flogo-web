@@ -24,15 +24,15 @@
   >
   </flogo-triggers-configuration-settings>
   <flogo-mapper
-    *ngSwitchCase="TAB_TYPES.FlowInputMappings"
+    *ngSwitchCase="TAB_TYPES.StreamInputMappings"
     class="mapper content__mapper"
-    [controller]="flowInputMapperController"
+    [controller]="streamInputMapperController"
     inputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-FLOW-INPUTS' | translate }}"
     outputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-TRIGGER-OUTPUT' | translate }}"
   >
   </flogo-mapper>
   <flogo-mapper
-    *ngSwitchCase="TAB_TYPES.FlowOutputMappings"
+    *ngSwitchCase="TAB_TYPES.StreamOutputMappings"
     class="mapper content__mapper"
     [controller]="replyMapperController"
     inputsSearchPlaceHolder="{{

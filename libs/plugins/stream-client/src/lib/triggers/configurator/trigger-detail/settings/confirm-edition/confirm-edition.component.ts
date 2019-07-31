@@ -9,7 +9,7 @@ export const EDITION_DATA_TOKEN = new InjectionToken(
 );
 
 export interface EditionData {
-  flowCount: number;
+  streamCount: number;
 }
 
 @Component({

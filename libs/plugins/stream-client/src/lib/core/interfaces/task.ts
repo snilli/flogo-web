@@ -20,7 +20,7 @@ export interface Task {
   links?: Link[];
   settings?: {
     iterate?: string;
-    flowPath?: string;
+    streamPath?: string;
   };
 
   activitySettings?: { [settingName: string]: any };

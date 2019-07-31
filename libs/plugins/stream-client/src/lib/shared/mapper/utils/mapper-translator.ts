@@ -62,7 +62,7 @@ export class MapperTranslator {
           MapperTranslator.addTileToOutputContext(rootSchema, tile, includeEmptySchemas);
           break;
         case 'metadata':
-          MapperTranslator.addFlowMetadataToOutputSchema(rootSchema, tile);
+          MapperTranslator.addStreamMetadataToOutputSchema(rootSchema, tile);
           break;
         default:
           const currentTile: Task = tile;
@@ -75,13 +75,13 @@ export class MapperTranslator {
     return rootSchema;
   }
 
-  private static addFlowMetadataToOutputSchema(rootSchema, flowMetadata: StreamMetadata) {
-    const flowInputs = flowMetadata.input;
-    if (flowInputs && flowInputs.length > 0) {
-      const flowInputsSchema = MapperTranslator.attributesToObjectDescriptor(flowInputs);
-      flowInputsSchema.rootType = 'flow';
-      flowInputsSchema.title = 'flow';
-      rootSchema.properties['flow'] = flowInputsSchema;
+  private static addStreamMetadataToOutputSchema(rootSchema, streamMetadata: StreamMetadata) {
+    const streamInputs = streamMetadata.input;
+    if (streamInputs && streamInputs.length > 0) {
+      const streamInputsSchema = MapperTranslator.attributesToObjectDescriptor(streamInputs);
+      streamInputsSchema.rootType = 'stream';
+      streamInputsSchema.title = 'stream';
+      rootSchema.properties['stream'] = streamInputsSchema;
     }
   }
 
@@ -184,7 +184,7 @@ export class MapperTranslator {
         ? ROOT_TYPES.ERROR
         : ROOT_TYPES.TRIGGER;
     } else if (tile.type === 'metadata') {
-      return ROOT_TYPES.FLOW;
+      return ROOT_TYPES.STREAM;
     }
     return ROOT_TYPES.ACTIVITY;
   }

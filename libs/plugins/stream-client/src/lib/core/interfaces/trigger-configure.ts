@@ -1,32 +1,5 @@
 import { TriggerSchema } from '@flogo-web/core';
 
-export interface TriggerConfigureSettings {
-  groupId: 'settings';
-  id: string;
-  name: string;
-  description: string;
-  trigger: {
-    [id: string]: any;
-  };
-  handler: {
-    [id: string]: any;
-  };
-}
-
-export interface TriggerConfigureMappings {
-  groupId:
-    | TriggerConfigureTabType.FlowInputMappings
-    | TriggerConfigureTabType.FlowOutputMappings;
-  mappings: { [field: string]: string };
-}
-
-export interface TriggerConfigureGroup {
-  id: string;
-  settings?: TriggerConfigureSettings;
-  inputMappings?: TriggerConfigureMappings;
-  outputMappings?: TriggerConfigureMappings;
-}
-
 export interface TriggerConfigureTrigger {
   id: string;
   tabs: string[];
@@ -64,8 +37,8 @@ export interface TriggerConfigureFields {
 
 export enum TriggerConfigureTabType {
   Settings = 'settings',
-  FlowInputMappings = 'flowInputMappings',
-  FlowOutputMappings = 'flowOutputMappings',
+  StreamInputMappings = 'streamInputMappings',
+  StreamOutputMappings = 'streamOutputMappings',
 }
 
 export interface TriggerConfigureState {

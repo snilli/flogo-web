@@ -3,7 +3,7 @@
     class="confirmation-title"
     [innerHTML]="
       'TRIGGER-CONFIGURATOR:SETTINGS:EDIT-CONFIRMATION-TITLE'
-        | translate: { othersCount: data.flowCount - 1 }
+        | translate: { othersCount: data.streamCount - 1 }
     "
   ></p>
   <p class="confirmation-message">
@@ -21,7 +21,7 @@
   >
     {{
       'TRIGGER-CONFIGURATOR:SETTINGS:EDIT-CONFIRMATION-CONTINUE'
-        | translate: { count: data.flowCount }
+        | translate: { count: data.streamCount }
     }}
   </button>
 </div>

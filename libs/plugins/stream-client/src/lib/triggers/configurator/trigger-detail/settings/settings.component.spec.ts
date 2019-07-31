@@ -30,7 +30,7 @@ describe('Component: ConfigureSettingsComponent', function(this: {
   it('Should open a confirmation popover when trying to enable settings', () => {
     const spyingObj = <Spy>this.confirmationService.openPopover;
     spyingObj.and.callFake(function() {
-      expect(arguments[2].get(EDITION_DATA_TOKEN).flowCount).toEqual(3);
+      expect(arguments[2].get(EDITION_DATA_TOKEN).streamCount).toEqual(3);
       return {
         result: of({}),
       };

@@ -6,7 +6,7 @@ const SETTINGS_TAB: { type: TriggerConfigureTabType; i18nKey: string } = {
 };
 
 const INPUT_MAPPINGS_TAB: { type: TriggerConfigureTabType; i18nKey: string } = {
-  type: TriggerConfigureTabType.FlowInputMappings,
+  type: TriggerConfigureTabType.StreamInputMappings,
   i18nKey: 'TRIGGER-CONFIGURATOR:FLOW-INPUTS',
 };
 
@@ -14,7 +14,7 @@ const OUTPUT_MAPPINGS_TAB: {
   type: TriggerConfigureTabType;
   i18nKey: string;
 } = {
-  type: TriggerConfigureTabType.FlowOutputMappings,
+  type: TriggerConfigureTabType.StreamOutputMappings,
   i18nKey: 'TRIGGER-CONFIGURATOR:FLOW-OUTPUTS',
 };
 

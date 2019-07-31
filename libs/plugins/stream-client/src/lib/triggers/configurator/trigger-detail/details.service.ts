@@ -25,7 +25,7 @@ export class ConfigureDetailsService {
 
   build(state: CurrentTriggerState) {
     const {
-      flowMetadata,
+      streamMetadata,
       schema: triggerSchema,
       handler: { actionMappings },
       fields,
@@ -42,14 +42,14 @@ export class ConfigureDetailsService {
         disableCommonSettings,
         nameValidator
       ),
-      flowInputMapper: this.createInputMapperController(
-        flowMetadata,
+      streamInputMapper: this.createInputMapperController(
+        streamMetadata,
         triggerSchema,
         input,
         state.functions
       ),
       replyMapper: this.createReplyMapperController(
-        flowMetadata,
+        streamMetadata,
         triggerSchema,
         output,
         state.functions
@@ -84,35 +84,35 @@ export class ConfigureDetailsService {
   }
 
   private createReplyMapperController(
-    flowMetadata,
+    streamMetadata,
     triggerSchema,
     output: any,
     functions
   ): null | MapperController {
-    const flowOutput = flowMetadata && flowMetadata.output ? flowMetadata.output : null;
-    if (isEmpty(flowOutput) || isEmpty(triggerSchema.reply)) {
+    const streamOutput = streamMetadata && streamMetadata.output ? streamMetadata.output : null;
+    if (isEmpty(streamOutput) || isEmpty(triggerSchema.reply)) {
       return null;
     }
     return this.mapperControllerFactory.createController(
       triggerSchema.reply || [],
-      flowMetadata && flowMetadata.output ? flowMetadata.output : [],
+      streamMetadata && streamMetadata.output ? streamMetadata.output : [],
       output,
       functions
     );
   }
 
   private createInputMapperController(
-    flowMetadata,
+    streamMetadata,
     triggerSchema,
     input: any,
     functions
   ): null | MapperController {
-    const flowInput = flowMetadata && flowMetadata.input ? flowMetadata.input : null;
-    if (isEmpty(flowInput) || isEmpty(triggerSchema.outputs)) {
+    const streamInput = streamMetadata && streamMetadata.input ? streamMetadata.input : null;
+    if (isEmpty(streamInput) || isEmpty(triggerSchema.outputs)) {
       return null;
     }
     return this.mapperControllerFactory.createController(
-      flowInput,
+      streamInput,
       triggerSchema.outputs || [],
       input,
       functions

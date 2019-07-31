@@ -279,7 +279,7 @@ export class MapperControllerFactory {
       expressionHead += propName ? propName.data.nodeName : '';
       expressionHead = makeResolvable(expressionHead);
       expressionTailParts = nodes.slice(2);
-    } else if (resolver === ROOT_TYPES.FLOW) {
+    } else if (resolver === ROOT_TYPES.STREAM) {
       expressionHead = makeResolvable(nodeName);
       expressionTailParts = nodes.slice(1);
     } else if (resolver === ROOT_TYPES.ITERATOR) {

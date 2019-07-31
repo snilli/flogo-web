@@ -36,7 +36,7 @@ export function load() {
       ['{{', '}}', 'bracket.curly'],
     ],
 
-    resolvers: /activity|trigger|current|flow|error|iterate|env|property/,
+    resolvers: /activity|trigger|current|stream|error|iterate|env|property/,
 
     // common regular expressions
     symbols: /[~!@#%\^&*-+=|\\:`<>.?\/]+/,

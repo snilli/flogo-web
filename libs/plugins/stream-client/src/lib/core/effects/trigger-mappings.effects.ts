@@ -34,18 +34,18 @@ export class TriggerMappingsEffects {
     tap(acts => console.log(acts))
   );
 
-  private flowState$: Observable<FlogoStreamState>;
+  private streamState$: Observable<FlogoStreamState>;
 
   constructor(
     private handlersService: HandlersService,
     private actions$: Actions,
     private store: Store<FlogoStreamState>
   ) {
-    this.flowState$ = this.store.pipe(select(selectStreamState));
+    this.streamState$ = this.store.pipe(select(selectStreamState));
   }
 
   private get latestState$() {
-    return this.flowState$.pipe(take(1));
+    return this.streamState$.pipe(take(1));
   }
 
   private saveHandler(

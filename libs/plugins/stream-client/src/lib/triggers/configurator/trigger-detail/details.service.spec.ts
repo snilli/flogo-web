@@ -19,7 +19,7 @@ describe('Serive: ConfigureDetailsService', function(this: {
     fields: {
       settings: [],
     },
-    flowMetadata: {
+    streamMetadata: {
       input: [],
       output: [
         {
@@ -64,7 +64,7 @@ describe('Serive: ConfigureDetailsService', function(this: {
     expect(this.mapperControllerFactory.createController.calls.mostRecent().args).toEqual(
       [
         MockData.schema.reply,
-        MockData.flowMetadata.output,
+        MockData.streamMetadata.output,
         MockData.handler.actionMappings.output,
         MockData.functions,
       ]

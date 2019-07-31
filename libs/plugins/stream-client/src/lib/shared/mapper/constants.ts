@@ -1,5 +1,5 @@
 export const ROOT_TYPES = {
-  FLOW: 'flow',
+  STREAM: 'stream',
   ACTIVITY: 'activity',
   TRIGGER: 'trigger',
   ERROR: 'error',

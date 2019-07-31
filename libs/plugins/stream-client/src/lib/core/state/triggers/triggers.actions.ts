@@ -4,8 +4,8 @@ import { TriggerHandler, Trigger } from '@flogo-web/lib-client/core';
 export enum TriggerActionType {
   AddTrigger = '[Stream][Trigger] Add trigger',
   RemoveHandler = '[Stream][Trigger] Remove handler',
-  UpdateTrigger = '[Flow][Trigger] Update trigger',
-  UpdateHandler = '[Flow][Trigger] Update handler',
+  UpdateTrigger = '[Stream][Trigger] Update trigger',
+  UpdateHandler = '[Stream][Trigger] Update handler',
 }
 
 export class RemoveHandler implements Action {
