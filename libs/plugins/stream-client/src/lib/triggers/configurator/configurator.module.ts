@@ -28,6 +28,7 @@ import {
   SettingsFormFieldComponent,
   ConfirmEditionComponent,
 } from './trigger-detail';
+import { OverlayModule } from "@angular/cdk/overlay";
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {
     FlogoSharedModule,
     MapperModule,
     MonacoEditorModule,
+    OverlayModule,
   ],
   declarations: [
     TriggerDetailComponent,
