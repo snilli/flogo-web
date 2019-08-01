@@ -26,7 +26,7 @@ import {
 const COMMON_FIELDS_TO_ENABLE = ['name', 'description', 'triggerSettings'];
 
 @Component({
-  selector: 'flogo-triggers-configuration-settings',
+  selector: 'flogo-stream-triggers-configuration-settings',
   templateUrl: 'settings.component.html',
   styleUrls: ['./shared/form-common-styles.less', 'settings.component.less'],
 })

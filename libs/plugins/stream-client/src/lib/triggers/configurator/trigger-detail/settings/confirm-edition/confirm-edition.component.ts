@@ -13,7 +13,7 @@ export interface EditionData {
 }
 
 @Component({
-  selector: 'flogo-confirm-edition',
+  selector: 'flogo-stream-confirm-edition',
   templateUrl: './confirm-edition.component.html',
   styleUrls: ['./confirm-edition.component.less'],
 })

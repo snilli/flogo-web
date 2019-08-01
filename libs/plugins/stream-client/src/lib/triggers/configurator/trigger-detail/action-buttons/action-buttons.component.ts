@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'flogo-triggers-configuration-detail-action-buttons',
+  selector: 'flogo-stream-triggers-configuration-detail-action-buttons',
   templateUrl: './action-buttons.component.html',
   styleUrls: ['./action-buttons.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,

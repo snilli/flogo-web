@@ -89,7 +89,8 @@ export class ConfigureDetailsService {
     output: any,
     functions
   ): null | MapperController {
-    const streamOutput = streamMetadata && streamMetadata.output ? streamMetadata.output : null;
+    const streamOutput =
+      streamMetadata && streamMetadata.output ? streamMetadata.output : null;
     if (isEmpty(streamOutput) || isEmpty(triggerSchema.reply)) {
       return null;
     }
@@ -107,7 +108,8 @@ export class ConfigureDetailsService {
     input: any,
     functions
   ): null | MapperController {
-    const streamInput = streamMetadata && streamMetadata.input ? streamMetadata.input : null;
+    const streamInput =
+      streamMetadata && streamMetadata.input ? streamMetadata.input : null;
     if (isEmpty(streamInput) || isEmpty(triggerSchema.outputs)) {
       return null;
     }

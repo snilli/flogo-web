@@ -1,9 +1,9 @@
 <div class="mapper">
-  <flogo-mapper-icons></flogo-mapper-icons>
+  <flogo-stream-mapper-icons></flogo-stream-mapper-icons>
   <div *ngIf="!isSingleInputMode" class="mapper__left-panel">
-    <flogo-mapper-input-list
+    <flogo-stream-mapper-input-list
       [searchPlaceholder]="inputsSearchPlaceHolder"
-    ></flogo-mapper-input-list>
+    ></flogo-stream-mapper-input-list>
   </div>
   <div
     class="mapper__right-panel"
@@ -28,7 +28,9 @@
     </div>
 
     <div class="workspace" *ngIf="currentInput">
-      <flogo-mapper-breadcrumbs [inputNode]="currentInput"></flogo-mapper-breadcrumbs>
+      <flogo-stream-mapper-breadcrumbs
+        [inputNode]="currentInput"
+      ></flogo-stream-mapper-breadcrumbs>
 
       <div
         *ngIf="currentInput"
@@ -39,22 +41,22 @@
         (dragenter)="onDragEnter()"
         (dragleave)="onDragLeave()"
       >
-        <flogo-mapper-editor
+        <flogo-stream-mapper-editor
           class="workspace__editor"
           *loadMonacoEditor
-        ></flogo-mapper-editor>
+        ></flogo-stream-mapper-editor>
       </div>
 
       <div class="workspace__parameters parameters">
         <div class="parameters__parameter mapper__output-list">
-          <flogo-mapper-output-list
+          <flogo-stream-mapper-output-list
             (selectNode)="onOutputSelected($event)"
             [searchPlaceholder]="outputsSearchPlaceHolder"
           >
-          </flogo-mapper-output-list>
+          </flogo-stream-mapper-output-list>
         </div>
         <div class="parameters__parameter mapper__functions-list col-md-8">
-          <flogo-mapper-functions></flogo-mapper-functions>
+          <flogo-stream-mapper-functions></flogo-stream-mapper-functions>
         </div>
       </div>
     </div>

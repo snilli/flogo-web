@@ -43,7 +43,7 @@ import { MonacoEditorModule } from './shared/monaco-editor';
     StreamService,
     StreamDataResolver,
     FlogoProfileService,
-    MicroServiceModelConverter
+    MicroServiceModelConverter,
   ],
   declarations: [StreamDesignerComponent],
 })

@@ -14,14 +14,14 @@
   </div>
   <div class="trigger-configuration__content">
     <div class="configuration__triggers js-triggers-list">
-      <flogo-triggers-configure-trigger
+      <flogo-stream-triggers-configure-trigger
         class="js-trigger-element"
         *ngFor="let trigger of (triggerStatuses$ | async)"
         [triggerData]="trigger"
         [selectedTriggerId]="selectedTriggerId"
         (selectTrigger)="changeTriggerSelection($event)"
       >
-      </flogo-triggers-configure-trigger>
+      </flogo-stream-triggers-configure-trigger>
     </div>
     <div class="configuration__trigger" @triggerConfiguratorLayoutElement>
       <flogo-stream-triggers-configurator-detail

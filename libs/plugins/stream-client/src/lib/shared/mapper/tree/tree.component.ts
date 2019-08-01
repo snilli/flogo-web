@@ -16,7 +16,7 @@ import { DraggingService } from '../services/dragging.service';
 import { IconsService } from '../services/icons.service';
 
 @Component({
-  selector: 'flogo-mapper-tree',
+  selector: 'flogo-stream-mapper-tree',
   templateUrl: 'tree.component.html',
   styleUrls: ['tree.component.less'],
 })

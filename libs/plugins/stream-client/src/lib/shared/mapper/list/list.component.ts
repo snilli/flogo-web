@@ -17,7 +17,7 @@ import { DraggingService } from '../services/dragging.service';
 import { IconsService } from '../services/icons.service';
 
 @Component({
-  selector: 'flogo-mapper-list',
+  selector: 'flogo-stream-mapper-list',
   templateUrl: 'list.component.html',
   styleUrls: ['list.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,

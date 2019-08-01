@@ -28,7 +28,7 @@ import {
   SettingsFormFieldComponent,
   ConfirmEditionComponent,
 } from './trigger-detail';
-import { OverlayModule } from "@angular/cdk/overlay";
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   imports: [

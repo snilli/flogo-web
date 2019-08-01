@@ -15,7 +15,7 @@ import {
 } from '../services/selectors';
 
 @Component({
-  selector: 'flogo-mapper-functions',
+  selector: 'flogo-stream-mapper-functions',
   templateUrl: 'functions.component.html',
   styleUrls: ['functions.component.css'],
 })

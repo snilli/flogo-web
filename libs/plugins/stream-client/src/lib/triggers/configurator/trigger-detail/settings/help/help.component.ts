@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'flogo-triggers-configuration-settings-help',
+  selector: 'flogo-stream-triggers-configuration-settings-help',
   templateUrl: 'help.component.html',
   styleUrls: ['help.component.less'],
 })

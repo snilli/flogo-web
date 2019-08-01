@@ -35,7 +35,7 @@ const formatErrorMessage = ([errorName, error]: [string, any]) =>
   errorFormatters[errorName](error);
 
 @Component({
-  selector: 'flogo-configuration-settings-field-error',
+  selector: 'flogo-stream-configuration-settings-field-error',
   templateUrl: './field-error.component.html',
   styleUrls: ['./field-error.component.less'],
 })

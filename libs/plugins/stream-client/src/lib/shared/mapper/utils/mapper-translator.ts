@@ -75,10 +75,15 @@ export class MapperTranslator {
     return rootSchema;
   }
 
-  private static addStreamMetadataToOutputSchema(rootSchema, streamMetadata: StreamMetadata) {
+  private static addStreamMetadataToOutputSchema(
+    rootSchema,
+    streamMetadata: StreamMetadata
+  ) {
     const streamInputs = streamMetadata.input;
     if (streamInputs && streamInputs.length > 0) {
-      const streamInputsSchema = MapperTranslator.attributesToObjectDescriptor(streamInputs);
+      const streamInputsSchema = MapperTranslator.attributesToObjectDescriptor(
+        streamInputs
+      );
       streamInputsSchema.rootType = 'stream';
       streamInputsSchema.title = 'stream';
       rootSchema.properties['stream'] = streamInputsSchema;
@@ -217,9 +222,7 @@ export class MapperTranslator {
   ) {
     const attributes = tile.attributes;
     let outputs;
-    if (
-      tile.type === FLOGO_TASK_TYPE.TASK
-    ) {
+    if (tile.type === FLOGO_TASK_TYPE.TASK) {
       // try to get data from task from outputs
       outputs = attributes && attributes.outputs ? attributes.outputs : [];
     } else {

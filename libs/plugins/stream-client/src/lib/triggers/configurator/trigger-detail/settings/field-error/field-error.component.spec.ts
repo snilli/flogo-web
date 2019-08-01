@@ -4,12 +4,12 @@ import { ValidationErrors } from '@angular/forms';
 import { FieldErrorComponent } from './field-error.component';
 
 @Component({
-  selector: 'flogo-test-container',
+  selector: 'flogo-stream-test-container',
   template: `
-    <flogo-configuration-settings-field-error
+    <flogo-stream-configuration-settings-field-error
       #component
       [validationErrors]="errors"
-    ></flogo-configuration-settings-field-error>
+    ></flogo-stream-configuration-settings-field-error>
   `,
 })
 class TestContainerComponent {

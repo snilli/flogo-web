@@ -10,7 +10,7 @@ import { MapperService } from '../services/mapper.service';
 import { MapperTreeNode } from '../models';
 
 @Component({
-  selector: 'flogo-mapper-input-list',
+  selector: 'flogo-stream-mapper-input-list',
   templateUrl: 'input-list.component.html',
   styleUrls: ['input-list.component.css'],
 })

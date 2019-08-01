@@ -15,7 +15,7 @@ import {
   selectApp,
   selectActionId,
   getInstalledFunctions,
-} from '../stream.selectors'
+} from '../stream.selectors';
 import { FlogoStreamState } from '../stream.state';
 import { createTriggerConfigureFields } from './cases/create-trigger-configure-fields';
 import { normalizeSettings } from './cases/normalize-settings';

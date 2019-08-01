@@ -15,7 +15,11 @@ export function extractHandlerChanges(
   if (settingChanges) {
     changes.push(['settings', settingChanges]);
   }
-  const mappingChanges = checkForMappingChanges(oldHandler, streamInputMapper, replyMapper);
+  const mappingChanges = checkForMappingChanges(
+    oldHandler,
+    streamInputMapper,
+    replyMapper
+  );
   if (mappingChanges) {
     changes.push(['actionMappings', mappingChanges]);
   }

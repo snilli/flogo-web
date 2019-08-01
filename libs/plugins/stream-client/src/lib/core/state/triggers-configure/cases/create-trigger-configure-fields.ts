@@ -2,7 +2,7 @@ import {
   SchemaAttributeDescriptor as SchemaAttribute,
   TriggerSchema,
 } from '@flogo-web/core';
-import {Dictionary, Trigger, TriggerHandler} from '@flogo-web/lib-client/core';
+import { Dictionary, Trigger, TriggerHandler } from '@flogo-web/lib-client/core';
 import { ConfigureTriggerDetails } from '../../../../triggers/configurator/interfaces';
 
 export function createTriggerConfigureFields(

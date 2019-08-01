@@ -1,10 +1,8 @@
 import { FlogoAppModel, TriggerSchema } from '@flogo-web/core';
 import { TriggerHandler, Trigger } from '@flogo-web/lib-client/core';
 
-import {
-  InstalledFunctionSchema,
-} from '../../../core';
-import { Metadata } from "@flogo-web/core";
+import { InstalledFunctionSchema } from '../../../core';
+import { Metadata } from '@flogo-web/core';
 
 export interface ConfiguratorStatus {
   disableSave?: boolean;

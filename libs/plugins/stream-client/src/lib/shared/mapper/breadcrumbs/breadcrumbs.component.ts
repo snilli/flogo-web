@@ -3,7 +3,7 @@ import { IconsService } from '../services/icons.service';
 import { MapperTreeNode } from '../models';
 
 @Component({
-  selector: 'flogo-mapper-breadcrumbs',
+  selector: 'flogo-stream-mapper-breadcrumbs',
   templateUrl: 'breadcrumbs.component.html',
   styleUrls: ['breadcrumbs.component.css'],
 })

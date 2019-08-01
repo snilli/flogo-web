@@ -5,16 +5,16 @@
     (tabSelected)="onTabSelected($event)"
   >
   </flogo-stream-triggers-configurator-tabs>
-  <flogo-triggers-configuration-detail-action-buttons
+  <flogo-stream-triggers-configuration-detail-action-buttons
     [status]="overallStatus$ | async"
     [isSaving]="isSaving$ | async"
     (save)="save()"
     (discardChanges)="discardChanges()"
   >
-  </flogo-triggers-configuration-detail-action-buttons>
+  </flogo-stream-triggers-configuration-detail-action-buttons>
 </div>
 <ng-container [ngSwitch]="currentTabType">
-  <flogo-triggers-configuration-settings
+  <flogo-stream-triggers-configuration-settings
     *ngSwitchCase="TAB_TYPES.Settings"
     [settingsForm]="settingsForm"
     [triggerInformation]="settingsTriggerInformation"
@@ -22,16 +22,16 @@
     (statusChanges)="updateSettingsStatus($event)"
     cdkScrollable
   >
-  </flogo-triggers-configuration-settings>
-  <flogo-mapper
+  </flogo-stream-triggers-configuration-settings>
+  <flogo-stream-mapper
     *ngSwitchCase="TAB_TYPES.StreamInputMappings"
     class="mapper content__mapper"
     [controller]="streamInputMapperController"
     inputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-FLOW-INPUTS' | translate }}"
     outputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-TRIGGER-OUTPUT' | translate }}"
   >
-  </flogo-mapper>
-  <flogo-mapper
+  </flogo-stream-mapper>
+  <flogo-stream-mapper
     *ngSwitchCase="TAB_TYPES.StreamOutputMappings"
     class="mapper content__mapper"
     [controller]="replyMapperController"
@@ -40,5 +40,5 @@
     }}"
     outputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-FLOW-OUTPUTS' | translate }}"
   >
-  </flogo-mapper>
+  </flogo-stream-mapper>
 </ng-container>

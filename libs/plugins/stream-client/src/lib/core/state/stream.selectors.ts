@@ -1,8 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { FlogoStreamState } from './stream.state';
-import {Dictionary} from "@flogo-web/lib-client/core";
-import {ContributionType, FunctionsSchema} from "@flogo-web/core";
-import {InstalledFunctionSchema} from "../interfaces";
+import { Dictionary } from '@flogo-web/lib-client/core';
+import { ContributionType, FunctionsSchema } from '@flogo-web/core';
+import { InstalledFunctionSchema } from '../interfaces';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 

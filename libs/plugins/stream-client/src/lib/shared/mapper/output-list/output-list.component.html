@@ -1,5 +1,5 @@
 <div class="mapper-output-list">
-  <flogo-mapper-tree
+  <flogo-stream-mapper-tree
     class="tree-output-list"
     [treeNodes]="treeNodes$ | async"
     [searchTerm]="filterTerm$ | async"
@@ -8,5 +8,5 @@
     (select)="onOutputSelect($event)"
     (search)="onSearchChange($event)"
   >
-  </flogo-mapper-tree>
+  </flogo-stream-mapper-tree>
 </div>

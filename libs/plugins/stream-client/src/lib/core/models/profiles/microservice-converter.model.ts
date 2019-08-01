@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  TriggerSchema
-} from '@flogo-web/core';
-import {
-  ErrorService,
-  ContributionsService,
-} from '@flogo-web/lib-client/core';
+import { TriggerSchema } from '@flogo-web/core';
+import { ErrorService, ContributionsService } from '@flogo-web/lib-client/core';
 
 @Injectable()
 export class MicroServiceModelConverter {

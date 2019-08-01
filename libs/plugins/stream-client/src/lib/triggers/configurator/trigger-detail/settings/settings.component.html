@@ -25,9 +25,9 @@
         >
       </span>
     </div>
-    <flogo-triggers-configuration-settings-help
+    <flogo-stream-triggers-configuration-settings-help
       [trigger]="triggerInformation?.trigger"
-    ></flogo-triggers-configuration-settings-help>
+    ></flogo-stream-triggers-configuration-settings-help>
   </div>
   <div class="settings-block">
     <label class="settings-label" for="triggerDescription">
@@ -58,7 +58,7 @@
         <i class="flogo-icon-settings settings-group__icon"></i>
         {{ 'TRIGGER-CONFIGURATOR:SETTINGS:TRIGGER-SETTINGS' | translate }}
       </div>
-      <flogo-configuration-settings-field
+      <flogo-stream-configuration-settings-field
         *ngFor="let settingName of triggerSettings"
         [settingInformation]="
           (triggerInformation?.settingsControls.triggerSettings)[settingName]
@@ -67,7 +67,7 @@
         [appProperties]="appProperties"
         (enableSettings)="onEnableSettings($event)"
       >
-      </flogo-configuration-settings-field>
+      </flogo-stream-configuration-settings-field>
     </div>
     <div
       *ngIf="handlerSettings"
@@ -78,7 +78,7 @@
         <i class="flogo-icon-flag settings-group__icon"></i>
         {{ 'TRIGGER-CONFIGURATOR:SETTINGS:HANDLER-SETTINGS' | translate }}
       </div>
-      <flogo-configuration-settings-field
+      <flogo-stream-configuration-settings-field
         *ngFor="let settingName of handlerSettings"
         [settingInformation]="
           (triggerInformation?.settingsControls.handlerSettings)[settingName]
@@ -87,7 +87,7 @@
         [appProperties]="appProperties"
         (enableSettings)="onEnableSettings($event)"
       >
-      </flogo-configuration-settings-field>
+      </flogo-stream-configuration-settings-field>
     </div>
   </div>
 </div>

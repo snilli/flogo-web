@@ -7,7 +7,12 @@ import { Store, select, Action } from '@ngrx/store';
 
 import { Handler } from '@flogo-web/core';
 import { HandlersService, TriggerHandler } from '@flogo-web/lib-client/core';
-import { StreamActionType, FlogoStreamState, TriggerActions, selectStreamState } from '../state';
+import {
+  StreamActionType,
+  FlogoStreamState,
+  TriggerActions,
+  selectStreamState,
+} from '../state';
 
 const mapToUpdateAction = (handler: TriggerHandler) =>
   map(

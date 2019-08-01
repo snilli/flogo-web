@@ -9,7 +9,7 @@ import {
 import { TriggerStatus } from '../interfaces';
 
 @Component({
-  selector: 'flogo-triggers-configure-trigger',
+  selector: 'flogo-stream-triggers-configure-trigger',
   templateUrl: 'trigger.component.html',
   styleUrls: ['trigger.component.less'],
 })

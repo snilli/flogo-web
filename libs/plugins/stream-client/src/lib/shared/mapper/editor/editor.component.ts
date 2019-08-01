@@ -36,7 +36,7 @@ interface EditorHint {
 }
 
 @Component({
-  selector: 'flogo-mapper-editor',
+  selector: 'flogo-stream-mapper-editor',
   templateUrl: 'editor.component.html',
   styleUrls: ['editor.component.less'],
 })

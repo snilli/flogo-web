@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'flogo-mapper-icons',
+  selector: 'flogo-stream-mapper-icons',
   encapsulation: ViewEncapsulation.None,
   styles: [
     `

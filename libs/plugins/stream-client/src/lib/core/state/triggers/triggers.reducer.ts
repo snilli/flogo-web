@@ -2,7 +2,10 @@ import { FlogoStreamState } from '../stream.state';
 import { TriggerActionsUnion, TriggerActionType } from './triggers.actions';
 import { isTriggerSelection } from '../../models/stream/selection';
 
-export function triggersReducer(state: FlogoStreamState, action: TriggerActionsUnion): FlogoStreamState {
+export function triggersReducer(
+  state: FlogoStreamState,
+  action: TriggerActionsUnion
+): FlogoStreamState {
   switch (action.type) {
     case TriggerActionType.UpdateHandler: {
       const payload = action.payload;

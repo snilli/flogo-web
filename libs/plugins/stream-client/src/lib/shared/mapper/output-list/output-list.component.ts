@@ -9,7 +9,7 @@ import { MapperTreeNode } from '../models';
 import { MapperService } from '../services/mapper.service';
 
 @Component({
-  selector: 'flogo-mapper-output-list',
+  selector: 'flogo-stream-mapper-output-list',
   templateUrl: 'output-list.component.html',
   styleUrls: ['output-list.component.css'],
 })

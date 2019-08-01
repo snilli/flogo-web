@@ -1,5 +1,5 @@
 <div class="mapper-functions-list row">
-  <flogo-mapper-tree
+  <flogo-stream-mapper-tree
     class="tree-functions-list col-md-6"
     [treeNodes]="functions$ | async"
     [searchTerm]="filterTerm$ | async"
@@ -8,10 +8,10 @@
     (hover)="onHover($event)"
     (search)="onSearch($event)"
   >
-  </flogo-mapper-tree>
-  <flogo-mapper-function-details
+  </flogo-stream-mapper-tree>
+  <flogo-stream-mapper-function-details
     class="col-md-6"
     [name]="name"
     [description]="description"
-  ></flogo-mapper-function-details>
+  ></flogo-stream-mapper-function-details>
 </div>

@@ -16,7 +16,7 @@ export interface FlogoStreamState extends BaseResourceState<Item> {
   triggers: Dictionary<Trigger>;
   handlers: Dictionary<TriggerHandler>;
   currentSelection: null | CurrentSelection;
-  triggerConfigure: TriggerConfigureState,
+  triggerConfigure: TriggerConfigureState;
 }
 
 export const INITIAL_STREAM_STATE: FlogoStreamState = {

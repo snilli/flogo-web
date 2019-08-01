@@ -4,7 +4,9 @@ import {
   HandlersService,
   SingleEmissionSubject,
   TriggersService,
-  RenderableTrigger, Dictionary, Trigger,
+  RenderableTrigger,
+  Dictionary,
+  Trigger,
 } from '@flogo-web/lib-client/core';
 import { select, Store } from '@ngrx/store';
 import {
@@ -13,7 +15,7 @@ import {
   TRIGGER_MENU_OPERATION,
   MicroServiceModelConverter,
 } from '../core';
-import {filter, mergeMap, reduce, switchMap, takeUntil} from 'rxjs/operators';
+import { filter, mergeMap, reduce, switchMap, takeUntil } from 'rxjs/operators';
 import { getTriggersState } from '../core/state/triggers/triggers.selectors';
 import { FlogoInstallerComponent } from '@flogo-web/lib-client/contrib-installer';
 import { ModalService } from '@flogo-web/lib-client/modal';
@@ -23,9 +25,9 @@ import {
 } from '@flogo-web/lib-client/confirmation';
 import { LanguageService } from '@flogo-web/lib-client/language';
 import { TriggerMenuSelectionEvent } from './trigger-block/models';
-import {from} from "rxjs";
-import {TriggerSchema} from "@flogo-web/core";
-import {TriggerConfigureActions} from '../core/state/triggers-configure';
+import { from } from 'rxjs';
+import { TriggerSchema } from '@flogo-web/core';
+import { TriggerConfigureActions } from '../core/state/triggers-configure';
 
 function settingsToObject(
   settings: { name: string; value?: any }[],
@@ -54,7 +56,7 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
     private _restAPIHandlerService: HandlersService,
     private confirmationService: ConfirmationModalService,
     private translate: LanguageService,
-    private converterService: MicroServiceModelConverter,
+    private converterService: MicroServiceModelConverter
   ) {}
 
   ngOnInit() {

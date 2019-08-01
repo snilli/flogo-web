@@ -9,7 +9,7 @@ import {
 import { PerfectScrollbarDirective as ScrollbarDirective } from 'ngx-perfect-scrollbar';
 
 @Component({
-  selector: 'flogo-mapper-function-details',
+  selector: 'flogo-stream-mapper-function-details',
   templateUrl: 'function-details.component.html',
   styleUrls: ['function-details.component.css'],
 })

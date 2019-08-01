@@ -13,7 +13,7 @@ export const AUTOCOMPLETE_OPTIONS = new InjectionToken<AutocompleteOptions>(
 );
 
 @Component({
-  selector: 'flogo-triggers-configuration-settings-autocomplete',
+  selector: 'flogo-stream-triggers-configuration-settings-autocomplete',
   templateUrl: 'auto-complete-content.component.html',
   styleUrls: ['auto-complete-content.component.less'],
 })

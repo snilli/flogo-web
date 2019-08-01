@@ -34,7 +34,7 @@ import { Mappings, MapperTreeNode, MapperState } from './models';
 import { MapperController } from './services/mapper-controller/mapper-controller';
 
 @Component({
-  selector: 'flogo-mapper',
+  selector: 'flogo-stream-mapper',
   templateUrl: 'mapper.component.html',
   styleUrls: ['mapper.component.less'],
   providers: [MapperService, EditorService, DraggingService],

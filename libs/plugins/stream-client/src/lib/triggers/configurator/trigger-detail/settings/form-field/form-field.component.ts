@@ -24,7 +24,7 @@ const COMPLEX_TYPES = [
 ];
 
 @Component({
-  selector: 'flogo-configuration-settings-field',
+  selector: 'flogo-stream-configuration-settings-field',
   templateUrl: 'form-field.component.html',
   styleUrls: ['../shared/form-common-styles.less'],
 })
