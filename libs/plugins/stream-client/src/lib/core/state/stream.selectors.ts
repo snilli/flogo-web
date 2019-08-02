@@ -68,3 +68,8 @@ export const getInstalledFunctions = createSelector(
       }));
   }
 );
+
+export const selectGraph = createSelector(
+  selectStreamState,
+  streamState => streamState['mainGraph']
+);

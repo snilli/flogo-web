@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 
-import { Dictionary, FlowGraph as DiagramGraph } from '@flogo-web/lib-client/core';
+import { Dictionary, DiagramGraph } from '@flogo-web/lib-client/core';
 
 import { Item } from '../../interfaces';
 

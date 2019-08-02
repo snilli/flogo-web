@@ -1,11 +1,7 @@
-import {
-  FlowGraph as StreamGraph,
-  GraphNode,
-  NodeType,
-} from '@flogo-web/lib-client/core';
+import { DiagramGraph, GraphNode, NodeType } from '@flogo-web/lib-client/core';
 
 /* streams-plugin-todo: Add the streams backend interface */
-export function makeGraphNodes(stages: any[]): StreamGraph {
+export function makeGraphNodes(stages: any[]): DiagramGraph {
   const [rootStage] = stages;
   const nodes = stages.reduce((graphNodes, stage, index, allStages) => {
     const node = makeBasicNode(stage);
