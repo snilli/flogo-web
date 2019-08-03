@@ -96,8 +96,8 @@ function getFlowToExport(): Resource<FlowData> {
     createdAt: '2018-10-05T14:48:00.000Z',
     updatedAt: '2018-10-05T14:48:00.000Z',
     metadata: {
-      input: [{ name: 'in1', type: 'string', value: null }],
-      output: [{ name: 'out1', type: 'string', value: null }],
+      input: [{ name: 'in1', type: ValueType.String, value: null }],
+      output: [{ name: 'out1', type: ValueType.String, value: null }],
     },
     type: 'flow',
     data: {

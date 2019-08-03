@@ -41,7 +41,7 @@ export class AppDetailService {
   public readonly isEmpty$: Observable<boolean>;
 
   public app$ = this.appSource.asObservable().pipe(
-    filter(Boolean),
+    filter<App>(Boolean),
     shareReplay(1)
   );
 
@@ -197,7 +197,7 @@ export class AppDetailService {
       map(flowGroups => {
         return flowGroups.reduce((refsSet, group) => {
           return group.trigger ? refsSet.add(group.trigger.ref) : refsSet;
-        }, new Set());
+        }, new Set<string>());
       })
     );
     const shimmableTriggers$: Observable<

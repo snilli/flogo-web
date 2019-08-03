@@ -43,7 +43,7 @@ interface IMockDetailService {
 
 class MockAppDetailService implements IMockDetailService {
   appSource = new BehaviorSubject<App>(null);
-  app$ = this.appSource.pipe(filter(Boolean));
+  app$ = this.appSource.pipe(filter<App>(Boolean));
   load = (appId: string) => {};
   updateProperty = (prop: 'name' | 'description', value: any) => EMPTY;
   getAvailableShimBuildOptions = () => of([]);
