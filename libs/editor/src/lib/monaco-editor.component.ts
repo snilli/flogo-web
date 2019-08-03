@@ -30,6 +30,7 @@ import {
   OffsetRange,
 } from './types';
 import { DisposableTracker } from './disposable-tracker';
+import { MonacoEditorLoaderService } from './loader';
 
 const SOURCE_ID = 'ngx-monaco-editor';
 const LANGUAGE_ID = 'flogomapping';
@@ -207,7 +208,7 @@ export class MonacoEditorComponent
   private destroyed = new Subject();
   private _value = '';
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone, private loader: MonacoEditorLoaderService) {}
 
   get value() {
     return this.editor.getValue();
@@ -354,7 +355,9 @@ export class MonacoEditorComponent
     if (this._disposed) {
       return;
     }
-    this.ngZone.runOutsideAngular(() => this.initMonaco());
+    this.ngZone.runOutsideAngular(() =>
+      this.loader.load().subscribe(() => this.initMonaco())
+    );
   }
 
   ngOnDestroy() {

@@ -11,7 +11,7 @@ import {
   startWith,
 } from 'rxjs/operators';
 
-import { MonacoEditorComponent, DEFAULT_EDITOR_OPTIONS } from '../../monaco-editor';
+import { MonacoEditorComponent, DEFAULT_EDITOR_OPTIONS } from '@flogo-web/editor';
 import { SingleEmissionSubject } from '../shared/single-emission-subject';
 
 import { MapperState } from '../models';

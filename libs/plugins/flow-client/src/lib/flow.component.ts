@@ -9,15 +9,15 @@ import {
 } from '@angular/animations';
 
 import { SingleEmissionSubject, AppsService } from '@flogo-web/lib-client/core';
+import { MonacoEditorLoaderService } from '@flogo-web/editor';
 import {
   ConfirmationResult,
   ConfirmationModalService,
 } from '@flogo-web/lib-client/confirmation';
 import { LanguageService } from '@flogo-web/lib-client/language';
-import { NotificationsService } from '@flogo-web/lib-client/notifications';
 
+import { NotificationsService } from '@flogo-web/lib-client/notifications';
 import { TestRunnerService } from './core/test-runner/test-runner.service';
-import { MonacoEditorLoaderService } from './shared/monaco-editor';
 
 import {
   FlowData,
@@ -108,17 +108,7 @@ export class FlowComponent implements OnInit, OnDestroy {
     this._flowService.currentFlowDetails.runnableState$
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(runnableState => (this.runnableInfo = runnableState));
-    this.monacoLoaderService.isMonacoLoaded
-      .pipe(
-        filter(Boolean),
-        take(1),
-        takeUntil(this.ngOnDestroy$)
-      )
-      .subscribe(loaded => {
-        if (loaded) {
-          this.loading = false;
-        }
-      });
+    this.loading = false;
     this.contribInstallerService.contribInstalled$
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(contribDetails =>

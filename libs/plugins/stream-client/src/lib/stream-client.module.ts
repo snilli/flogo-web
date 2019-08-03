@@ -6,7 +6,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { HeaderModule as FlogoDesignerHeader } from '@flogo-web/lib-client/designer-header';
 import { LogsModule as FlogoLogsModule } from '@flogo-web/lib-client/logs';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
+
 import { DiagramModule } from '@flogo-web/lib-client/diagram';
+import { MonacoEditorModule } from '@flogo-web/editor';
+
 import {
   StreamService,
   StreamSaveEffects,
@@ -18,7 +21,6 @@ import {
 import { StreamDesignerComponent } from './stream-designer';
 import { StreamDataResolver } from './stream-data.resolver';
 import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers.module';
-import { MonacoEditorModule } from './shared/monaco-editor';
 import { StreamDiagramComponent } from './stream-diagram';
 import { StageAddModule } from './stage-add';
 
@@ -40,8 +42,8 @@ import { StageAddModule } from './stage-add';
         resolve: { streamData: StreamDataResolver },
       },
     ]),
-    MonacoEditorModule.forRoot(),
     StageAddModule,
+    MonacoEditorModule,
   ],
   providers: [
     StreamService,

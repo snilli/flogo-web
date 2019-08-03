@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { TreeModule } from 'primeng/components/tree/tree';
 
-import { MonacoEditorModule } from '../monaco-editor';
+import { MonacoEditorModule } from '@flogo-web/editor';
 import { MappingParser } from './services/map.parser';
 import { FunctionsComponent } from './functions-list/functions.component';
 

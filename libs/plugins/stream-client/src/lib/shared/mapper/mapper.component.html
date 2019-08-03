@@ -38,12 +38,11 @@
         [class.workspace__editor-container--droppable]="isDraggingOver"
         (drop)="onDrop($event)"
         (dragover)="onDragOver($event)"
-        (dragenter)="onDragEnter()"
+        (dragenter)="onDragEnter($event)"
         (dragleave)="onDragLeave()"
       >
         <flogo-stream-mapper-editor
           class="workspace__editor"
-          *loadMonacoEditor
         ></flogo-stream-mapper-editor>
       </div>
 

@@ -52,6 +52,9 @@
     },
     "plugins-stream-server": {
       "tags": ["streams", "server"]
+    },
+    "editor": {
+      "tags": []
     }
   }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MonacoEditorModule } from '../monaco-editor';
+import { MonacoEditorModule } from '@flogo-web/editor';
 import { TextBoxComponent } from './textbox/textbox.component';
 import { FormBuilderComponent } from './form-builder.component';
 import { FormBuilderService } from './form-builder.service';

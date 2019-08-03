@@ -19,8 +19,6 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 
-import { MonacoEditorLoaderService } from '../monaco-editor';
-import { load as loadMonacoLangPlugin } from '../mapper-language/monaco-contribution';
 import { SingleEmissionSubject } from './shared/single-emission-subject';
 import { MapperService } from './services/mapper.service';
 import { EditorService } from './editor/editor.service';
@@ -56,15 +54,8 @@ export class MapperComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private mapperService: MapperService,
     private editorService: EditorService,
-    private draggingService: DraggingService,
-    private monacoLoaderService: MonacoEditorLoaderService
-  ) {
-    monacoLoaderService.isMonacoLoaded.subscribe(isLoaded => {
-      if (isLoaded) {
-        loadMonacoLangPlugin();
-      }
-    });
-  }
+    private draggingService: DraggingService
+  ) {}
 
   ngOnInit() {
     this.hasInitted = true;
