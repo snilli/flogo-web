@@ -1,18 +1,21 @@
-import { pick, fromPairs, isArray } from 'lodash';
+import { pick, fromPairs, isArray, uniq } from 'lodash';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   HandlersService,
   SingleEmissionSubject,
   TriggersService,
   RenderableTrigger,
+  Dictionary,
+  Trigger,
 } from '@flogo-web/lib-client/core';
 import { select, Store } from '@ngrx/store';
 import {
   StreamStoreState as AppState,
   TriggerActions,
   TRIGGER_MENU_OPERATION,
+  MicroServiceModelConverter,
 } from '../core';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, mergeMap, reduce, switchMap, takeUntil } from 'rxjs/operators';
 import { getTriggersState } from '../core/state/triggers/triggers.selectors';
 import { FlogoInstallerComponent } from '@flogo-web/lib-client/contrib-installer';
 import { ModalService } from '@flogo-web/lib-client/modal';
@@ -22,6 +25,9 @@ import {
 } from '@flogo-web/lib-client/confirmation';
 import { LanguageService } from '@flogo-web/lib-client/language';
 import { TriggerMenuSelectionEvent } from './trigger-block/models';
+import { from } from 'rxjs';
+import { TriggerSchema } from '@flogo-web/core';
+import { TriggerConfigureActions } from '../core/state/triggers-configure';
 
 function settingsToObject(
   settings: { name: string; value?: any }[],
@@ -49,7 +55,8 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
     private restAPITriggersService: TriggersService,
     private _restAPIHandlerService: HandlersService,
     private confirmationService: ConfirmationModalService,
-    private translate: LanguageService
+    private translate: LanguageService,
+    private converterService: MicroServiceModelConverter
   ) {}
 
   ngOnInit() {
@@ -119,6 +126,25 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
     });
   }
 
+  private openTriggerMapper(selectedTrigger: Trigger) {
+    const refs = uniq(this.triggersList.map(trigger => trigger.ref));
+    from(refs)
+      .pipe(
+        mergeMap(ref => this.converterService.getTriggerSchema({ ref })),
+        reduce((schemas: Dictionary<TriggerSchema>, schema: TriggerSchema) => {
+          return { ...schemas, [schema.ref]: schema };
+        }, {})
+      )
+      .subscribe(triggerSchemas => {
+        this.store.dispatch(
+          new TriggerConfigureActions.OpenConfigureWithSelection({
+            triggerId: selectedTrigger.id,
+            triggerSchemas,
+          })
+        );
+      });
+  }
+
   private deleteHandlerForTrigger(triggerId) {
     const titleKey = 'PLUGIN-FLOW:TRIGGERS:DELETE-CONFIRMATION-TITLE';
     const messageKey = 'PLUGIN-FLOW:TRIGGERS:DELETE-CONFIRMATION-MESSAGE';
@@ -139,10 +165,6 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.store.dispatch(new TriggerActions.RemoveHandler(triggerId));
       });
-  }
-
-  private openTriggerMapper(trigger) {
-    /* streams-plugin-todo: open trigger configuration */
   }
 
   handleMenuSelection(event: TriggerMenuSelectionEvent) {

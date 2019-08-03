@@ -8,7 +8,7 @@ import { makeStageItems, makeGraphNodes } from './graph-and-items';
 /* streams-plugin-todo: Replace any with API resource interface of Stream */
 export function generateStateFromResource(resource: any, schemas: ContributionSchema[]) {
   const schemaDefs = fromPairs(schemas.map(schema => [schema.ref, schema]));
-  //streams-plugin-todo: check about currentSelection in resource
+  //streams-plugin-todo: check about currentSelection and triggerConfigure in resource
   const {
     id,
     name,
@@ -16,6 +16,7 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     app,
     triggers: originalTriggers,
     currentSelection,
+    triggerConfigure,
   } = resource;
   const { triggers, handlers } = normalizeTriggersAndHandlersForResource(
     id,
@@ -35,5 +36,6 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     mainGraph: graph,
     mainItems: items,
     currentSelection,
+    triggerConfigure,
   };
 }

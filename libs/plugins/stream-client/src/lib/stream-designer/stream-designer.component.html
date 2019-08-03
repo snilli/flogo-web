@@ -4,7 +4,7 @@
     [appName]="streamState?.app?.name"
     [description]="streamState?.description"
     (goBack)="navigateToApp()"
-    (changeName)="changeStreamName($event, 'name')"
+    (changeName)="changeStreamName($event)"
     (changeDescription)="changeStreamDescription($event)"
   >
     <svg class="stream-logo" viewBox="-3 -11 48 48" header-role="resource-logo">

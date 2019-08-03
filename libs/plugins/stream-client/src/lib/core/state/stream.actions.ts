@@ -7,6 +7,7 @@ export enum StreamActionType {
   RevertName = '[Stream] Revert name',
   ChangeDescription = '[Stream] Description changed',
   StreamSaveSuccess = '[Stream] Save success',
+  UpdateMetadata = '[Stream] Update Metadata',
 }
 
 interface BaseStreamAction extends Action {

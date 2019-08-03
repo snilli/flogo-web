@@ -1,0 +1,44 @@
+<div class="settings-block">
+  <label class="settings-label">
+    <span>{{ settingInformation.name }}</span>
+    <i *ngIf="!settingInformation.required" class="settings-label__optional">
+      {{ 'TRIGGER-CONFIGURATOR:SETTINGS:OPTIONAL' | translate }}
+    </i>
+    <i
+      *ngIf="settingControl.disabled"
+      class="flogo-icon-edit settings-icon__edit"
+      (click)="enableField()"
+    ></i>
+  </label>
+  <!--streams-plugin-todo: use monaco-editor, remove textarea-->
+  <!--<monaco-editor
+    *ngIf="useCodeEditor; else regularField"
+    class="settings-field settings-field&#45;&#45;code-editor"
+    #field
+    [formValueChangeTransformerFn]="editorOut"
+    [formValueWriteTransformerFn]="editorIn"
+    [formControl]="settingControl"
+  ></monaco-editor>-->
+  <!--<textarea
+    *ngIf="useCodeEditor; else regularField"
+    class="settings-field settings-field&#45;&#45;code-editor"
+    #field
+    [formControl]="settingControl"
+  ></textarea>-->
+  <ng-template [ngIf]="!useCodeEditor">
+    <input
+      class="settings-field"
+      #field
+      fgTriggersConfigAutoComplete
+      [fgTriggerSettingsField]="settingInformation.type"
+      [formControl]="settingControl"
+      [autoCompleteVariablesSource]="appProperties"
+      [autoCompleteAllowedSource]="settingInformation.allowed"
+    />
+  </ng-template>
+  <flogo-stream-configuration-settings-field-error
+    *ngIf="settingControl?.errors"
+    [validationErrors]="settingControl?.errors"
+  >
+  </flogo-stream-configuration-settings-field-error>
+</div>

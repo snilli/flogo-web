@@ -586,15 +586,6 @@
             ],
             "exclude": ["**/node_modules/**", "!libs/plugins/stream-client/**"]
           }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "maxWorkers": 2,
-            "jestConfig": "libs/plugins/stream-client/jest.config.js",
-            "tsConfig": "libs/plugins/stream-client/tsconfig.spec.json",
-            "setupFile": "libs/plugins/stream-client/src/test-setup.ts"
-          }
         }
       },
       "schematics": {
