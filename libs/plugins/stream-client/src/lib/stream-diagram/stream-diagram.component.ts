@@ -1,11 +1,23 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { DiagramGraph, SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import {
+  DiagramAction,
+  DiagramActionType,
+  DiagramActionChild,
+  DiagramSelection,
+  DiagramActionSelf,
+} from '@flogo-web/lib-client/diagram';
 
-import { StreamStoreState, selectGraph } from '../core/state';
-import { takeUntil } from 'rxjs/operators';
+import {
+  StreamStoreState,
+  selectGraph,
+  StreamDiagramActions,
+  getDiagramSelection,
+} from '../core/state';
 
 @Component({
   selector: 'flogo-stream-diagram',
@@ -14,6 +26,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class StreamDiagramComponent implements OnDestroy {
   items$: Observable<DiagramGraph>;
+  currentSelection$: Observable<DiagramSelection>;
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(private store: Store<StreamStoreState>) {
@@ -21,9 +34,32 @@ export class StreamDiagramComponent implements OnDestroy {
       select(selectGraph),
       takeUntil(this.ngOnDestroy$)
     );
+    this.currentSelection$ = this.store.pipe(
+      select(getDiagramSelection),
+      takeUntil(this.ngOnDestroy$)
+    );
   }
 
   ngOnDestroy(): void {
     this.ngOnDestroy$.emitAndComplete();
+  }
+
+  onDiagramAction(action: DiagramAction) {
+    switch (action.type) {
+      case DiagramActionType.Insert:
+        this.store.dispatch(
+          new StreamDiagramActions.SelectCreateStage(
+            (<DiagramActionChild>action).parentId
+          )
+        );
+        break;
+      case DiagramActionType.Remove:
+      case DiagramActionType.Select:
+        this.store.dispatch(
+          new StreamDiagramActions.SelectStage((<DiagramActionSelf>action).id)
+        );
+        break;
+      case DiagramActionType.Configure:
+    }
   }
 }

@@ -18,5 +18,8 @@ export * from './stream.actions';
 export * from './stream.reducers';
 export * from './stream.selectors';
 
+import * as StreamDiagramActions from './stream.actions';
+export { StreamDiagramActions };
+
 import * as TriggerActions from './triggers/triggers.actions';
 export { TriggerActions };

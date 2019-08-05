@@ -8,6 +8,8 @@ export enum StreamActionType {
   ChangeDescription = '[Stream] Description changed',
   StreamSaveSuccess = '[Stream] Save success',
   UpdateMetadata = '[Stream] Update Metadata',
+  SelectCreateStage = '[Stream] Add a stage',
+  SelectStage = '[Stream] Select item',
 }
 
 interface BaseStreamAction extends Action {
@@ -38,9 +40,21 @@ export class StreamSaveSuccess implements BaseStreamAction {
   readonly type = StreamActionType.StreamSaveSuccess;
 }
 
+export class SelectCreateStage implements BaseStreamAction {
+  readonly type = StreamActionType.SelectCreateStage;
+  constructor(public payload: string) {}
+}
+
+export class SelectStage implements BaseStreamAction {
+  readonly type = StreamActionType.SelectStage;
+  constructor(public payload: string | null) {}
+}
+
 export type StreamActionsUnion =
   | Init
   | ChangeName
   | RevertName
   | ChangeDescription
-  | StreamSaveSuccess;
+  | StreamSaveSuccess
+  | SelectCreateStage
+  | SelectStage;

@@ -1,3 +1,4 @@
+import * as selectionFactory from '../models/stream/selection';
 import { INITIAL_STREAM_STATE, FlogoStreamState } from './stream.state';
 import { StreamActionsUnion, StreamActionType } from './stream.actions';
 
@@ -21,6 +22,16 @@ export function streamReducer(
       return {
         ...state,
         description: action.payload,
+      };
+    case StreamActionType.SelectCreateStage:
+      return {
+        ...state,
+        currentSelection: selectionFactory.makeInsertSelection(action.payload),
+      };
+    case StreamActionType.SelectStage:
+      return {
+        ...state,
+        currentSelection: selectionFactory.makeStageSelection(action.payload),
       };
   }
   return state;

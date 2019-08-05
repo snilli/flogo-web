@@ -1,4 +1,24 @@
-import { CurrentSelection, SelectionType, TriggerSelection } from '../selection';
+import {
+  CurrentSelection,
+  SelectionType,
+  TriggerSelection,
+  InsertTaskSelection,
+  TaskSelection,
+} from '../selection';
+
+export function makeInsertSelection(parentId: string): InsertTaskSelection {
+  return {
+    type: SelectionType.InsertTask,
+    parentId,
+  };
+}
+
+export function makeStageSelection(taskId: string): TaskSelection {
+  return {
+    type: SelectionType.Task,
+    taskId,
+  };
+}
 
 export function isTriggerSelection(
   selection: null | CurrentSelection
