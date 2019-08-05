@@ -1,6 +1,7 @@
 import * as selectionFactory from '../models/stream/selection';
 import { INITIAL_STREAM_STATE, FlogoStreamState } from './stream.state';
 import { StreamActionsUnion, StreamActionType } from './stream.actions';
+import { removeStage } from './cases/remove-stage';
 
 export function streamReducer(
   state: FlogoStreamState = INITIAL_STREAM_STATE,
@@ -33,6 +34,8 @@ export function streamReducer(
         ...state,
         currentSelection: selectionFactory.makeStageSelection(action.payload),
       };
+    case StreamActionType.DeleteStage:
+      return removeStage(state, action.payload);
   }
   return state;
 }

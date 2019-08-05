@@ -54,6 +54,10 @@ export class StreamDiagramComponent implements OnDestroy {
         );
         break;
       case DiagramActionType.Remove:
+        this.store.dispatch(
+          new StreamDiagramActions.SelectRemoveStage((<DiagramActionSelf>action).id)
+        );
+        break;
       case DiagramActionType.Select:
         this.store.dispatch(
           new StreamDiagramActions.SelectStage((<DiagramActionSelf>action).id)

@@ -10,22 +10,14 @@ import { createStagesFromGraph } from './graph-and-items';
 export function generateResourceFromState(state: FlogoStreamState): any {
   const metadata = normalizeMetadata(state.metadata);
   const stages = createStagesFromGraph(state.mainItems, state.mainGraph);
-  const streamResource = {
+  return {
     id: state.id,
     type: 'stream',
     name: state.name,
     description: state.description,
-  } as any;
-  if (metadata) {
-    streamResource.metadata = metadata;
-  }
-
-  if (stages) {
-    streamResource.data = {
-      stages,
-    };
-  }
-  return streamResource;
+    metadata: metadata || {},
+    data: stages ? { stages } : {},
+  };
 }
 
 function normalizeMetadata(source: Metadata): Metadata {

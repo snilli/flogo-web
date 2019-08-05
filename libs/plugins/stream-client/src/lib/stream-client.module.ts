@@ -27,7 +27,6 @@ import { StreamDiagramComponent } from './stream-diagram';
     FlogoSharedModule,
     FlogoDesignerHeader,
     FlogoLogsModule,
-    FlogoSharedModule,
     FlogoStreamTriggersModule,
     DiagramModule,
     StoreModule.forFeature('stream', featureReducer),
