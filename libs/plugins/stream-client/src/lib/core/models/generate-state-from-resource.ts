@@ -25,6 +25,11 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
   const stages = (resource && resource.data && resource.data.stages) || [];
   const items = makeStageItems(stages, schemaDefs);
   const graph = makeGraphNodes(stages);
+  // ppaidi-todo : remove initialization
+  const metadata = resource.metadata || {
+    input: [],
+    output: [],
+  };
   return {
     id,
     name,
@@ -32,6 +37,7 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     app,
     triggers,
     handlers,
+    metadata,
     schemas: schemaDefs,
     mainGraph: graph,
     mainItems: items,

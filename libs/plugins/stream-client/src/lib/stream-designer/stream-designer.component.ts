@@ -1,20 +1,26 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   animateChild,
   transition,
   trigger as animationTrigger,
 } from '@angular/animations';
 import { select, Store } from '@ngrx/store';
+import { takeUntil } from 'rxjs/operators';
+
+import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { StreamMetadata } from '@flogo-web/plugins/stream-core';
+
 import {
   ChangeDescription,
   ChangeName,
+  UpdateMetadata,
   FlogoStreamState,
   selectStreamState,
   StreamService,
 } from '../core';
 import { StreamStoreState as AppState } from '../core';
-import { takeUntil } from 'rxjs/operators';
-import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { ParamsSchemaComponent } from '../params-schema';
+
 @Component({
   selector: 'flogo-stream-designer',
   templateUrl: './stream-designer.component.html',
@@ -25,6 +31,8 @@ import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 })
 export class StreamDesignerComponent implements OnInit, OnDestroy {
   @HostBinding('@initialAnimation') initialAnimation = true;
+  @ViewChild('inputSchemaModal', { static: true })
+  defineInputSchema: ParamsSchemaComponent;
 
   streamState: FlogoStreamState;
   isStreamMenuOpen = false;
@@ -60,6 +68,14 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   toggleStreamMenu() {
     this.isStreamMenuOpen = !this.isStreamMenuOpen;
+  }
+
+  public openInputSchemaModal() {
+    this.defineInputSchema.openInputSchemaModel();
+  }
+
+  public onStreamSchemaSave(metadata: StreamMetadata) {
+    this.store.dispatch(new UpdateMetadata(metadata));
   }
 
   deleteStream() {
