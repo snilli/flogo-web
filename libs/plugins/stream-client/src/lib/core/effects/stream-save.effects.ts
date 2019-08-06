@@ -19,7 +19,11 @@ export class StreamSaveEffects {
 
   @Effect()
   saveStream$: Observable<Action> = this.actions$.pipe(
-    ofType(StreamActionType.ChangeDescription, StreamActionType.DeleteStage),
+    ofType(
+      StreamActionType.ChangeDescription,
+      StreamActionType.DeleteStage,
+      StreamActionType.StageItemCreated
+    ),
     switchMap(action => this.saveStream(action)),
     filter(isSaved => isSaved),
     map(() => new StreamDiagramActions.StreamSaveSuccess())

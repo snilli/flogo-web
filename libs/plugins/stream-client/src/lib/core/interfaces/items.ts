@@ -9,4 +9,5 @@ export interface Item {
   inputMappings: { [inputName: string]: any };
   output: { [outputName: string]: any };
   activitySettings?: { [settingName: string]: any };
+  return?: boolean;
 }
