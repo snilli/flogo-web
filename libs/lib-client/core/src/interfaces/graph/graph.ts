@@ -8,4 +8,8 @@ export interface DiagramGraph {
   nodes: NodeDictionary;
 }
 
+/**
+ * Exporting DiagramGraph as FlowGraph which is imported in plugins-flow-client.
+ * @deprecated
+ */
 export { DiagramGraph as FlowGraph };

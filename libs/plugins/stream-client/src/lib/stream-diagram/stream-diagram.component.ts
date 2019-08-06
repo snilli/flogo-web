@@ -64,6 +64,8 @@ export class StreamDiagramComponent implements OnDestroy {
         );
         break;
       case DiagramActionType.Configure:
+        // streams-plugin-todo: implement the logic to allow user to configure the stages
+        break;
     }
   }
 }
