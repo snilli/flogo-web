@@ -1,21 +1,29 @@
+import { isEmpty } from 'lodash';
+import { of } from 'rxjs';
+import { tap, take, switchMap, catchError, filter, map } from 'rxjs/operators';
+
 import { Injectable } from '@angular/core';
-import { tap, take, switchMap, catchError } from 'rxjs/operators';
 import { Action, Store } from '@ngrx/store';
 
 import { ContributionsService, ResourceService } from '@flogo-web/lib-client/core';
 import { ContributionType } from '@flogo-web/core';
+import { LanguageService } from '@flogo-web/lib-client/language';
+import { NotificationsService } from '@flogo-web/lib-client/notifications';
+import {
+  ConfirmationModalService,
+  ConfirmationResult,
+} from '@flogo-web/lib-client/confirmation';
 
 import { Init, RevertName, StreamActionType, StreamStoreState } from './state';
 import * as streamSelectors from './state/stream.selectors';
 import { generateStateFromResource, generateResourceFromState } from './models';
-import { NotificationsService } from '@flogo-web/lib-client/notifications';
-import { of } from 'rxjs';
-import { isEmpty } from 'lodash';
 
 @Injectable()
 export class StreamService {
   previousStream = null;
   constructor(
+    private translate: LanguageService,
+    private confirmationModal: ConfirmationModalService,
     private contribService: ContributionsService,
     private resourceService: ResourceService,
     private notifications: NotificationsService,
@@ -112,5 +120,21 @@ export class StreamService {
         );
       })
     );
+  }
+
+  getDeleteStageConfirmation(itemId) {
+    return this.translate
+      .get(['STREAMS.DESIGNER:CONFIRM-STAGE-DELETE', 'MODAL:CONFIRM-DELETION'])
+      .pipe(
+        switchMap(
+          translations =>
+            this.confirmationModal.openModal({
+              title: translations['MODAL:CONFIRM-DELETION'],
+              textMessage: translations['STREAMS.DESIGNER:CONFIRM-STAGE-DELETE'],
+            }).result
+        ),
+        filter(result => result === ConfirmationResult.Confirm),
+        map(() => itemId)
+      );
   }
 }

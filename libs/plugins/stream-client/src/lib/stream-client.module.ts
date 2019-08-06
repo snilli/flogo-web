@@ -6,6 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HeaderModule as FlogoDesignerHeader } from '@flogo-web/lib-client/designer-header';
 import { LogsModule as FlogoLogsModule } from '@flogo-web/lib-client/logs';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
+import { DiagramModule } from '@flogo-web/lib-client/diagram';
 import {
   StreamService,
   StreamSaveEffects,
@@ -18,6 +19,7 @@ import { StreamDesignerComponent } from './stream-designer';
 import { StreamDataResolver } from './stream-data.resolver';
 import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers.module';
 import { MonacoEditorModule } from './shared/monaco-editor';
+import { StreamDiagramComponent } from './stream-diagram';
 
 @NgModule({
   imports: [
@@ -25,8 +27,8 @@ import { MonacoEditorModule } from './shared/monaco-editor';
     FlogoSharedModule,
     FlogoDesignerHeader,
     FlogoLogsModule,
-    FlogoSharedModule,
     FlogoStreamTriggersModule,
+    DiagramModule,
     StoreModule.forFeature('stream', featureReducer),
     EffectsModule.forFeature([StreamSaveEffects, TriggerMappingsEffects]),
     RouterModule.forChild([
@@ -45,6 +47,6 @@ import { MonacoEditorModule } from './shared/monaco-editor';
     FlogoProfileService,
     MicroServiceModelConverter,
   ],
-  declarations: [StreamDesignerComponent],
+  declarations: [StreamDesignerComponent, StreamDiagramComponent],
 })
 export class StreamClientModule {}

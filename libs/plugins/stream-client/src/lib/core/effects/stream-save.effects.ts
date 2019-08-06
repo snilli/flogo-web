@@ -5,7 +5,7 @@ import { switchMap, filter, map } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
 
 import { StreamService } from '../stream.service';
-import { StreamSaveSuccess, StreamActionType } from '../state';
+import { StreamDiagramActions, StreamActionType } from '../state';
 
 @Injectable()
 export class StreamSaveEffects {
@@ -14,20 +14,33 @@ export class StreamSaveEffects {
     ofType(StreamActionType.ChangeName),
     switchMap(() => this.streamOps.saveStreamName()),
     filter(isSaved => isSaved),
-    map(() => new StreamSaveSuccess())
+    map(() => new StreamDiagramActions.StreamSaveSuccess())
   );
 
   @Effect()
   saveStream$: Observable<Action> = this.actions$.pipe(
-    ofType(StreamActionType.ChangeDescription),
+    ofType(StreamActionType.ChangeDescription, StreamActionType.DeleteStage),
     switchMap(action => this.saveStream(action)),
     filter(isSaved => isSaved),
-    map(() => new StreamSaveSuccess())
+    map(() => new StreamDiagramActions.StreamSaveSuccess())
+  );
+
+  @Effect()
+  deleteStage$: Observable<Action> = this.actions$.pipe(
+    ofType(StreamActionType.SelectRemoveStage),
+    switchMap((action: StreamDiagramActions.SelectRemoveStage) =>
+      this.showDeleteMessage(action.payload)
+    ),
+    map(removeItemId => new StreamDiagramActions.ConfirmDeleteStage(removeItemId))
   );
 
   constructor(private streamOps: StreamService, private actions$: Actions) {}
 
   private saveStream(action?: Action) {
     return this.streamOps.saveStream(action);
+  }
+
+  private showDeleteMessage(itemId) {
+    return this.streamOps.getDeleteStageConfirmation(itemId);
   }
 }

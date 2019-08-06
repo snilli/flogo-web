@@ -1,8 +1,14 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { FlogoStreamState } from './stream.state';
+
+import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
 import { Dictionary } from '@flogo-web/lib-client/core';
 import { ContributionType, FunctionsSchema } from '@flogo-web/core';
+
+import { FlogoStreamState } from './stream.state';
 import { InstalledFunctionSchema } from '../interfaces';
+import { CurrentSelection, SelectionType } from '../models/selection';
+
+const GRAPH_NAME = 'mainGraph';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
@@ -66,5 +72,34 @@ export const getInstalledFunctions = createSelector(
         type: schema.type,
         ref: schema.ref,
       }));
+  }
+);
+
+export const selectGraph = createSelector(
+  selectStreamState,
+  streamState => streamState[GRAPH_NAME]
+);
+
+export const selectCurrentSelection = createSelector(
+  selectStreamState,
+  (state: FlogoStreamState) => state.currentSelection
+);
+
+export const getDiagramSelection = createSelector(
+  selectCurrentSelection,
+  (selection: CurrentSelection) => {
+    if (selection && selection.type === SelectionType.InsertTask) {
+      return {
+        type: DiagramSelectionType.Insert,
+        taskId: selection.parentId,
+      };
+    } else if (selection && selection.type === SelectionType.Task) {
+      return {
+        type: DiagramSelectionType.Node,
+        taskId: selection.taskId,
+      };
+    } else {
+      return null;
+    }
   }
 );
