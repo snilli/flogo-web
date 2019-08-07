@@ -1,6 +1,6 @@
 import { FlogoAppModel, TriggerSchema } from '@flogo-web/core';
 import { TriggerHandler, Trigger } from '@flogo-web/lib-client/core';
-import { StreamMetadata } from "@flogo-web/plugins/stream-core";
+import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 
 import { InstalledFunctionSchema } from '../../../core';
 
