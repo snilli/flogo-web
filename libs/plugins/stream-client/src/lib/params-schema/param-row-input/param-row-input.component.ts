@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { GroupByParamService } from './group-by-param.service';
 
 @Component({
@@ -11,7 +13,7 @@ import { GroupByParamService } from './group-by-param.service';
 /**
  * @private
  */
-export class ParamRowInputComponent implements OnInit {
+export class ParamRowInputComponent implements OnInit, OnDestroy {
   @Input() paramGroup: FormGroup;
   @Input() dropdownOptions;
   @Input() inputIndex;
@@ -20,15 +22,15 @@ export class ParamRowInputComponent implements OnInit {
   showGroupByBtn = true;
   selectedAsGroupBy = false;
 
-  constructor(private groupByParamService: GroupByParamService) {
-    this.groupByParamService.updateGroupBy$.subscribe(this.setGroupBySelected.bind(this));
-  }
+  private ngOnDestroy$ = SingleEmissionSubject.create();
+
+  constructor(private groupByParamService: GroupByParamService) {}
 
   ngOnInit(): void {
-    if (this.groupBy) {
-      this.groupByParamService.updateGroupBy(this.groupBy);
-    }
-    this.setGroupBySelected();
+    this.groupByParamService.updateGroupBy$
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(this.setGroupBySelected.bind(this));
+    this.groupByParamService.updateGroupBy(this.groupBy);
   }
 
   setGroupBySelected() {
@@ -70,5 +72,9 @@ export class ParamRowInputComponent implements OnInit {
       const param = this.paramGroup.get('name');
       this.groupByParamService.updateGroupBy(param.value);
     }
+  }
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.emitAndComplete();
   }
 }

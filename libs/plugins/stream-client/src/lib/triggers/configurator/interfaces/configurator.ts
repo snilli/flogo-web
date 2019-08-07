@@ -1,8 +1,8 @@
 import { FlogoAppModel, TriggerSchema } from '@flogo-web/core';
 import { TriggerHandler, Trigger } from '@flogo-web/lib-client/core';
+import { StreamMetadata } from "@flogo-web/plugins/stream-core";
 
 import { InstalledFunctionSchema } from '../../../core';
-import { Metadata } from '@flogo-web/core';
 
 export interface ConfiguratorStatus {
   disableSave?: boolean;
@@ -20,7 +20,7 @@ export interface TriggerStatus {
 
 export interface CurrentTriggerState {
   appId: string;
-  streamMetadata: Metadata;
+  streamMetadata: StreamMetadata;
   schema: TriggerSchema;
   handler: TriggerHandler;
   trigger: Trigger;
