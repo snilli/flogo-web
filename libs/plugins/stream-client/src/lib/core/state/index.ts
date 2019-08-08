@@ -21,5 +21,8 @@ export * from './stream.selectors';
 import * as StreamDiagramActions from './stream.actions';
 export { StreamDiagramActions };
 
+import * as StreamSelectors from './stream.selectors';
+export { StreamSelectors };
+
 import * as TriggerActions from './triggers/triggers.actions';
 export { TriggerActions };

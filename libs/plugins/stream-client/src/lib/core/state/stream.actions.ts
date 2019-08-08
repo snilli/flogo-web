@@ -1,5 +1,7 @@
 import { Action } from '@ngrx/store';
 import { FlogoStreamState } from './stream.state';
+import { GraphNode } from '@flogo-web/lib-client/core';
+import { Item } from '../interfaces';
 
 export enum StreamActionType {
   Init = '[Stream] Init',
@@ -9,6 +11,8 @@ export enum StreamActionType {
   StreamSaveSuccess = '[Stream] Save success',
   UpdateMetadata = '[Stream] Update Metadata',
   SelectCreateStage = '[Stream] Add a stage',
+  StageItemCreated = '[Stream] Stage created',
+  CancelCreateStage = '[Stream] Cancel create stage',
   SelectStage = '[Stream] Select item',
   SelectRemoveStage = '[Stream] Ask to delete stage',
   DeleteStage = '[Stream] Confirm delete stage',
@@ -47,6 +51,21 @@ export class SelectCreateStage implements BaseStreamAction {
   constructor(public payload: string) {}
 }
 
+export class StageItemCreated implements BaseStreamAction {
+  readonly type = StreamActionType.StageItemCreated;
+  constructor(
+    public payload: {
+      item: Item;
+      node: Partial<GraphNode>;
+    }
+  ) {}
+}
+
+export class CancelCreateStage implements BaseStreamAction {
+  readonly type = StreamActionType.CancelCreateStage;
+  constructor(public payload: string) {}
+}
+
 export class SelectStage implements BaseStreamAction {
   readonly type = StreamActionType.SelectStage;
   constructor(public payload: string | null) {}
@@ -71,4 +90,6 @@ export type StreamActionsUnion =
   | SelectCreateStage
   | SelectStage
   | SelectRemoveStage
-  | ConfirmDeleteStage;
+  | ConfirmDeleteStage
+  | CancelCreateStage
+  | StageItemCreated;

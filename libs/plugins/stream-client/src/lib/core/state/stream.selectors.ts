@@ -2,13 +2,20 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
 import { Dictionary } from '@flogo-web/lib-client/core';
-import { ContributionType, FunctionsSchema } from '@flogo-web/core';
+import {
+  ContributionType,
+  FunctionsSchema,
+  ContributionSchema,
+  CONTRIB_REFS,
+} from '@flogo-web/core';
 
 import { FlogoStreamState } from './stream.state';
 import { InstalledFunctionSchema } from '../interfaces';
-import { CurrentSelection, SelectionType } from '../models/selection';
+import { CurrentSelection, SelectionType } from '../models';
+import { Activity } from '../../stage-add';
 
-const GRAPH_NAME = 'mainGraph';
+export const GRAPH_NAME = 'mainGraph';
+export const ITEMS_DICTIONARY_NAME = 'mainItems';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
@@ -102,4 +109,21 @@ export const getDiagramSelection = createSelector(
       return null;
     }
   }
+);
+
+export const getInstalledActivities = createSelector(
+  selectSchemas,
+  (schemas: Dictionary<ContributionSchema>): Activity[] =>
+    Object.values(schemas)
+      .filter(
+        schema =>
+          schema.type === ContributionType.Activity && schema.ref !== CONTRIB_REFS.SUBFLOW
+      )
+      .map(schema => ({
+        title: schema.title,
+        ref: schema.ref,
+      }))
+      .sort((activity1, activity2) =>
+        ('' + activity1.title).localeCompare(activity2.title)
+      )
 );

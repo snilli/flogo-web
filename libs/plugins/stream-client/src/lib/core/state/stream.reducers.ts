@@ -2,6 +2,8 @@ import * as selectionFactory from '../models/stream/selection';
 import { INITIAL_STREAM_STATE, FlogoStreamState } from './stream.state';
 import { StreamActionsUnion, StreamActionType } from './stream.actions';
 import { removeStage } from './cases/remove-stage';
+import { stageItemCreated } from './cases/stage-item-created';
+import { SelectionType } from '../models/selection';
 
 export function streamReducer(
   state: FlogoStreamState = INITIAL_STREAM_STATE,
@@ -29,6 +31,21 @@ export function streamReducer(
         ...state,
         currentSelection: selectionFactory.makeInsertSelection(action.payload),
       };
+    case StreamActionType.StageItemCreated:
+      return stageItemCreated(state, action.payload);
+    case StreamActionType.CancelCreateStage:
+      const selection = state.currentSelection;
+      if (
+        selection &&
+        selection.type === SelectionType.InsertTask &&
+        selection.parentId === action.payload
+      ) {
+        return {
+          ...state,
+          currentSelection: null,
+        };
+      }
+      return state;
     case StreamActionType.SelectStage:
       return {
         ...state,

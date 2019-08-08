@@ -1,4 +1,16 @@
-import { DiagramGraph, GraphNode, NodeType } from '@flogo-web/lib-client/core';
+import {
+  DiagramGraph,
+  GraphNode,
+  NodeType,
+  NodeFeatures,
+} from '@flogo-web/lib-client/core';
+
+const defaultFeatures: NodeFeatures = {
+  selectable: true,
+  deletable: true,
+  canHaveChildren: true,
+  canBranch: false,
+};
 
 /* streams-plugin-todo: Add the streams backend interface */
 export function makeGraphNodes(stages: any[]): DiagramGraph {
@@ -33,11 +45,19 @@ function makeBasicNode(stage): Partial<GraphNode> {
       title: stage.name,
       description: stage.description,
       features: {
-        selectable: true,
-        deletable: true,
-        canHaveChildren: true,
-        canBranch: false,
+        ...defaultFeatures,
       },
     }
   );
+}
+
+export function makeNode(
+  from: { id: string; type: NodeType } & Partial<GraphNode>
+): Partial<GraphNode> {
+  return {
+    ...from,
+    children: from.children ? [...from.children] : [],
+    parents: from.parents ? [...from.parents] : [],
+    features: { ...defaultFeatures, ...from.features },
+  };
 }

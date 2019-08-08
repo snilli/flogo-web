@@ -20,6 +20,7 @@ import { StreamDataResolver } from './stream-data.resolver';
 import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers.module';
 import { MonacoEditorModule } from './shared/monaco-editor';
 import { StreamDiagramComponent } from './stream-diagram';
+import { StageAddModule } from './stage-add';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { StreamDiagramComponent } from './stream-diagram';
       },
     ]),
     MonacoEditorModule.forRoot(),
+    StageAddModule,
   ],
   providers: [
     StreamService,

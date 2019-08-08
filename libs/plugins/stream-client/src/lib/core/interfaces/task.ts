@@ -1,7 +1,6 @@
 import { Dictionary } from '@flogo-web/lib-client/core';
 import { FLOGO_TASK_TYPE } from '../constants';
 import { TaskAttributes } from './attribute';
-import { Link } from './link';
 
 export interface Task {
   id: string;
@@ -16,15 +15,11 @@ export interface Task {
   attributes?: TaskAttributes;
   inputMappings?: Dictionary<any>;
   outputMappings?: Dictionary<any>;
-  tasks?: Task[];
-  links?: Link[];
   settings?: {
     iterate?: string;
-    streamPath?: string;
   };
 
   activitySettings?: { [settingName: string]: any };
-  condition?: string;
   __props?: {
     [key: string]: any;
     errors?: { msg: string }[];
