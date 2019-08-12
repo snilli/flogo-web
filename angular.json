@@ -27,8 +27,14 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/core/tsconfig.lib.json", "libs/core/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "!libs/core/**"]
+            "tsConfig": [
+              "libs/core/tsconfig.lib.json",
+              "libs/core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/core/**"
+            ]
           }
         },
         "test": {
@@ -61,7 +67,10 @@
               "libs/parser/tsconfig.lib.json",
               "libs/parser/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/parser/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/parser/**"
+            ]
           }
         }
       }
@@ -107,7 +116,10 @@
               "apps/server/tsconfig.app.json",
               "apps/server/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/server/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/server/**"
+            ]
           }
         },
         "test": {
@@ -174,9 +186,9 @@
               "apps/client/src/styles.less"
             ],
             "scripts": [
-              "node_modules/lodash/lodash.min.js",
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/monaco-editor/min/vs/loader.js"
             ]
           },
           "configurations": {
@@ -239,7 +251,6 @@
               "apps/client/src/styles.less"
             ],
             "scripts": [
-              "node_modules/lodash/lodash.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
@@ -276,7 +287,10 @@
               "apps/client/tsconfig.app.json",
               "apps/client/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/client/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/client/**"
+            ]
           }
         }
       }
@@ -294,7 +308,10 @@
               "libs/lib-server/tsconfig.lib.json",
               "libs/lib-server/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/lib-server/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/lib-server/**"
+            ]
           }
         },
         "test": {
@@ -319,7 +336,6 @@
             "tsConfig": "libs/lib-client/tsconfig.spec.json",
             "karmaConfig": "libs/lib-client/karma.conf.js",
             "scripts": [
-              "node_modules/lodash/lodash.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
@@ -332,8 +348,43 @@
               "libs/lib-client/tsconfig.lib.json",
               "libs/lib-client/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/lib-client/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/lib-client/**"
+            ]
           }
+        }
+      }
+    },
+    "editor": {
+      "projectType": "library",
+      "root": "libs/editor",
+      "sourceRoot": "libs/editor/src",
+      "prefix": "flogo-web",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/editor/tsconfig.lib.json",
+              "libs/editor/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/editor/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/editor/jest.config.js",
+            "tsConfig": "libs/editor/tsconfig.spec.json",
+            "setupFile": "libs/editor/src/test-setup.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "less"
         }
       }
     },
@@ -350,7 +401,10 @@
               "libs/plugins/flow-server/tsconfig.lib.json",
               "libs/plugins/flow-server/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/plugins/flow-server/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/plugins/flow-server/**"
+            ]
           }
         },
         "test": {
@@ -383,7 +437,6 @@
             "tsConfig": "libs/plugins/flow-client/tsconfig.spec.json",
             "karmaConfig": "libs/plugins/flow-client/karma.conf.js",
             "scripts": [
-              "node_modules/lodash/lodash.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
@@ -413,7 +466,10 @@
               "libs/plugins/flow-client/tsconfig.lib.json",
               "libs/plugins/flow-client/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/plugins/flow-client/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/plugins/flow-client/**"
+            ]
           }
         }
       }
@@ -431,7 +487,10 @@
               "libs/plugins/flow-core/tsconfig.lib.json",
               "libs/plugins/flow-core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/plugins/flow-core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/plugins/flow-core/**"
+            ]
           }
         },
         "test": {
@@ -482,8 +541,13 @@
             "main": "apps/demo-libs/src/main.ts",
             "polyfills": "apps/demo-libs/src/polyfills.ts",
             "tsConfig": "apps/demo-libs/tsconfig.app.json",
-            "assets": ["apps/demo-libs/src/favicon.ico", "apps/demo-libs/src/assets"],
-            "styles": ["apps/demo-libs/src/styles.less"],
+            "assets": [
+              "apps/demo-libs/src/favicon.ico",
+              "apps/demo-libs/src/assets"
+            ],
+            "styles": [
+              "apps/demo-libs/src/styles.less"
+            ],
             "scripts": [],
             "es5BrowserSupport": true
           },
@@ -539,7 +603,10 @@
               "apps/demo-libs/tsconfig.app.json",
               "apps/demo-libs/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/demo-libs/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/demo-libs/**"
+            ]
           }
         }
       }
@@ -566,7 +633,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/demo-libs-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/demo-libs-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/demo-libs-e2e/**"
+            ]
           }
         }
       }
@@ -584,7 +654,10 @@
               "libs/plugins/stream-client/tsconfig.lib.json",
               "libs/plugins/stream-client/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/plugins/stream-client/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/plugins/stream-client/**"
+            ]
           }
         }
       },
@@ -607,7 +680,10 @@
               "libs/plugins/stream-core/tsconfig.lib.json",
               "libs/plugins/stream-core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/plugins/stream-core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/plugins/stream-core/**"
+            ]
           }
         },
         "test": {
@@ -633,7 +709,10 @@
               "libs/plugins/stream-server/tsconfig.lib.json",
               "libs/plugins/stream-server/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/plugins/stream-server/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/plugins/stream-server/**"
+            ]
           }
         },
         "test": {

@@ -7,7 +7,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
 
 import { MapperModule } from '../../shared/mapper';
-import { MonacoEditorModule } from '../../shared/monaco-editor';
+import { MonacoEditorModule } from '@flogo-web/editor';
 import { ConfiguratorService } from './services/configurator.service';
 import { ConfiguratorComponent } from './configurator.component';
 import { ConfigureTriggerComponent } from './trigger/trigger.component';

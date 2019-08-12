@@ -16,7 +16,6 @@
     "ref": {
       "type": "string",
       "description": "Contribution ref",
-      "default": null,
       "x-prompt": "[Optional] What is the ref to the action contribution for this plugin? \nExample: github.com/project-flogo/flow \n (Hit enter to skip)"
     }
   },

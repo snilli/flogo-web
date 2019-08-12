@@ -142,7 +142,7 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
 
     this.appDetailService.app$
       .pipe(
-        distinctUntilKeyChanged('id'),
+        distinctUntilKeyChanged<App>('id'),
         takeUntilDestroyed
       )
       .subscribe(() => {
