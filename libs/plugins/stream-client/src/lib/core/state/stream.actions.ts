@@ -16,6 +16,7 @@ export enum StreamActionType {
   SelectStage = '[Stream] Select item',
   SelectRemoveStage = '[Stream] Ask to delete stage',
   DeleteStage = '[Stream] Confirm delete stage',
+  DeleteStream = '[Stream] Delete stream',
 }
 
 interface BaseStreamAction extends Action {
@@ -81,12 +82,18 @@ export class ConfirmDeleteStage implements BaseStreamAction {
   constructor(public payload: string) {}
 }
 
+export class DeleteStream implements BaseStreamAction {
+  readonly type = StreamActionType.DeleteStream;
+  constructor(public payload: FlogoStreamState) {}
+}
+
 export type StreamActionsUnion =
   | Init
   | ChangeName
   | RevertName
   | ChangeDescription
   | StreamSaveSuccess
+  | DeleteStream
   | SelectCreateStage
   | SelectStage
   | SelectRemoveStage
