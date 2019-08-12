@@ -9,7 +9,6 @@ import {
 } from '@angular/animations';
 
 import { SingleEmissionSubject, AppsService } from '@flogo-web/lib-client/core';
-import { MonacoEditorLoaderService } from '@flogo-web/editor';
 import {
   ConfirmationResult,
   ConfirmationModalService,
@@ -71,7 +70,6 @@ export class FlowComponent implements OnInit, OnDestroy {
   flowName: string;
   backToAppHover = false;
 
-  @HostBinding('hidden') loading: boolean;
   public app: any;
   public isflowMenuOpen = false;
 
@@ -86,12 +84,10 @@ export class FlowComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private testRunner: TestRunnerService,
     private notifications: NotificationsService,
-    private monacoLoaderService: MonacoEditorLoaderService,
     private contribInstallerService: ContribInstallerService,
     private store: Store<FlowState>
   ) {
     this._isDiagramEdited = false;
-    this.loading = true;
     this.app = null;
   }
 
@@ -108,7 +104,6 @@ export class FlowComponent implements OnInit, OnDestroy {
     this._flowService.currentFlowDetails.runnableState$
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(runnableState => (this.runnableInfo = runnableState));
-    this.loading = false;
     this.contribInstallerService.contribInstalled$
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(contribDetails =>
