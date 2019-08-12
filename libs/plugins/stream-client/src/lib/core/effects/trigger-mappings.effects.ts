@@ -63,7 +63,7 @@ export class TriggerMappingsEffects {
   }
 
   private getCleanHandlers({ metadata, handlers }: FlogoStreamState): TriggerHandler[] {
-    const inputNames = metadata.input.map(o => o.name);
+    const inputNames = metadata.input ? metadata.input.map(o => o.name) : null;
     const reduceToUpdatableHandlers = (result, handler) =>
       updateableHandlerReducer(inputNames, result, handler);
     const handlersToUpdate = Object.values(handlers).reduce(
@@ -74,7 +74,7 @@ export class TriggerMappingsEffects {
   }
 }
 
-function updateableHandlerReducer(inputNames: string[], result, handler: Handler) {
+function updateableHandlerReducer(inputNames: string[] | null, result, handler: Handler) {
   const currentMappings =
     (handler.actionMappings || <Handler['actionMappings']>{}).input || {};
   const applicableMappings = pick(currentMappings, inputNames);

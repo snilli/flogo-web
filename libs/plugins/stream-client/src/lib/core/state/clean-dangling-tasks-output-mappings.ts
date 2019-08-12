@@ -1,7 +1,6 @@
 import { isEmpty, pick, fromPairs } from 'lodash';
-import { ContributionSchema } from '@flogo-web/core';
+import { ContributionSchema, isMapperActivity } from '@flogo-web/core';
 import { Dictionary } from '@flogo-web/lib-client/core';
-import { isMapperActivity } from '@flogo-web/plugins/flow-core';
 
 import { Item } from '../interfaces';
 import { FlogoStreamState } from './stream.state';

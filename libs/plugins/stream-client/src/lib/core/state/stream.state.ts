@@ -6,7 +6,7 @@ import {
 } from '@flogo-web/lib-client/core';
 
 import { Item, TriggerConfigureState } from '../interfaces';
-import { CurrentSelection } from '../models/selection';
+import { CurrentSelection } from '../models';
 
 export interface StreamStoreState {
   stream: FlogoStreamState;
@@ -31,4 +31,5 @@ export const INITIAL_STREAM_STATE: FlogoStreamState = {
   schemas: null,
   currentSelection: null,
   triggerConfigure: null,
+  metadata: null,
 };

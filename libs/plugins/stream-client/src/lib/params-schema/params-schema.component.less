@@ -1,30 +1,13 @@
 @import '~@flogo-web/assets/styles/_variables';
 
-.flow-input-params-field {
-  display: flex;
-  margin-bottom: 16px;
-  width: 100%;
-}
-
-.flow-params-new-field {
-  width: 100%;
-}
-
-.flow-input-params-pane {
-  background-color: @lighter-gray;
-  width: 75%;
-  max-height: 422px;
-  overflow-y: auto;
-}
-
-.flow-input-params-header {
+.stream-input-params-header {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 15px;
 }
 
-.flow-input-params-header__title {
+.stream-input-params-header__title {
   position: relative;
   font-size: 20px;
   color: #262626;
@@ -33,13 +16,13 @@
   display: flex;
 }
 
-.flow-input-params-header__icon {
+.stream-input-params-header__icon {
   margin-right: 10px;
   height: 26px;
   width: 31px;
 }
 
-.flow-input-params-close {
+.stream-input-params-close {
   color: @pale-gray;
   position: fixed;
   top: 24px;
@@ -49,25 +32,13 @@
   cursor: pointer;
 }
 
-.btn-input-output-params {
-  color: @color-primary;
-  background-color: @color-bg;
-  border-color: @color-primary;
-}
-
-.btn-input-output-params.active {
-  color: @color-bg;
-  background-color: @color-primary;
-  border-color: @color-primary;
-}
-
-.flow-input-params-container {
+.stream-input-params-container {
   display: flex;
   border: 1px solid @primary-blue;
   height: 422px;
 }
 
-.flow-input-params-categories {
+.stream-input-params-categories {
   width: 25%;
   border-right: 1px solid @gainsboro-five;
   ul {
@@ -77,7 +48,7 @@
   }
 }
 
-.flow-input-params__category {
+.stream-input-params__category {
   width: 100%;
   height: 45px;
   padding-left: 30px;
@@ -98,22 +69,39 @@
   }
 }
 
-.flow-input-params__category-error {
+.stream-input-params__category-error {
   color: @color-invalid;
   font-size: 0.75em;
   margin-left: 0.5em;
 }
 
-.flow-input-params__category--selected {
+.stream-input-params__category--selected {
   background-color: @link-water;
   color: @twilight-blue;
 }
 
-.flow-param-fields {
+.stream-input-params-pane {
+  background-color: @lighter-gray;
+  width: 75%;
+  max-height: 422px;
+  overflow-y: auto;
+}
+
+.stream-input-params-pane__each-field {
+  display: flex;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.stream-input-params-pane__new-field {
+  width: 100%;
+}
+
+.stream-input-params-pane__input-fields {
   margin: 40px;
 }
 
-.flow-input-params-add {
+.stream-input-params-pane__add-btn {
   border: 0;
   min-width: 45px;
   height: 45px;

@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 
@@ -43,9 +44,15 @@ export class ParamsSchemaComponent implements OnInit {
 
   openInputSchemaModel() {
     this.displayInputParams = true;
+    const metadata = isEmpty(this.metadata)
+      ? {
+          input: [],
+          output: [],
+        }
+      : this.metadata;
     this.paramsForm = this.resourceInterfaceBuilderService.createForm(
-      this.metadata.input,
-      this.metadata.output
+      metadata.input,
+      metadata.output
     );
     this.modal.open();
   }
@@ -75,8 +82,16 @@ export class ParamsSchemaComponent implements OnInit {
     const input = mapParamsToStream(updatedParams.input);
     const output = mapParamsToStream(updatedParams.output);
     const groupBy = this.groupByParamService.selectedGroupBy;
-    this.save.next({ input, output, groupBy });
+    const metadata = this.normalizeMetadata(input, output, groupBy);
+    this.save.next(metadata);
     this.closeInputSchemaModel();
+  }
+
+  normalizeMetadata(input, output, groupBy) {
+    if (isEmpty(input) && isEmpty(output)) {
+      return null;
+    }
+    return { input, output, groupBy };
   }
 
   removeParam(index: number, fromParams: string) {

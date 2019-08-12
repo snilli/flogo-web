@@ -299,6 +299,10 @@
     "TRIGGER-CONFIGURATOR:STREAM-INPUTS": "Map to stream inputs",
     "TRIGGER-CONFIGURATOR:STREAM-OUTPUTS": "Map from stream output",
     "TRIGGER-MAPPER:LABEL-STREAM-INPUTS": "Stream Input Params",
-    "TRIGGER-MAPPER:LABEL-STREAM-OUTPUTS": "Stream Output"
+    "TRIGGER-MAPPER:LABEL-STREAM-OUTPUTS": "Stream Output",
+    "INPUT-PARAMS:INPUT-GROUPBY": "Input & Group by",
+    "INPUT-PARAMS:OUTPUT": "Output",
+    "INPUT-PARAMS:ADD-INPUT": "Add input",
+    "INPUT-PARAMS:ADD-OUTPUT": "Add output"
   }
 }
