@@ -38,15 +38,6 @@ export class StreamSaveEffects {
     map(removeItemId => new StreamDiagramActions.ConfirmDeleteStage(removeItemId))
   );
 
-  @Effect()
-  deleteStream$: Observable<Action> = this.actions$.pipe(
-    ofType(StreamActionType.DeleteStream),
-    switchMap((action: StreamDiagramActions.DeleteStream) =>
-      this.streamOps.deleteStream(action.payload)
-    ),
-    map(() => new StreamDiagramActions.StreamSaveSuccess())
-  );
-
   constructor(private streamOps: StreamService, private actions$: Actions) {}
 
   private saveStream(action?: Action) {

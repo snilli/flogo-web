@@ -8,7 +8,6 @@ import { select, Store } from '@ngrx/store';
 import {
   ChangeDescription,
   ChangeName,
-  DeleteStream,
   FlogoStreamState,
   selectStreamState,
   StreamService,
@@ -65,7 +64,10 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   deleteStream() {
     this.closeStreamMenu();
-    this.store.dispatch(new DeleteStream(this.streamState));
+    this.streamService
+      .deleteStream(this.streamState)
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe();
   }
 
   ngOnDestroy() {
