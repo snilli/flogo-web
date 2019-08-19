@@ -1,5 +1,4 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   animateChild,
   transition,
@@ -11,6 +10,7 @@ import {
   ChangeName,
   FlogoStreamState,
   selectStreamState,
+  StreamService,
 } from '../core';
 import { StreamStoreState as AppState } from '../core';
 import { takeUntil } from 'rxjs/operators';
@@ -31,7 +31,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
-  constructor(private store: Store<AppState>, private router: Router) {}
+  constructor(private store: Store<AppState>, private streamService: StreamService) {}
 
   ngOnInit() {
     this.store
@@ -43,7 +43,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   }
 
   navigateToApp() {
-    this.router.navigate(['/apps', this.streamState.app.id]);
+    this.streamService.navigateToApp(this.streamState.app.id);
   }
 
   changeStreamDescription(description) {
@@ -62,7 +62,10 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     this.isStreamMenuOpen = !this.isStreamMenuOpen;
   }
 
-  deleteStream() {}
+  deleteStream() {
+    this.closeStreamMenu();
+    this.streamService.deleteStream(this.streamState);
+  }
 
   ngOnDestroy() {
     this.ngOnDestroy$.emitAndComplete();
