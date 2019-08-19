@@ -146,36 +146,35 @@ export class StreamService {
   }
 
   deleteStream(stream) {
-    return this.translate
+    this.translate
       .get(['STREAMS.DELETE-STREAM:CONFIRM_DELETE', 'MODAL:CONFIRM-DELETION'], {
         streamName: stream.name,
       })
       .pipe(
-        switchMap(translation => {
-          return this.confirmationModal.openModal({
-            title: translation['MODAL:CONFIRM-DELETION'],
-            textMessage: translation['STREAMS.DELETE-STREAM:CONFIRM_DELETE'],
-          }).result;
-        }),
+        switchMap(
+          translation =>
+            this.confirmationModal.openModal({
+              title: translation['MODAL:CONFIRM-DELETION'],
+              textMessage: translation['STREAMS.DELETE-STREAM:CONFIRM_DELETE'],
+            }).result
+        ),
         filter(result => result === ConfirmationResult.Confirm),
-        switchMap(() => {
-          return this.appResourceService.deleteResourceWithTrigger(stream.id, null).pipe(
-            map(() => {
-              this.navigateToApp(stream.app.id);
-              this.notifications.success({
-                key: 'STREAMS.DELETE-STREAM:SUCCESS-MESSAGE-STREAM-DELETED',
-              });
-            }),
-            catchError(err => {
-              console.error(err);
-              this.notifications.error({
-                key: 'STREAMS.DELETE-STREAM:ERROR-MESSAGE-DELETE-STREAM',
-                params: err,
-              });
-              return of(false);
-            })
-          );
-        })
+        switchMap(() => this.appResourceService.deleteResourceWithTrigger(stream.id))
+      )
+      .subscribe(
+        () => {
+          this.navigateToApp(stream.app.id);
+          this.notifications.success({
+            key: 'STREAMS.DELETE-STREAM:SUCCESS-MESSAGE-STREAM-DELETED',
+          });
+        },
+        err => {
+          console.error(err);
+          this.notifications.error({
+            key: 'STREAMS.DELETE-STREAM:ERROR-MESSAGE-DELETE-STREAM',
+            params: err,
+          });
+        }
       );
   }
 

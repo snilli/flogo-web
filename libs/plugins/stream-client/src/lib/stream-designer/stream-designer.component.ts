@@ -64,10 +64,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   deleteStream() {
     this.closeStreamMenu();
-    this.streamService
-      .deleteStream(this.streamState)
-      .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe();
+    this.streamService.deleteStream(this.streamState);
   }
 
   ngOnDestroy() {
