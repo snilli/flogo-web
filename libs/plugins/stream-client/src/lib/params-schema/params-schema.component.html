@@ -24,13 +24,13 @@
             />
           </svg>
         </span>
-        {{ 'INPUT-PARAMS:DEFINE' | translate }}
+        {{ 'STREAMS.INPUT-PARAMS:DEFINE' | translate }}
       </div>
       <button
         type="button"
         class="flogo-button--secondary"
         data-dismiss="modal"
-        (click)="closeInputSchemaModel()"
+        (click)="onInputSchemaModalCancel()"
       >
         {{ 'INPUT-PARAMS:CANCEL' | translate }}
       </button>
@@ -88,10 +88,11 @@
             <div [formGroupName]="i" class="stream-input-params-pane__new-field">
               <flogo-stream-params-schema-input-param-row
                 (removeParam)="removeParam(i, 'input')"
+                (updateGroupBy)="updateGroupBy($event)"
                 [dropdownOptions]="selectTypes"
                 [paramGroup]="inputParam"
                 [inputIndex]="i"
-                [groupBy]="metadata?.groupBy"
+                [groupBy]="groupBy"
               ></flogo-stream-params-schema-input-param-row>
             </div>
           </div>

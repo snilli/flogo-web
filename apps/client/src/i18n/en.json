@@ -300,6 +300,7 @@
     "TRIGGER-CONFIGURATOR:STREAM-OUTPUTS": "Map from stream output",
     "TRIGGER-MAPPER:LABEL-STREAM-INPUTS": "Stream Input Params",
     "TRIGGER-MAPPER:LABEL-STREAM-OUTPUTS": "Stream Output",
+    "INPUT-PARAMS:DEFINE": "Define params",
     "INPUT-PARAMS:INPUT-GROUPBY": "Input & Group by",
     "INPUT-PARAMS:OUTPUT": "Output",
     "INPUT-PARAMS:ADD-INPUT": "Add input",

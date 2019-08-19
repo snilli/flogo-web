@@ -1,8 +1,14 @@
-import { takeUntil } from 'rxjs/operators';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
-import { GroupByParamService } from './group-by-param.service';
 
 @Component({
   selector: 'flogo-stream-params-schema-input-param-row',
@@ -13,34 +19,33 @@ import { GroupByParamService } from './group-by-param.service';
 /**
  * @private
  */
-export class ParamRowInputComponent implements OnInit, OnDestroy {
+export class ParamRowInputComponent implements OnDestroy, OnChanges {
   @Input() paramGroup: FormGroup;
   @Input() dropdownOptions;
   @Input() inputIndex;
   @Input() groupBy;
   @Output() removeParam: EventEmitter<number> = new EventEmitter<number>();
+  @Output() updateGroupBy: EventEmitter<string> = new EventEmitter<string>();
   showGroupByBtn = true;
   selectedAsGroupBy = false;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
-  constructor(private groupByParamService: GroupByParamService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.groupByParamService.updateGroupBy$
-      .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe(this.setGroupBySelected.bind(this));
-    this.groupByParamService.updateGroupBy(this.groupBy);
+  ngOnChanges({ groupBy: groupByChange }: SimpleChanges): void {
+    if (groupByChange) {
+      this.setGroupBySelected();
+    }
   }
 
   setGroupBySelected() {
-    const groupBy = this.groupByParamService.selectedGroupBy;
-    if (groupBy) {
+    if (this.groupBy) {
       const inputParam =
         this.paramGroup &&
         this.paramGroup.get('name') &&
         this.paramGroup.get('name').value;
-      if (inputParam === groupBy) {
+      if (inputParam === this.groupBy) {
         this.showGroupByBtn = true;
         this.selectedAsGroupBy = true;
       } else {
@@ -61,7 +66,7 @@ export class ParamRowInputComponent implements OnInit, OnDestroy {
     this.paramGroup.patchValue({ type });
   }
 
-  updateGroupBy() {
+  updateGroupByParam() {
     if (this.selectedAsGroupBy) {
       this.selectGroupBy();
     }
@@ -70,7 +75,7 @@ export class ParamRowInputComponent implements OnInit, OnDestroy {
   selectGroupBy() {
     if (this.paramGroup.get('name').value && this.paramGroup.get('name').valid) {
       const param = this.paramGroup.get('name');
-      this.groupByParamService.updateGroupBy(param.value);
+      this.updateGroupBy.emit(param.value);
     }
   }
 

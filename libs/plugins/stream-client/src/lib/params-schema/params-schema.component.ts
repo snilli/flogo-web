@@ -1,5 +1,14 @@
+import { takeUntil } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 
 import { BsModalComponent } from 'ng2-bs3-modal';
@@ -7,6 +16,7 @@ import { BsModalComponent } from 'ng2-bs3-modal';
 import { ValueType } from '@flogo-web/core';
 import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 import { ResourceInterfaceBuilderService } from '@flogo-web/lib-client/resource-interface-builder';
+import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { GroupByParamService } from './param-row-input/group-by-param.service';
 
 @Component({
@@ -14,7 +24,7 @@ import { GroupByParamService } from './param-row-input/group-by-param.service';
   templateUrl: 'params-schema.component.html',
   styleUrls: ['params-schema.component.less'],
 })
-export class ParamsSchemaComponent implements OnInit {
+export class ParamsSchemaComponent implements OnInit, OnDestroy {
   @ViewChild('modal', { static: true })
   modal: BsModalComponent;
   paramsForm: FormGroup;
@@ -22,6 +32,9 @@ export class ParamsSchemaComponent implements OnInit {
   @Output() save = new EventEmitter<StreamMetadata>();
   selectTypes: ValueType[] = [];
   displayInputParams: boolean;
+  groupBy: string;
+
+  private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(
     private resourceInterfaceBuilderService: ResourceInterfaceBuilderService,
@@ -32,6 +45,25 @@ export class ParamsSchemaComponent implements OnInit {
 
   ngOnInit() {
     this.paramsForm = this.resourceInterfaceBuilderService.createForm();
+
+    this.groupByParamService.updateGroupBy$
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(() => {
+        this.setGroupBy();
+      });
+
+    if (this.metadata && this.metadata.groupBy) {
+      this.groupBy = this.metadata.groupBy;
+      this.updateGroupBy(this.groupBy);
+    }
+  }
+
+  setGroupBy() {
+    this.groupBy = this.groupByParamService.selectedGroupBy;
+  }
+
+  updateGroupBy(groupBy) {
+    this.groupByParamService.updateGroupBy(groupBy);
   }
 
   showOutputParams() {
@@ -55,6 +87,11 @@ export class ParamsSchemaComponent implements OnInit {
       metadata.output
     );
     this.modal.open();
+  }
+
+  onInputSchemaModalCancel() {
+    this.groupBy = this.metadata ? this.metadata.groupBy : null;
+    this.closeInputSchemaModel();
   }
 
   closeInputSchemaModel() {
@@ -102,8 +139,12 @@ export class ParamsSchemaComponent implements OnInit {
       fromParams === 'input' &&
       removeParam === this.groupByParamService.selectedGroupBy
     ) {
-      this.groupByParamService.updateGroupBy('');
+      this.updateGroupBy(null);
     }
     control.removeAt(index);
+  }
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.emitAndComplete();
   }
 }
