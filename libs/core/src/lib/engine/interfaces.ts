@@ -73,4 +73,10 @@ export namespace FlogoAppModel {
       };
     };
   }
+
+  export interface Action<PluginActionSettings = {}> {
+    id: string;
+    ref: string;
+    settings: PluginActionSettings;
+  }
 }

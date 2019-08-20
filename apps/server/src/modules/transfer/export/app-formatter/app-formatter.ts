@@ -82,7 +82,7 @@ export class AppFormatter {
         type: resource.type,
         ref: this.resourceTypeToRef.get(resource.type),
       });
-      exportedResources.push(this.exporter.resource(resource, exportContext));
+      exportedResources.push(exportedResource);
     });
     return { resources: exportedResources, resourceInfoLookup };
   }
