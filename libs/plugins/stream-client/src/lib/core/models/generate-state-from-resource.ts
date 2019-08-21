@@ -25,6 +25,7 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
   const stages = (resource && resource.data && resource.data.stages) || [];
   const items = makeStageItems(stages, schemaDefs);
   const graph = makeGraphNodes(stages);
+  const metadata = resource.metadata;
   return {
     id,
     name,
@@ -32,6 +33,7 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     app,
     triggers,
     handlers,
+    metadata,
     schemas: schemaDefs,
     mainGraph: graph,
     mainItems: items,

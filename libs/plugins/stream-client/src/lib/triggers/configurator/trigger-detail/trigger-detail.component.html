@@ -27,7 +27,9 @@
     *ngSwitchCase="TAB_TYPES.StreamInputMappings"
     class="mapper content__mapper"
     [controller]="streamInputMapperController"
-    inputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-FLOW-INPUTS' | translate }}"
+    inputsSearchPlaceHolder="{{
+      'STREAMS.TRIGGER-MAPPER:LABEL-STREAM-INPUTS' | translate
+    }}"
     outputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-TRIGGER-OUTPUT' | translate }}"
   >
   </flogo-stream-mapper>
@@ -38,7 +40,9 @@
     inputsSearchPlaceHolder="{{
       'TRIGGER-MAPPER:LABEL-TRIGGER-REPLY-ATTRIBUTES' | translate
     }}"
-    outputsSearchPlaceHolder="{{ 'TRIGGER-MAPPER:LABEL-FLOW-OUTPUTS' | translate }}"
+    outputsSearchPlaceHolder="{{
+      'STREAMS.TRIGGER-MAPPER:LABEL-STREAM-OUTPUTS' | translate
+    }}"
   >
   </flogo-stream-mapper>
 </ng-container>

@@ -2,6 +2,7 @@ import * as selectionFactory from '../models/stream/selection';
 import { INITIAL_STREAM_STATE, FlogoStreamState } from './stream.state';
 import { StreamActionsUnion, StreamActionType } from './stream.actions';
 import { removeStage } from './cases/remove-stage';
+import { cleanDanglingTaskOutputMappings } from './clean-dangling-tasks-output-mappings';
 import { stageItemCreated } from './cases/stage-item-created';
 import { SelectionType } from '../models/selection';
 
@@ -53,6 +54,14 @@ export function streamReducer(
       };
     case StreamActionType.DeleteStage:
       return removeStage(state, action.payload);
+    case StreamActionType.UpdateMetadata:
+      state = cleanDanglingTaskOutputMappings(state);
+      return {
+        ...state,
+        metadata: {
+          ...action.payload,
+        },
+      };
   }
   return state;
 }

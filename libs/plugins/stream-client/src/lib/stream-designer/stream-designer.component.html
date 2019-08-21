@@ -40,6 +40,17 @@
   </flogo-designer-header>
   <div class="secondary-area">
     <flogo-stream-triggers></flogo-stream-triggers>
+    <flogo-stream-params-schema-button
+      role="button"
+      [streamMetadata]="streamState?.metadata"
+      (click)="openInputSchemaModal()"
+    ></flogo-stream-params-schema-button>
     <flogo-stream-diagram></flogo-stream-diagram>
   </div>
 </div>
+
+<flogo-stream-params-schema
+  #inputSchemaModal
+  [metadata]="streamState?.metadata"
+  (save)="onStreamSchemaSave($event)"
+></flogo-stream-params-schema>

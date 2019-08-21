@@ -1,6 +1,9 @@
 import { Action } from '@ngrx/store';
-import { FlogoStreamState } from './stream.state';
+
+import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 import { GraphNode } from '@flogo-web/lib-client/core';
+
+import { FlogoStreamState } from './stream.state';
 import { Item } from '../interfaces';
 
 export enum StreamActionType {
@@ -81,6 +84,11 @@ export class ConfirmDeleteStage implements BaseStreamAction {
   constructor(public payload: string) {}
 }
 
+export class UpdateMetadata implements BaseStreamAction {
+  readonly type = StreamActionType.UpdateMetadata;
+  constructor(public payload: StreamMetadata) {}
+}
+
 export type StreamActionsUnion =
   | Init
   | ChangeName
@@ -92,4 +100,5 @@ export type StreamActionsUnion =
   | SelectRemoveStage
   | ConfirmDeleteStage
   | CancelCreateStage
-  | StageItemCreated;
+  | StageItemCreated
+  | UpdateMetadata;

@@ -292,6 +292,18 @@
     "DESIGNER:INSTALL-NEW-ACTIVITY": "Install new contribution",
     "DELETE-STREAM:SUCCESS-MESSAGE-STREAM-DELETED": "Stream was deleted successfully!",
     "DELETE-STREAM:ERROR-MESSAGE-DELETE-STREAM": "Remove stream error: {{value}}",
-    "DELETE-STREAM:CONFIRM_DELETE": "Are you sure you want to delete the stream \"{{streamName}}\"?"
+    "DELETE-STREAM:CONFIRM_DELETE": "Are you sure you want to delete the stream \"{{streamName}}\"?",
+    "INPUT-OUTPUT:STREAM-INTERFACE": "Stream interface",
+    "INPUT-OUTPUT:GROUP-BY": "Group By",
+    "TRIGGER-CONFIGURATOR:SETTINGS": "Trigger Settings",
+    "TRIGGER-CONFIGURATOR:STREAM-INPUTS": "Map to stream inputs",
+    "TRIGGER-CONFIGURATOR:STREAM-OUTPUTS": "Map from stream output",
+    "TRIGGER-MAPPER:LABEL-STREAM-INPUTS": "Stream Input Params",
+    "TRIGGER-MAPPER:LABEL-STREAM-OUTPUTS": "Stream Output",
+    "INPUT-PARAMS:DEFINE": "Define params",
+    "INPUT-PARAMS:INPUT-GROUPBY": "Input & Group by",
+    "INPUT-PARAMS:OUTPUT": "Output",
+    "INPUT-PARAMS:ADD-INPUT": "Add input",
+    "INPUT-PARAMS:ADD-OUTPUT": "Add output"
   }
 }

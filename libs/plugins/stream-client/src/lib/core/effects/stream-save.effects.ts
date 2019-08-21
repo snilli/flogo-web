@@ -22,6 +22,7 @@ export class StreamSaveEffects {
     ofType(
       StreamActionType.ChangeDescription,
       StreamActionType.DeleteStage,
+      StreamActionType.UpdateMetadata,
       StreamActionType.StageItemCreated
     ),
     switchMap(action => this.saveStream(action)),
