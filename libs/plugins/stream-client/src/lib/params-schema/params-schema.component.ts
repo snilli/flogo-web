@@ -1,12 +1,5 @@
 import { isEmpty } from 'lodash';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 
 import { BsModalComponent } from 'ng2-bs3-modal';
@@ -30,9 +23,7 @@ export class ParamsSchemaComponent implements OnInit {
   displayInputParams: boolean;
   groupBy: string;
 
-  constructor(
-    private resourceInterfaceBuilderService: ResourceInterfaceBuilderService,
-  ) {
+  constructor(private resourceInterfaceBuilderService: ResourceInterfaceBuilderService) {
     this.selectTypes = Array.from(ValueType.allTypes);
   }
 
@@ -112,10 +103,7 @@ export class ParamsSchemaComponent implements OnInit {
     const control = <FormArray>this.paramsForm.controls[fromParams];
     const removeParam =
       control.controls[index].value && control.controls[index].value.name;
-    if (
-      fromParams === 'input' &&
-      removeParam === this.groupBy
-    ) {
+    if (fromParams === 'input' && removeParam === this.groupBy) {
       this.updateGroupBy(null);
     }
     control.removeAt(index);
