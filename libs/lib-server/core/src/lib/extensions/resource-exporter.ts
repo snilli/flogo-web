@@ -10,6 +10,7 @@ export interface ResourceExportContext {
   contributions: Map<string, ContributionSchema>;
   resourceIdReconciler: Map<string, Resource>;
   refAgent: ExportRefAgent;
+  actionAgent: ExportActionAgent;
 }
 
 export interface HandlerExportContext {
@@ -17,6 +18,7 @@ export interface HandlerExportContext {
   resource: FlogoAppModel.Resource;
   internalHandler: Handler;
   refAgent: ExportRefAgent;
+  actionAgent: ExportActionAgent;
 }
 
 export interface ResourceExporter<TResourceData = unknown> {
@@ -33,4 +35,13 @@ export interface ResourceExporter<TResourceData = unknown> {
 export interface ExportRefAgent {
   getAliasRef(contribType: ContributionType, packageRef: string): string | undefined;
   registerFunctionName(functionName: string): void;
+}
+
+export interface ExportActionAgent {
+  registerAction<ActionSettings = unknown>(
+    ref: string,
+    resourceId: string,
+    settings: ActionSettings
+  ): void;
+  getActionId(resourceId: string): string | undefined;
 }

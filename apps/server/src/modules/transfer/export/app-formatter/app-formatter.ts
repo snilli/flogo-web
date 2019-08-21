@@ -3,6 +3,7 @@ import {
   ResourceExportContext,
   Resource,
   ExportRefAgent,
+  ExportActionAgent,
 } from '@flogo-web/lib-server/core';
 import {
   App,
@@ -18,6 +19,7 @@ import { makeHandlerFormatter } from './handler-format';
 import { ExportedResourceInfo } from './exported-resource-info';
 import { createRefAgent, RefAgent } from '../ref-agent';
 import { APP_MODEL_VERSION } from '../../../../common/constants';
+import { createActionAgent, ActionAgent } from '../action-agent/create-action-agent';
 
 const TRIGGER_KEYS: Array<keyof FlogoAppModel.Trigger> = [
   'id',
@@ -40,10 +42,12 @@ export class AppFormatter {
 
   format(app: App, resourceIdReconciler: Map<string, Resource>): FlogoAppModel.App {
     const refAgent: RefAgent = createRefAgent(this.contributionSchemas, app.imports);
+    const actionAgent: ActionAgent = createActionAgent();
     const exportContext: ResourceExportContext = {
       contributions: this.contributionSchemas,
       resourceIdReconciler,
       refAgent,
+      actionAgent,
     };
 
     const { resources, resourceInfoLookup } = this.formatResources(
@@ -54,10 +58,16 @@ export class AppFormatter {
     const formattedTriggers = this.formatTriggers(
       app.triggers,
       refAgent,
-      this.makeHandlerFormatter(resourceIdReconciler, resourceInfoLookup, refAgent)
+      this.makeHandlerFormatter(
+        resourceIdReconciler,
+        resourceInfoLookup,
+        refAgent,
+        actionAgent
+      )
     );
 
     const allImports = refAgent.formatImports();
+    const allActions = actionAgent.getAllActions();
 
     return {
       name: app.name,
@@ -68,6 +78,7 @@ export class AppFormatter {
       properties: !isEmpty(app.properties) ? app.properties : undefined,
       imports: !isEmpty(allImports) ? allImports : undefined,
       triggers: !isEmpty(formattedTriggers) ? formattedTriggers : undefined,
+      actions: !isEmpty(allActions) ? allActions : undefined,
       resources: !isEmpty(resources) ? resources : undefined,
     };
   }
@@ -110,12 +121,14 @@ export class AppFormatter {
   private makeHandlerFormatter(
     resourceIdReconciler: Map<string, Resource>,
     resourceInfoLookup: Map<string, ExportedResourceInfo>,
-    refAgent: ExportRefAgent
+    refAgent: ExportRefAgent,
+    actionAgent: ExportActionAgent
   ) {
     return makeHandlerFormatter({
       exportHandler: this.exporter.handler,
       contributionSchemas: this.contributionSchemas,
       refAgent: refAgent,
+      actionAgent,
       getResourceInfo: oldResourceId =>
         resourceInfoLookup.get(resourceIdReconciler.get(oldResourceId).id),
     });

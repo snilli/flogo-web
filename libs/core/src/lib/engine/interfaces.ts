@@ -10,6 +10,7 @@ export namespace FlogoAppModel {
     properties?: AppProperty[];
     triggers?: Trigger[];
     resources?: Resource[];
+    actions?: Action[];
   }
 
   export interface AppProperty {
@@ -51,7 +52,8 @@ export namespace FlogoAppModel {
   export interface NewHandler {
     settings: Settings;
     action: {
-      ref: string;
+      id?: string;
+      ref?: string;
       settings?: Settings;
       input?: {
         [inputName: string]: any;

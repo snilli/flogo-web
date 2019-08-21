@@ -12,7 +12,6 @@ export function exportStreamResource(
 ): FlogoAppModel.Resource<StreamResourceModel.StreamResourceData> {
   const formattedMetadata = formatMetadata(fromResource.metadata);
   const formattedStages = formatStages(fromResource.data || {}, context.refAgent);
-  const { groupBy } = fromResource.metadata as any;
   return {
     id: fromResource.id,
     data: {
@@ -22,8 +21,6 @@ export function exportStreamResource(
         : undefined,
       metadata: !isEmpty(formattedMetadata) ? formattedMetadata : undefined,
       stages: !isEmpty(formattedStages) ? formattedStages : undefined,
-      /* Adding the groupBy to the data which will be removed while cleaning the resource */
-      groupBy: !isEmpty(groupBy) ? groupBy : undefined,
     },
   };
 }

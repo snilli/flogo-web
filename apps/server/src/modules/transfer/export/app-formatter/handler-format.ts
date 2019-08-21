@@ -7,7 +7,7 @@ import {
   ContributionType,
   MapperUtils,
 } from '@flogo-web/core';
-import { ExportRefAgent } from '@flogo-web/lib-server/core';
+import { ExportRefAgent, ExportActionAgent } from '@flogo-web/lib-server/core';
 import { HandlerExporterFn } from '../resource-exporter-fn';
 import { ExportedResourceInfo } from './exported-resource-info';
 
@@ -15,6 +15,7 @@ interface HandlerFormatterParams {
   exportHandler: HandlerExporterFn;
   contributionSchemas: Map<string, ContributionSchema>;
   refAgent: ExportRefAgent;
+  actionAgent: ExportActionAgent;
   getResourceInfo(oldResourceId): ExportedResourceInfo;
 }
 
@@ -22,6 +23,7 @@ export function makeHandlerFormatter({
   exportHandler,
   contributionSchemas,
   refAgent,
+  actionAgent,
   getResourceInfo,
 }: HandlerFormatterParams) {
   return (trigger: Trigger) => {
@@ -33,6 +35,7 @@ export function makeHandlerFormatter({
         triggerSchema,
         resource: resourceInfo.resource,
         refAgent,
+        actionAgent,
         internalHandler: {
           ...handler,
           resourceId: resourceInfo.resource.id,
