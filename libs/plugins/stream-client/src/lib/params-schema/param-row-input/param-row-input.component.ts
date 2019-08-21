@@ -3,12 +3,10 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnDestroy,
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 
 @Component({
   selector: 'flogo-stream-params-schema-input-param-row',
@@ -19,7 +17,7 @@ import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 /**
  * @private
  */
-export class ParamRowInputComponent implements OnDestroy, OnChanges {
+export class ParamRowInputComponent implements OnChanges {
   @Input() paramGroup: FormGroup;
   @Input() dropdownOptions;
   @Input() inputIndex;
@@ -28,8 +26,6 @@ export class ParamRowInputComponent implements OnDestroy, OnChanges {
   @Output() updateGroupBy: EventEmitter<string> = new EventEmitter<string>();
   showGroupByBtn = true;
   selectedAsGroupBy = false;
-
-  private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor() {}
 
@@ -77,9 +73,5 @@ export class ParamRowInputComponent implements OnDestroy, OnChanges {
       const param = this.paramGroup.get('name');
       this.updateGroupBy.emit(param.value);
     }
-  }
-
-  ngOnDestroy() {
-    this.ngOnDestroy$.emitAndComplete();
   }
 }
