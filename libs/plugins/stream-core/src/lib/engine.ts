@@ -23,5 +23,8 @@ export namespace StreamResourceModel {
     output?: {
       [outputName: string]: any;
     };
+    settings?: {
+      [settingName: string]: any;
+    };
   }
 }

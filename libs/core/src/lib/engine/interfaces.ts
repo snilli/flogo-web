@@ -52,6 +52,7 @@ export namespace FlogoAppModel {
   export interface NewHandler {
     settings: Settings;
     action: {
+      /* streams-plugin-todo: Need to impose a restriction that either id or ref+settings is required */
       id?: string;
       ref?: string;
       settings?: Settings;

@@ -1,5 +1,14 @@
-import { StreamResourceModel } from '@flogo-web/plugins/stream-core';
-
 export interface StreamData {
-  stages: StreamResourceModel.Stage[];
+  stages: InternalStage[];
+}
+
+export interface InternalStage {
+  id: string;
+  ref: string;
+  name: string;
+  description: string;
+  inputMappings: { [inputName: string]: any };
+  output: { [outputName: string]: any };
+  activitySettings?: { [settingName: string]: any };
+  return?: boolean;
 }
