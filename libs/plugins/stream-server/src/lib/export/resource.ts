@@ -10,7 +10,7 @@ export function exportStreamResource(
   fromResource: Resource<StreamData>,
   context: ResourceExportContext
 ): FlogoAppModel.Resource<StreamResourceModel.StreamResourceData> {
-  const formattedMetadata = formatMetadata(fromResource.metadata);
+  const formattedMetadata = formatMetadata(fromResource.metadata || {});
   const formattedStages = formatStages(fromResource.data || {}, context.refAgent);
   return {
     id: fromResource.id,
@@ -35,7 +35,7 @@ const exportMetadataAttribute = ({
 });
 
 function formatMetadata(
-  actionMetadata: Metadata
+  actionMetadata: Metadata | {}
 ): StreamResourceModel.StreamResourceData['metadata'] {
   return ['input', 'output'].reduce((formattedMetadata, type) => {
     if (!isEmpty(actionMetadata[type])) {

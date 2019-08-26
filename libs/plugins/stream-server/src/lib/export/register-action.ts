@@ -6,8 +6,9 @@ export function registerAction(
   actionAgent: ExportActionAgent,
   ref: string,
   resourceId: string,
-  { groupBy }: StreamMetadata
+  metadata: StreamMetadata
 ) {
+  const groupBy = metadata && metadata.groupBy;
   actionAgent.registerAction(ref, resourceId, {
     pipelineURI: createResourceUri(resourceId),
     groupBy,
