@@ -10,6 +10,7 @@ export namespace FlogoAppModel {
     properties?: AppProperty[];
     triggers?: Trigger[];
     resources?: Resource[];
+    actions?: Action[];
   }
 
   export interface AppProperty {
@@ -51,7 +52,9 @@ export namespace FlogoAppModel {
   export interface NewHandler {
     settings: Settings;
     action: {
-      ref: string;
+      /* streams-plugin-todo: Need to impose a restriction that either id or ref+settings is required */
+      id?: string;
+      ref?: string;
       settings?: Settings;
       input?: {
         [inputName: string]: any;
@@ -72,5 +75,11 @@ export namespace FlogoAppModel {
         output?: Mapping[];
       };
     };
+  }
+
+  export interface Action<PluginActionSettings = object> {
+    id: string;
+    ref: string;
+    settings: PluginActionSettings;
   }
 }

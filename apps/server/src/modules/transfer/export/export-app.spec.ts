@@ -86,6 +86,13 @@ function getAppToExport(): App {
         description: '',
         data: {},
       },
+      {
+        id: '7lfwPqpJd',
+        name: 'Some stream',
+        type: 'stream',
+        description: '',
+        data: {},
+      },
     ],
   };
 }
@@ -135,6 +142,12 @@ function getExpectedApp(): FlogoAppModel.App {
         id: 'flow:some_flow',
         data: {
           name: 'Some flow',
+        },
+      },
+      {
+        id: 'stream:some_stream',
+        data: {
+          name: 'Some stream',
         },
       },
     ],

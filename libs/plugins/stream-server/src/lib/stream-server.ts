@@ -1,4 +1,4 @@
-import { FlogoAppModel } from '@flogo-web/core';
+import { FlogoAppModel, Resource, ContributionType } from '@flogo-web/core';
 import {
   FlogoPlugin,
   PluginServer,
@@ -6,7 +6,11 @@ import {
   HandlerImportContext,
   HandlerExportContext,
   HookContext,
+  ResourceExportContext,
 } from '@flogo-web/lib-server/core';
+import { StreamData } from '@flogo-web/plugins/stream-core';
+
+import { exportStreamResource, registerAction } from './export';
 
 const RESOURCE_TYPE = 'stream';
 const RESOURCE_REF = 'github.com/project-flogo/stream';
@@ -26,10 +30,18 @@ export const streamPlugin: FlogoPlugin = {
         },
       },
       export: {
-        resource(resource) {
-          return resource;
+        resource(resource: Resource<StreamData>, context: ResourceExportContext) {
+          const ref = context.refAgent.getAliasRef(ContributionType.Action, RESOURCE_REF);
+          registerAction(context.actionAgent, ref, resource.id, resource.metadata);
+          return exportStreamResource(resource, context);
         },
         handler(handler: FlogoAppModel.NewHandler, context: HandlerExportContext) {
+          handler.action = {
+            ...handler.action,
+            id: context.actionAgent.getActionId(context.resource.id),
+            settings: undefined,
+            ref: undefined,
+          };
           return handler;
         },
       },
