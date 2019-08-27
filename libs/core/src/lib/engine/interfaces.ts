@@ -77,7 +77,7 @@ export namespace FlogoAppModel {
     };
   }
 
-  export interface Action<PluginActionSettings = {}> {
+  export interface Action<PluginActionSettings = object> {
     id: string;
     ref: string;
     settings: PluginActionSettings;
