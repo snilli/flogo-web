@@ -13,6 +13,7 @@ import {
   ResourceImporter,
   ValidationErrorDetail,
   ImportsRefAgent,
+  ImportsActionAgent,
 } from '@flogo-web/lib-server/core';
 
 import { constructApp } from '../../../core/models/app';
@@ -21,7 +22,7 @@ import { tryAndAccumulateValidationErrors } from '../common/try-validation-error
 import { IMPORT_SYNTAX } from '../common/parse-imports';
 import { validatorFactory } from './validator';
 import { importTriggers } from './import-triggers';
-import { createFromImports } from './imports';
+import { createFromImports, ExtractActionsAgent } from './imports';
 
 interface DefaultAppModelResource extends FlogoAppModel.Resource {
   data: {
@@ -47,6 +48,7 @@ export function importApp(
     validateImports(rawApp.imports, contributions);
   }
   const importsRefAgent = createFromImports(rawApp.imports, contributions);
+  const actionIds: ImportsActionAgent = new ExtractActionsAgent(rawApp.actions);
   const newApp = cleanAndValidateApp(
     rawApp as FlogoAppModel.App,
     Array.from(contributions.values()),

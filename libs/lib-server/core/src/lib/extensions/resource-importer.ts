@@ -45,3 +45,8 @@ export interface ImportsRefAgent {
    */
   getPackageRef(contribType: ContributionType, aliasRef: string): string;
 }
+
+export interface ImportsActionAgent {
+  getRefForId(actionId: string): string;
+  getSettingsForId(actionId: string): FlogoAppModel.Action['settings'];
+}
