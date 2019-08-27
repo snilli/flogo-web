@@ -8,12 +8,14 @@ import { select, Store } from '@ngrx/store';
 import { takeUntil } from 'rxjs/operators';
 
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { ContribInstallerService } from '@flogo-web/lib-client/contrib-installer';
 import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 
 import {
   ChangeDescription,
   ChangeName,
   UpdateMetadata,
+  ContributionInstalled,
   FlogoStreamState,
   selectStreamState,
   StreamService,
@@ -39,7 +41,11 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
-  constructor(private store: Store<AppState>, private streamService: StreamService) {}
+  constructor(
+    private store: Store<AppState>,
+    private streamService: StreamService,
+    private contribInstallerService: ContribInstallerService
+  ) {}
 
   ngOnInit() {
     this.store
@@ -48,6 +54,12 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       .subscribe(streamState => {
         this.streamState = streamState;
       });
+
+    this.contribInstallerService.contribInstalled$
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(contribDetails =>
+        this.store.dispatch(new ContributionInstalled(contribDetails))
+      );
   }
 
   navigateToApp() {

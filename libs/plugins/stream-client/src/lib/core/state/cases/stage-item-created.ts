@@ -2,8 +2,8 @@ import { DiagramGraph, GraphNode, NodeType } from '@flogo-web/lib-client/core';
 
 import { FlogoStreamState } from '../stream.state';
 import { StageItemCreated } from '../stream.actions';
-import { ITEMS_DICTIONARY_NAME, GRAPH_NAME } from '../stream.selectors';
 import { makeStageSelection } from '../../models/stream/selection';
+import { ITEMS_DICTIONARY_NAME, GRAPH_NAME } from '../../constants';
 
 export function stageItemCreated(
   state: FlogoStreamState,

@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 export interface StageAddOptions {
   activities$: Observable<Activity[]>;
-  selectActivity: (activityRef: string) => void;
+  selectActivity: (ref: string) => void;
   updateActiveState: (isOpen: boolean) => void;
   cancel: () => void;
 }

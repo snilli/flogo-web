@@ -25,6 +25,7 @@ import { TriggersModule as FlogoStreamTriggersModule } from './triggers/triggers
 import { StreamDiagramComponent } from './stream-diagram';
 import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
+import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { StageAddModule } from './stage-add';
     ]),
     StageAddModule,
     MonacoEditorModule,
+    StageConfiguratorModule,
   ],
   providers: [
     StreamService,

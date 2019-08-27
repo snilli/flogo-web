@@ -17,6 +17,7 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     triggers: originalTriggers,
     currentSelection,
     triggerConfigure,
+    stageConfigure,
   } = resource;
   const { triggers, handlers } = normalizeTriggersAndHandlersForResource(
     id,
@@ -39,5 +40,6 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     mainItems: items,
     currentSelection,
     triggerConfigure,
+    stageConfigure,
   };
 }

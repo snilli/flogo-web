@@ -15,7 +15,7 @@ import {
   StreamMetadata,
   MapperSchema,
   Properties as MapperSchemaProperties,
-} from '../../../task-configurator/models';
+} from '../../../stage-configurator/models';
 import { Mappings, MapExpression } from '../models';
 
 export type MappingsValidatorFn = (mappings: Mappings) => boolean;

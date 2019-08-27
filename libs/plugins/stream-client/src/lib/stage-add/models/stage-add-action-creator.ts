@@ -78,12 +78,10 @@ function createStage({ activitySchema, mainItems }) {
 function createItem(stage): Item {
   return {
     id: stage.id,
-    type: stage.type,
     ref: stage.ref,
     name: stage.name,
     description: stage.description,
     inputMappings: stage.inputMappings,
     output: stage.outputMappings,
-    return: stage.return,
   };
 }

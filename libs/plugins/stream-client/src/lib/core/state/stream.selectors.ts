@@ -13,9 +13,7 @@ import { FlogoStreamState } from './stream.state';
 import { InstalledFunctionSchema } from '../interfaces';
 import { CurrentSelection, SelectionType } from '../models';
 import { Activity } from '../../stage-add';
-
-export const GRAPH_NAME = 'mainGraph';
-export const ITEMS_DICTIONARY_NAME = 'mainItems';
+import { GRAPH_NAME } from '../constants';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
@@ -126,4 +124,9 @@ export const getInstalledActivities = createSelector(
       .sort((activity1, activity2) =>
         ('' + activity1.title).localeCompare(activity2.title)
       )
+);
+
+export const selectStageConfigure = createSelector(
+  selectStreamState,
+  (state: FlogoStreamState) => state.stageConfigure
 );

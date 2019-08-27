@@ -8,7 +8,7 @@ import {
   MapperState,
   OutputContext,
 } from '../../models';
-import { MapperSchema } from '../../../../task-configurator/models';
+import { MapperSchema } from '../../../../stage-configurator/models';
 import { ArrayMappingHelper, ArrayMappingInfo } from '../../models/array-mapping';
 import { AttributeDescriptor } from '../../utils';
 import { TreeService } from '../tree.service';

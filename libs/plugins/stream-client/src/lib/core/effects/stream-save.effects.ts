@@ -23,7 +23,8 @@ export class StreamSaveEffects {
       StreamActionType.ChangeDescription,
       StreamActionType.DeleteStage,
       StreamActionType.UpdateMetadata,
-      StreamActionType.StageItemCreated
+      StreamActionType.StageItemCreated,
+      StreamActionType.CommitStageConfiguration
     ),
     switchMap(action => this.saveStream(action)),
     filter(isSaved => isSaved),

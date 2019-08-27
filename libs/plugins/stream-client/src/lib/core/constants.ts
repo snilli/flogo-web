@@ -3,6 +3,9 @@ export enum FLOGO_TASK_TYPE {
   TASK = 1,
 }
 
+export const GRAPH_NAME = 'mainGraph';
+export const ITEMS_DICTIONARY_NAME = 'mainItems';
+
 export const FLOGO_ERROR_ROOT_NAME = '__error-trigger';
 
 export const TRIGGER_MENU_OPERATION = {
