@@ -22,8 +22,7 @@ import {
 } from '@flogo-web/lib-client/core';
 
 import { isMapperActivity } from '@flogo-web/plugins/flow-core';
-
-import { FlowActions, FlowSelectors, FlowState } from '../core/state';
+import { FlowSelectors, FlowState } from '../core/state';
 import { TestRunnerService } from '../core/test-runner/test-runner.service';
 import { ItemActivityTask } from '../core/interfaces/flow';
 
@@ -33,8 +32,6 @@ import { debugPanelAnimations } from './debug-panel.animations';
 import { mergeFormWithOutputs } from './utils';
 import { FieldsInfo } from './fields-info';
 import { DebugActivityTask, combineToDebugActivity } from './debug-activity-task';
-import { TogglerRefService } from './toggler-ref.service';
-import { DEFAULT_MINIMIZED_HEIGHT } from './variables';
 
 const SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
 
@@ -81,17 +78,14 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
   isEndOfFlow: boolean;
   isRestartableTask$: Observable<boolean>;
   canRestart: boolean;
-  toggleButtonAnimationParams = { minimizedHeight: DEFAULT_MINIMIZED_HEIGHT };
 
   private destroy$ = SingleEmissionSubject.create();
-  viewState = 'empty';
 
   constructor(
     private store: Store<FlowState>,
     private formBuilder: FormBuilder,
     private attributeFormBuilder: FormBuilderService,
-    private testRunner: TestRunnerService,
-    private togglerRef: TogglerRefService
+    private testRunner: TestRunnerService
   ) {}
 
   ngOnInit() {
