@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule as NgCommonModule } from '@angular/common';
 import { SharedModule } from '@flogo-web/lib-client/common';
 import { FormBuilderModule as DynamicFormModule } from '../shared/dynamic-form';
-
-import { PanelContentComponent } from './panel-content/panel-content.component';
 import { FieldsComponent } from './fields/fields.component';
 import { ErrorComponent } from './error/error.component';
 import { ToggleIconComponent } from './header-toggler/toggle-icon.component';
@@ -16,7 +14,6 @@ import { TogglerRefService } from './toggler-ref.service';
 @NgModule({
   imports: [NgCommonModule, SharedModule, DynamicFormModule],
   declarations: [
-    PanelContentComponent,
     FieldsComponent,
     ErrorComponent,
     ToggleIconComponent,

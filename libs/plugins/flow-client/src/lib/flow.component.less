@@ -11,6 +11,17 @@
   flex-grow: 2;
   height: calc(100vh - @size-height-nav-bar);
 }
+//******************************************************//
+//This styles should be removed once the flogo-context-panel-area component is updated 
+//i.e., when this style can be controlled from this component.
+:host ::ng-deep flogo-context-panel-trigger {
+  left: 182px;
+}
+// This style should be removed once the 'overflow' property is removed from '.content' element of flogo-context-panel-area component
+:host ::ng-deep flogo-context-panel-area .content {
+  overflow: visible;
+}
+//******************************************************//
 
 .canvas-flow {
   display: flex;
@@ -47,7 +58,8 @@
 
 .debug-panel-container {
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
+  height: 100%;
 }
 
 .tabs {
@@ -106,4 +118,19 @@
 
 .flow-debugging {
   margin-right: 1rem;
+}
+
+.primary-area{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.panel-content {
+  padding: 0 1em;
+}
+
+.context-panel-container{
+  flex: 1;
+  overflow: hidden
 }

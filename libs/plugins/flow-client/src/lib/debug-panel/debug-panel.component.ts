@@ -1,6 +1,5 @@
 import { isEmpty, fromPairs } from 'lodash';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AnimationEvent } from '@angular/animations';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable, pipe } from 'rxjs';
@@ -38,8 +37,6 @@ import { TogglerRefService } from './toggler-ref.service';
 import { DEFAULT_MINIMIZED_HEIGHT } from './variables';
 
 const SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
-const STATUS_OPEN = 'open';
-const STATUS_CLOSED = 'closed';
 
 const mapFormInputChangesToSaveAction = (
   store,
@@ -70,18 +67,24 @@ const mapFormInputChangesToSaveAction = (
 })
 export class DebugPanelComponent implements OnInit, OnDestroy {
   @ViewChild('content', { static: true }) content: ElementRef;
-  panelStatus: 'open' | 'closed' = STATUS_CLOSED;
   activity$: Observable<DebugActivityTask>;
   fields$: Observable<FieldsInfo>;
+  fields: FieldsInfo;
   isRunDisabled$: Observable<boolean>;
+  runDisabled: boolean;
   flowHasRun$: Observable<boolean>;
+  flowHasRun: boolean;
   activityHasRun$: Observable<boolean>;
   executionErrrors$: Observable<Array<string>>;
+  executionErrors: Array<string>;
   isEndOfFlow$: Observable<boolean>;
+  isEndOfFlow: boolean;
   isRestartableTask$: Observable<boolean>;
+  canRestart: boolean;
   toggleButtonAnimationParams = { minimizedHeight: DEFAULT_MINIMIZED_HEIGHT };
 
   private destroy$ = SingleEmissionSubject.create();
+  viewState = 'empty';
 
   constructor(
     private store: Store<FlowState>,
@@ -100,19 +103,35 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
     this.isRunDisabled$ = selectAndShare(
       FlowSelectors.getIsRunDisabledForSelectedActivity
     );
+    this.isRunDisabled$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(runDisabled => (this.runDisabled = runDisabled));
     this.executionErrrors$ = selectAndShare(
       FlowSelectors.getCurrentActivityExecutionErrors
     );
-    this.isRestartableTask$ = selectAndShare(FlowSelectors.getIsRestartableTask);
+    this.executionErrrors$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(executionErrors => (this.executionErrors = executionErrors));
 
+    this.isRestartableTask$ = selectAndShare(FlowSelectors.getIsRestartableTask);
+    this.isRestartableTask$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(canRestart => (this.canRestart = canRestart));
     const schema$ = selectAndShare(FlowSelectors.getSelectedActivitySchema);
     const selectedActivity$ = selectAndShare(FlowSelectors.getSelectedActivity);
     this.activity$ = combineLatest(schema$, selectedActivity$).pipe(
       combineToDebugActivity(),
       shareReplay(1)
     );
+
     this.flowHasRun$ = selectAndShare(FlowSelectors.getFlowHasRun);
+    this.flowHasRun$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(flowHasRun => (this.flowHasRun = flowHasRun));
     this.isEndOfFlow$ = schema$.pipe(map(isMapperActivity));
+    this.isEndOfFlow$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isEndOfFlow => (this.isEndOfFlow = isEndOfFlow));
     const form$: Observable<null | FieldsInfo> = schema$.pipe(
       this.mapStateToForm(),
       shareReplay(1)
@@ -125,50 +144,19 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
       this.mergeToFormFields(),
       shareReplay(1)
     );
-
+    this.fields$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(fields => (this.fields = fields));
     form$
       .pipe(
         mapFormInputChangesToSaveAction(this.store, selectedActivity$),
         takeUntil(this.destroy$)
       )
       .subscribe(action => this.store.dispatch(action));
-
-    this.store
-      .pipe(
-        select(FlowSelectors.selectDebugPanelOpen),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(isOpen => {
-        this.panelStatus = isOpen ? STATUS_OPEN : STATUS_CLOSED;
-        this.adjustPositionForAnimation();
-      });
-  }
-
-  private adjustPositionForAnimation() {
-    const minimizedHeight = this.togglerRef.getBottomDistance();
-    this.toggleButtonAnimationParams = { minimizedHeight };
   }
 
   ngOnDestroy() {
     this.destroy$.emitAndComplete();
-  }
-
-  openPanel() {
-    if (!this.isOpen) {
-      this.changePanelState(true);
-    }
-  }
-
-  closePanel() {
-    if (this.isOpen) {
-      this.changePanelState(false);
-    }
-  }
-
-  onAnimationEnd(event: AnimationEvent) {
-    if (event.toState === STATUS_OPEN) {
-      this.scrollContextElementIntoView();
-    }
   }
 
   run() {
@@ -180,14 +168,6 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe();
-  }
-
-  get isOpen(): boolean {
-    return this.panelStatus === STATUS_OPEN;
-  }
-
-  private changePanelState(isOpen: boolean) {
-    this.store.dispatch(new FlowActions.DebugPanelStatusChange({ isOpen }));
   }
 
   private mapStateToForm() {

@@ -55,6 +55,11 @@ interface TaskContext {
   ],
 })
 export class FlowComponent implements OnInit, OnDestroy {
+  isOpen: boolean;
+
+  setPanelState(isOpen: boolean) {
+    this.isOpen = isOpen;
+  }
   @HostBinding('@initialAnimation') initialAnimation = true;
   @ViewChild('inputSchemaModal', { static: true })
   defineInputSchema: ParamsSchemaComponent;

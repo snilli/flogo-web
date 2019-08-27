@@ -1,43 +1,60 @@
-<div
-  class="content"
-  #content
-  [@wrappedContentState]="panelStatus"
-  (@wrappedContentState.done)="onAnimationEnd($event)"
->
-  <ng-content></ng-content>
-</div>
-<div
-  class="debug-panel-container"
-  [class.is-open]="isOpen"
-  [@debugPanelContainerState]="panelStatus"
->
-  <div
-    class="debug-panel-container__content"
-    *ngIf="isOpen"
-    [class.is-open]="isOpen"
-    [@debugPanelState]="{
-      value: panelStatus,
-      params: toggleButtonAnimationParams
-    }"
-  >
-    <flogo-flow-debug-panel-header-toggler
-      [isOpen]="isOpen"
-      (open)="openPanel()"
-      (close)="closePanel()"
-    >
-    </flogo-flow-debug-panel-header-toggler>
-    <flogo-flow-debug-panel-content
-      *ngIf="isOpen"
-      class="js-debug-panel-content debug-panel__content"
-      [activity]="activity$ | async"
-      [fields]="fields$ | async"
-      [executionErrors]="executionErrrors$ | async"
-      [activityHasRun]="activityHasRun$ | async"
-      [flowHasRun]="flowHasRun$ | async"
-      [canRestart]="isRestartableTask$ | async"
-      [runDisabled]="isRunDisabled$ | async"
-      [isEndOfFlow]="isEndOfFlow$ | async"
-      (runFromHere)="run()"
-    ></flogo-flow-debug-panel-content>
+<div class="js-debug-panel-content debug-panel__content content">
+  <div *ngIf="(activity$ | async) as activity; else emptyText" class="activity">
+    <div class="activity__info-group">
+      <div class="activity__name">
+        <span>{{ activity.name }}</span>
+        <a
+          class="schema-homepage"
+          *ngIf="activity.schemaHomepage"
+          [href]="activity.schemaHomepage"
+          target="_blank"
+        >
+          <i class="flogo-icon-info"></i>
+        </a>
+      </div>
+      <div class="activity__id">ID: {{ activity.id }}</div>
+      <div class="activity__description">{{ activity.description }}</div>
+      <button
+        *ngIf="canRestart"
+        class="flogo-button--secondary btn-run"
+        [disabled]="runDisabled"
+        (click)="run()"
+      >
+        {{ 'DEBUGGER:BUTTON-RUN-FROM-TILE' | translate }}
+      </button>
+    </div>
+    <ng-container
+      *ngIf="executionErrors?.length > 0; then errorDisplay; else activityFields"
+    ></ng-container>
   </div>
+  <ng-template #emptyText>
+    <div class="empty-text">
+      <div class="empty-text__lead">{{ 'DEBUGGER:EMPTY-STATE-TITLE' | translate }}</div>
+      <div class="empty-text__detail">
+        {{ 'DEBUGGER:EMPTY-STATE-DESCRIPTION' | translate }}
+      </div>
+    </div>
+  </ng-template>
 </div>
+
+<ng-template #errorDisplay>
+  <flogo-flow-debug-panel-error
+    class="activity__field-group"
+    [errors]="executionErrors"
+  ></flogo-flow-debug-panel-error>
+</ng-template>
+<ng-template #activityFields>
+  <ng-container *ngIf="!isEndOfFlow; else endOfFlow">
+    <flogo-flow-debug-panel-fields
+      class="activity__fields"
+      [fields]="fields"
+    ></flogo-flow-debug-panel-fields>
+  </ng-container>
+</ng-template>
+<ng-template #endOfFlow>
+  <div class="empty-text">
+    <div class="empty-text__lead">
+      {{ 'DEBUGGER:EMPTY-STATE-END-OF-FLOW' | translate }}
+    </div>
+  </div>
+</ng-template>
