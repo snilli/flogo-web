@@ -15,9 +15,9 @@
       <div class="activity__id">ID: {{ activity.id }}</div>
       <div class="activity__description">{{ activity.description }}</div>
       <button
-        *ngIf="canRestart"
+        *ngIf="(isRestartableTask$ | async)"
         class="flogo-button--secondary btn-run"
-        [disabled]="runDisabled"
+        [disabled]="isRunDisabled$ | async"
         (click)="run()"
       >
         {{ 'DEBUGGER:BUTTON-RUN-FROM-TILE' | translate }}
@@ -44,10 +44,10 @@
   ></flogo-flow-debug-panel-error>
 </ng-template>
 <ng-template #activityFields>
-  <ng-container *ngIf="!isEndOfFlow; else endOfFlow">
+  <ng-container *ngIf="!(isEndOfFlow$ | async); else endOfFlow">
     <flogo-flow-debug-panel-fields
       class="activity__fields"
-      [fields]="fields"
+      [fields]="fields$ | async"
     ></flogo-flow-debug-panel-fields>
   </ng-container>
 </ng-template>

@@ -66,18 +66,11 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
   @ViewChild('content', { static: true }) content: ElementRef;
   activity$: Observable<DebugActivityTask>;
   fields$: Observable<FieldsInfo>;
-  fields: FieldsInfo;
   isRunDisabled$: Observable<boolean>;
-  runDisabled: boolean;
-  flowHasRun$: Observable<boolean>;
-  flowHasRun: boolean;
   activityHasRun$: Observable<boolean>;
-  executionErrrors$: Observable<Array<string>>;
   executionErrors: Array<string>;
   isEndOfFlow$: Observable<boolean>;
-  isEndOfFlow: boolean;
   isRestartableTask$: Observable<boolean>;
-  canRestart: boolean;
 
   private destroy$ = SingleEmissionSubject.create();
 
@@ -97,35 +90,19 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
     this.isRunDisabled$ = selectAndShare(
       FlowSelectors.getIsRunDisabledForSelectedActivity
     );
-    this.isRunDisabled$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(runDisabled => (this.runDisabled = runDisabled));
-    this.executionErrrors$ = selectAndShare(
-      FlowSelectors.getCurrentActivityExecutionErrors
-    );
-    this.executionErrrors$
+
+    selectAndShare(FlowSelectors.getCurrentActivityExecutionErrors)
       .pipe(takeUntil(this.destroy$))
       .subscribe(executionErrors => (this.executionErrors = executionErrors));
 
     this.isRestartableTask$ = selectAndShare(FlowSelectors.getIsRestartableTask);
-    this.isRestartableTask$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(canRestart => (this.canRestart = canRestart));
     const schema$ = selectAndShare(FlowSelectors.getSelectedActivitySchema);
     const selectedActivity$ = selectAndShare(FlowSelectors.getSelectedActivity);
-    this.activity$ = combineLatest(schema$, selectedActivity$).pipe(
+    this.activity$ = combineLatest([schema$, selectedActivity$]).pipe(
       combineToDebugActivity(),
       shareReplay(1)
     );
-
-    this.flowHasRun$ = selectAndShare(FlowSelectors.getFlowHasRun);
-    this.flowHasRun$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(flowHasRun => (this.flowHasRun = flowHasRun));
     this.isEndOfFlow$ = schema$.pipe(map(isMapperActivity));
-    this.isEndOfFlow$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(isEndOfFlow => (this.isEndOfFlow = isEndOfFlow));
     const form$: Observable<null | FieldsInfo> = schema$.pipe(
       this.mapStateToForm(),
       shareReplay(1)
@@ -134,13 +111,10 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
       FlowSelectors.getSelectedActivityExecutionResult
     );
     this.activityHasRun$ = executionResult$.pipe(map(Boolean));
-    this.fields$ = combineLatest(form$, selectedActivity$, executionResult$).pipe(
+    this.fields$ = combineLatest([form$, selectedActivity$, executionResult$]).pipe(
       this.mergeToFormFields(),
       shareReplay(1)
     );
-    this.fields$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(fields => (this.fields = fields));
     form$
       .pipe(
         mapFormInputChangesToSaveAction(this.store, selectedActivity$),
