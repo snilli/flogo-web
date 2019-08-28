@@ -33,8 +33,6 @@ import { mergeFormWithOutputs } from './utils';
 import { FieldsInfo } from './fields-info';
 import { DebugActivityTask, combineToDebugActivity } from './debug-activity-task';
 
-const SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
-
 const mapFormInputChangesToSaveAction = (
   store,
   activity$: Observable<ItemActivityTask>
@@ -202,13 +200,5 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
         output: outputs && outputs.fieldsWithControlType,
       },
     };
-  }
-
-  private scrollContextElementIntoView() {
-    const contentElement: Element = this.content.nativeElement;
-    const selection = contentElement.querySelector(SELECTOR_FOR_CURRENT_ELEMENT);
-    if (selection) {
-      selection.scrollIntoView({ behavior: 'smooth' });
-    }
   }
 }
