@@ -1,6 +1,8 @@
 import { ExportActionAgent } from '@flogo-web/lib-server/core';
-import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 import { createResourceUri } from '@flogo-web/core';
+
+import { StreamMetadata, StreamActionSettings } from '@flogo-web/plugins/stream-core';
+
 import { STREAM_POINTER } from '../constants';
 
 export function registerAction(
@@ -10,7 +12,7 @@ export function registerAction(
   metadata: StreamMetadata
 ) {
   const groupBy = metadata && metadata.groupBy;
-  actionAgent.registerAction(ref, resourceId, {
+  actionAgent.registerAction<StreamActionSettings>(ref, resourceId, {
     [STREAM_POINTER]: createResourceUri(resourceId),
     groupBy,
   });

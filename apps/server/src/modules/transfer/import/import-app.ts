@@ -13,7 +13,7 @@ import {
   ResourceImporter,
   ValidationErrorDetail,
   ImportsRefAgent,
-  ImportsActionAgent,
+  ImportsActionsManager,
 } from '@flogo-web/lib-server/core';
 
 import { constructApp } from '../../../core/models/app';
@@ -22,7 +22,7 @@ import { tryAndAccumulateValidationErrors } from '../common/try-validation-error
 import { IMPORT_SYNTAX } from '../common/parse-imports';
 import { validatorFactory } from './validator';
 import { importTriggers } from './import-triggers';
-import { createFromImports, ExtractActionsAgent } from './imports';
+import { createFromImports, ExtractActions } from './imports';
 
 interface DefaultAppModelResource extends FlogoAppModel.Resource {
   data: {
@@ -48,7 +48,7 @@ export function importApp(
     validateImports(rawApp.imports, contributions);
   }
   const importsRefAgent = createFromImports(rawApp.imports, contributions);
-  const actionIds: ImportsActionAgent = new ExtractActionsAgent(rawApp.actions);
+  const actionsManager: ImportsActionsManager = new ExtractActions(rawApp.actions);
   const newApp = cleanAndValidateApp(
     rawApp as FlogoAppModel.App,
     Array.from(contributions.values()),
@@ -64,7 +64,12 @@ export function importApp(
   const { triggers, normalizedTriggerIds, errors: handlerErrors } = importTriggers(
     rawApp.triggers || [],
     normalizedResourceIds,
-    createHandlerImportResolver(resolveImporter, contributions, importsRefAgent),
+    createHandlerImportResolver(
+      resolveImporter,
+      contributions,
+      importsRefAgent,
+      actionsManager
+    ),
     generateId,
     now,
     importsRefAgent
@@ -76,6 +81,7 @@ export function importApp(
     normalizedResourceIds: normalizedResourceIds,
     normalizedTriggerIds: normalizedTriggerIds,
     importsRefAgent,
+    actionsManager,
   };
   const resolveImportHook = createResourceImportResolver(resolveImporter, context);
   const { resources: importedResources, errors: resourceErrors } = applyImportHooks(
@@ -239,8 +245,12 @@ function createResourceImportResolver(
 function createHandlerImportResolver(
   resolveResourceImporter: ImportersResolver,
   contributions: Map<string, ContributionSchema>,
-  importsRefAgent: ImportsRefAgent
+  importsRefAgent: ImportsRefAgent,
+  actionsManager: ImportsActionsManager
 ) {
+  const getResourceReference = action => {
+    return action.ref ? action.ref : actionsManager.getRefForId(action.id);
+  };
   return (
     triggerRef: string,
     handler: FlogoAppModel.Handler,
@@ -248,7 +258,7 @@ function createHandlerImportResolver(
   ): Handler => {
     handler.action.ref = importsRefAgent.getPackageRef(
       ContributionType.Action,
-      handler.action.ref
+      getResourceReference(handler.action)
     );
     const ref = handler.action && handler.action.ref;
     const resourceImporter = resolveResourceImporter.byRef(ref);
@@ -257,6 +267,7 @@ function createHandlerImportResolver(
         rawHandler,
         triggerSchema: contributions.get(triggerRef),
         contributions,
+        actionsManager,
       });
     }
     throw new ValidationError(

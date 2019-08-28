@@ -11,12 +11,14 @@ export interface ResourceImportContext {
   normalizedTriggerIds: Map<string, string>;
   normalizedResourceIds: Map<string, string>;
   importsRefAgent: ImportsRefAgent;
+  actionsManager: ImportsActionsManager;
 }
 
 export interface HandlerImportContext {
   contributions: Map<string, ContributionSchema>;
   triggerSchema: ContributionSchema;
   rawHandler: FlogoAppModel.Handler;
+  actionsManager: ImportsActionsManager;
 }
 
 export interface ResourceImporter<TResourceData = unknown> {
@@ -46,7 +48,7 @@ export interface ImportsRefAgent {
   getPackageRef(contribType: ContributionType, aliasRef: string): string;
 }
 
-export interface ImportsActionAgent {
+export interface ImportsActionsManager {
   getRefForId(actionId: string): string;
   getSettingsForId(actionId: string): FlogoAppModel.Action['settings'];
 }

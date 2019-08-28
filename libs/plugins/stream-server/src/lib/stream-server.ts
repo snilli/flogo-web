@@ -11,6 +11,7 @@ import {
 import { StreamData } from '@flogo-web/plugins/stream-core';
 
 import { exportStreamResource, registerAction } from './export';
+import { importHandler } from './import';
 
 const RESOURCE_TYPE = 'stream';
 const RESOURCE_REF = 'github.com/project-flogo/stream';
@@ -25,8 +26,8 @@ export const streamPlugin: FlogoPlugin = {
         resource(data: any, context: ResourceImportContext) {
           return data;
         },
-        handler(data: any, context: HandlerImportContext) {
-          return data;
+        handler(handler: FlogoAppModel.Handler, context: HandlerImportContext) {
+          return importHandler(handler, context);
         },
       },
       export: {
