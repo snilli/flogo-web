@@ -6,16 +6,10 @@ import { FieldsComponent } from './fields/fields.component';
 import { ErrorComponent } from './error/error.component';
 
 import { DebugPanelComponent } from './debug-panel.component';
-import { TogglerRefService } from './toggler-ref.service';
 
 @NgModule({
   imports: [NgCommonModule, SharedModule, DynamicFormModule],
-  declarations: [
-    FieldsComponent,
-    ErrorComponent,
-    DebugPanelComponent,
-  ],
-  providers: [TogglerRefService],
+  declarations: [FieldsComponent, ErrorComponent, DebugPanelComponent],
   exports: [DebugPanelComponent],
 })
 export class DebugPanelModule {}
