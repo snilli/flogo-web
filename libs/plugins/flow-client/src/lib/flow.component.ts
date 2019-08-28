@@ -26,12 +26,12 @@ import {
   FlogoFlowService as FlowsService,
 } from './core';
 import { HandlerType, SelectionType, mergeItemWithSchema } from './core/models';
-import { FlowActions, FlowState } from './core/state';
+import { FlowActions, FlowState, FlowSelectors } from './core/state';
 import { FlowMetadata } from './task-configurator/models';
 import { ParamsSchemaComponent } from './params-schema';
 import { of } from 'rxjs';
 import { ContribInstallerService } from '@flogo-web/lib-client/contrib-installer';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
 interface TaskContext {
   isTrigger: boolean;
@@ -56,15 +56,12 @@ interface TaskContext {
 })
 export class FlowComponent implements OnInit, OnDestroy {
   isOpen: boolean;
-
-  setPanelState(isOpen: boolean) {
-    this.isOpen = isOpen;
-  }
+  SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
   @HostBinding('@initialAnimation') initialAnimation = true;
   @ViewChild('inputSchemaModal', { static: true })
   defineInputSchema: ParamsSchemaComponent;
-  public flowState: FlowState;
-  public runnableInfo: {
+  flowState: FlowState;
+  runnableInfo: {
     disabled: boolean;
     disableReason?: string;
   };
@@ -75,8 +72,8 @@ export class FlowComponent implements OnInit, OnDestroy {
   flowName: string;
   backToAppHover = false;
 
-  public app: any;
-  public isflowMenuOpen = false;
+  app: any;
+  isflowMenuOpen = false;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
@@ -114,6 +111,14 @@ export class FlowComponent implements OnInit, OnDestroy {
       .subscribe(contribDetails =>
         this.store.dispatch(new FlowActions.ContributionInstalled(contribDetails))
       );
+    this.store
+      .pipe(
+        select(FlowSelectors.selectDebugPanelOpen),
+        takeUntil(this.ngOnDestroy$)
+      )
+      .subscribe(isOpen => {
+        this.isOpen = isOpen;
+      });
   }
 
   toggleFlowMenu() {
@@ -127,6 +132,10 @@ export class FlowComponent implements OnInit, OnDestroy {
   private onFlowStateUpdate(nextState: FlowState) {
     const prevState = this.flowState;
     this.flowState = nextState;
+  }
+
+  private changePanelState(isOpen: boolean) {
+    this.store.dispatch(new FlowActions.DebugPanelStatusChange({ isOpen }));
   }
 
   ngOnDestroy() {

@@ -68,9 +68,9 @@
     class="context-panel-container"
     [isOpen]="isOpen"
     panelTitle="Context panel"
-    contextElementSelector=".scroll-to-me"
-    (open)="setPanelState(true)"
-    (close)="setPanelState(false)"
+    [contextElementSelector]="SELECTOR_FOR_CURRENT_ELEMENT"
+    (open)="changePanelState(true)"
+    (close)="changePanelState(false)"
   >
     <div context-panel-role="primary-area" class="primary-area">
       <ng-container *ngTemplateOutlet="flowContent"></ng-container>
