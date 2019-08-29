@@ -4,21 +4,14 @@ import { normalizeTriggersAndHandlersForResource } from '@flogo-web/lib-client/c
 import { ContributionSchema } from '@flogo-web/core';
 
 import { makeStageItems, makeGraphNodes } from './graph-and-items';
+import { ApiStreamResource } from '../interfaces';
 
-/* streams-plugin-todo: Replace any with API resource interface of Stream */
-export function generateStateFromResource(resource: any, schemas: ContributionSchema[]) {
+export function generateStateFromResource(
+  resource: ApiStreamResource,
+  schemas: ContributionSchema[]
+) {
   const schemaDefs = fromPairs(schemas.map(schema => [schema.ref, schema]));
-  //streams-plugin-todo: check about currentSelection and triggerConfigure in resource
-  const {
-    id,
-    name,
-    description,
-    app,
-    triggers: originalTriggers,
-    currentSelection,
-    triggerConfigure,
-    stageConfigure,
-  } = resource;
+  const { id, name, description, app, triggers: originalTriggers } = resource;
   const { triggers, handlers } = normalizeTriggersAndHandlersForResource(
     id,
     originalTriggers
@@ -38,8 +31,5 @@ export function generateStateFromResource(resource: any, schemas: ContributionSc
     schemas: schemaDefs,
     mainGraph: graph,
     mainItems: items,
-    currentSelection,
-    triggerConfigure,
-    stageConfigure,
   };
 }

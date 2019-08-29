@@ -5,7 +5,7 @@ import { removeStage } from './cases/remove-stage';
 import { cleanDanglingTaskOutputMappings } from './clean-dangling-tasks-output-mappings';
 import { stageItemCreated } from './cases/stage-item-created';
 import { SelectionType } from '../models';
-import { commitStageConfiguration } from '../../stage-configurator/models/commit-stage-configuration';
+import { commitStageConfiguration } from '../../stage-configurator/models';
 
 export function streamReducer(
   state: FlogoStreamState = INITIAL_STREAM_STATE,

@@ -1,4 +1,4 @@
-import { cloneDeep, defaultsDeep } from 'lodash';
+import { cloneDeep, defaultsDeep, isEmpty } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { switchMap, takeUntil, skip } from 'rxjs/operators';
 import { Subscription, of } from 'rxjs';
@@ -149,6 +149,8 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     );
     this.initOutputMappings(outputPropsToMap, outputMappings);
 
+    this.setSelectTab(settingPropsToMap);
+
     this.open();
   }
 
@@ -250,6 +252,15 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     return { controller, subscription };
   }
 
+  private setSelectTab(settingPropsToMap) {
+    if (!isEmpty(settingPropsToMap)) {
+      this.selectTab(TASK_TABS.SETTINGS);
+    } else {
+      this.tabs.get(TASK_TABS.SETTINGS).enabled = false;
+      this.selectTab(TASK_TABS.INPUT_MAPPINGS);
+    }
+  }
+
   private resetState() {
     if (this.tabs) {
       this.tabs.clear();
@@ -260,7 +271,6 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
       OUTPUT_MAPPINGS_TAB_INFO,
     ];
     this.tabs = Tabs.create(tabsInfo);
-    this.selectTab(TASK_TABS.SETTINGS);
   }
 
   selectTab(name: string) {
