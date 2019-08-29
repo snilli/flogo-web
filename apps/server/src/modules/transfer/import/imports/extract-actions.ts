@@ -1,5 +1,8 @@
 import { FlogoAppModel } from '@flogo-web/core';
-import { ImportsActionsManager } from '@flogo-web/lib-server/core';
+import {
+  ImportsActionsManager,
+  parseResourceIdFromResourceUri,
+} from '@flogo-web/lib-server/core';
 
 type ApplicationAction = FlogoAppModel.Action;
 
@@ -13,6 +16,19 @@ export class ExtractActions implements ImportsActionsManager {
   getSettingsForId(actionId: string): ApplicationAction['settings'] {
     const actionForId = this.actionIds.get(actionId);
     return actionForId && actionForId.settings;
+  }
+
+  getSettingsForResourceId(
+    resourceId: string,
+    propertyName: string
+  ): ApplicationAction['settings'] {
+    const actionForResource = Array.from(this.actionIds.values()).find(action => {
+      const settings = action.settings;
+      return (
+        settings && parseResourceIdFromResourceUri(settings[propertyName]) === resourceId
+      );
+    });
+    return actionForResource && actionForResource.settings;
   }
 
   getRefForId(actionId: string): string {

@@ -51,4 +51,8 @@ export interface ImportsRefAgent {
 export interface ImportsActionsManager {
   getRefForId(actionId: string): string;
   getSettingsForId(actionId: string): FlogoAppModel.Action['settings'];
+  getSettingsForResourceId(
+    resourceId: string,
+    propertyName: string
+  ): FlogoAppModel.Action['settings'];
 }
