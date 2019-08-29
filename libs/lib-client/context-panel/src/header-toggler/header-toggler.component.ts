@@ -16,7 +16,7 @@ import {
 })
 export class HeaderTogglerComponent {
   @Input() isOpen: boolean;
-  @Input() title: string;
+  @Input() label: string;
   @Output() open = new EventEmitter();
   @Output() close = new EventEmitter();
 

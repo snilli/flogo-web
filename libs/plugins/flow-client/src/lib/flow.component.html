@@ -67,8 +67,9 @@
   <flogo-context-panel-area
     class="context-panel-container"
     [isOpen]="isOpen"
-    panelTitle="Context panel"
+    panelTitle="Testing and Debugging"
     [contextElementSelector]="SELECTOR_FOR_CURRENT_ELEMENT"
+    [triggerStyles]="triggerPosition"
     (open)="changePanelState(true)"
     (close)="changePanelState(false)"
   >
