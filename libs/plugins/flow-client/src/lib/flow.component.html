@@ -49,10 +49,6 @@
     <flogo-flow-tabs header-role="bottom-block" class="tabs"></flogo-flow-tabs>
   </flogo-designer-header>
 
-  <flogo-flow-debug-panel class="debug-panel-container">
-    <ng-container *ngTemplateOutlet="flowContent"></ng-container>
-  </flogo-flow-debug-panel>
-
   <ng-template #flowContent>
     <flogo-flow-triggers></flogo-flow-triggers>
     <flogo-flow-params-schema-button
@@ -65,11 +61,24 @@
         class="diagram"
         (deleteTask)="onDeleteTask($event)"
       ></flogo-flow-diagram>
-      <!--      <flogo-debug-panel-toggle-button
-        class="debug-panel-toggler"
-      ></flogo-debug-panel-toggle-button>-->
     </div>
   </ng-template>
+
+  <flogo-context-panel-area
+    class="context-panel-container"
+    [isOpen]="isOpen"
+    panelTitle="Context panel"
+    [contextElementSelector]="SELECTOR_FOR_CURRENT_ELEMENT"
+    (open)="changePanelState(true)"
+    (close)="changePanelState(false)"
+  >
+    <div context-panel-role="primary-area" class="primary-area">
+      <ng-container *ngTemplateOutlet="flowContent"></ng-container>
+    </div>
+    <div context-panel-role="panel-content" class="panel-content">
+      <flogo-flow-debug-panel class="debug-panel-container"> </flogo-flow-debug-panel>
+    </div>
+  </flogo-context-panel-area>
 
   <flogo-flow-task-configurator></flogo-flow-task-configurator>
   <flogo-flow-branch-configurator></flogo-flow-branch-configurator>

@@ -1,40 +1,111 @@
-@import '~@flogo-web/assets/styles/uxpl/dropdown';
-@import '~@flogo-web/assets/styles/_typography';
-@import (reference) '_variables';
-@import (reference) 'styles/panel';
+@import (reference) '~@flogo-web/assets/styles/_variables';
+@import (reference) '~@flogo-web/assets/styles/_typography';
+@import (reference) './_variables';
 
 :host {
-  background-color: transparent;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  overflow: hidden;
 }
 
 .content {
-  display: flex;
-  flex-direction: row;
   flex: 1;
-  min-height: 0;
+  display: flex;
   overflow: auto;
 }
 
-.debug-panel-container {
-  height: 0;
-  width: 100%;
-  position: relative;
-  display: flex;
+::ng-deep {
+  .empty-text {
+    margin: 1.5rem;
+    border-radius: 4px;
+    background-color: @lightest-gray;
+    color: @color-dark-gray;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-text__lead {
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  .empty-text__detail {
+    font-size: 0.875rem;
+  }
+
+  .activity__field-group {
+    width: 50%;
+    padding: 1rem 1rem 1rem 2rem;
+  }
+
+  .activity__field-group + .activity__field-group {
+    padding-left: 1rem;
+  }
 }
 
-.debug-panel-container__content {
-  .panel();
-  position: absolute;
-  top: 0;
-  transform: translate3d(0, -@panel-height-minimized, 0);
-}
-
-.debug-panel__content {
-  background-color: #fff;
+.activity {
   flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.activity__info-group {
+  width: @info-width;
+  margin-top: 1rem;
+  border-right: 1px solid @light-grey;
+
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  background: url(/assets/svg/flogo.icon.gears.circle.svg) no-repeat @padding-width 1rem;
+  background-size: @activity-icon-width;
+}
+
+.activity__name {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.activity__name,
+.activity__id {
+  padding-left: (@padding-width / 2 + @activity-icon-width);
+}
+
+.schema-homepage {
+  font-size: 0.9em;
+  text-decoration: none;
+  color: @color-dark-gray;
+  margin: 0 6px;
+
+  &:hover {
+    color: @primary-blue;
+  }
+}
+
+.activity__id,
+.activity__description {
+  font-size: 0.75rem;
+  color: @color-dark-gray;
+}
+
+.activity__description {
+  margin-top: 1rem;
+}
+
+.activity__fields {
+  flex: 1;
+  overflow: auto;
+}
+
+.fields-title {
+  font-weight: 600;
+}
+
+.btn-run {
+  margin-top: 1rem;
+  // todo: margin should be zero at global level
+  margin-left: 0;
   width: 100%;
-  overflow-y: auto;
 }
