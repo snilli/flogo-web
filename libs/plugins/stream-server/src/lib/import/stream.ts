@@ -4,6 +4,7 @@ import {
   StreamMetadata,
   InternalStage,
   StreamActionSettings,
+  StreamResourceModel,
 } from '@flogo-web/plugins/stream-core';
 import { ResourceImportContext } from '@flogo-web/lib-server/core';
 import { STREAM_POINTER } from '../constants';
@@ -46,12 +47,27 @@ function extractStages(
     return context.importsRefAgent.getPackageRef(ContributionType.Activity, alias);
   };
   const rawStages = (resource.data && resource.data.stages) || [];
-  return rawStages.map(stage => {
+  return rawStages.map((stage, index) => {
     stage.ref = getStageReference(stage.ref);
-    return stage;
+    return formatStage(stage, index);
   });
 }
 
 function getOriginalId(source: Map<string, string>, newId: string): string {
   return Array.from(source.entries()).find(([, resourceId]) => resourceId === newId)[0];
+}
+
+function formatStage(stage: StreamResourceModel.Stage, idx: number): InternalStage {
+  const { ref, name, description, output } = stage;
+  // ref may have the full path of the contribution and we just need the name of the contribution.
+  const contribName = ref.split('/').pop();
+  return {
+    id: `${contribName}_${idx + 2}`,
+    ref,
+    name,
+    description,
+    activitySettings: stage.settings,
+    inputMappings: stage.input,
+    output,
+  };
 }
