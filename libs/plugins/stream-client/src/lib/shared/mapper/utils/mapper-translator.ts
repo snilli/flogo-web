@@ -4,12 +4,7 @@ import { EXPR_PREFIX, ValueType } from '@flogo-web/core';
 import { Dictionary } from '@flogo-web/lib-client/core';
 
 import { ROOT_TYPES } from '../constants';
-import {
-  Task,
-  FLOGO_ERROR_ROOT_NAME,
-  FLOGO_TASK_TYPE,
-  MAPPING_TYPE,
-} from '../../../core';
+import { MAPPING_TYPE } from '../../../core';
 // todo: shared models should be moved to core
 import {
   StreamMetadata,
@@ -17,6 +12,7 @@ import {
   Properties as MapperSchemaProperties,
 } from '../../../stage-configurator/models';
 import { Mappings, MapExpression } from '../models';
+import { FLOGO_ACTIVITY_TYPE, SchemaOutputs } from '../../../core/interfaces';
 
 export type MappingsValidatorFn = (mappings: Mappings) => boolean;
 export interface AttributeDescriptor {
@@ -41,32 +37,18 @@ function getEnumDescriptor(attr: AttributeDescriptor) {
 }
 
 export class MapperTranslator {
-  static createInputSchema(tile: Task) {
-    let attributes = [];
-    if (tile.attributes && tile.attributes.inputs) {
-      attributes = tile.attributes.inputs;
-    }
-    return MapperTranslator.attributesToObjectDescriptor(attributes);
-  }
-
   static createOutputSchema(
-    tiles: Array<Task | StreamMetadata>,
-    additionalSchemas?: MapperSchemaProperties,
-    includeEmptySchemas = false
+    tiles: Array<StreamMetadata | SchemaOutputs>,
+    additionalSchemas?: MapperSchemaProperties
   ): MapperSchema {
     const rootSchema = { type: 'object', properties: {} };
     tiles.forEach(tile => {
       switch (tile.type) {
-        case FLOGO_TASK_TYPE.TASK:
-        case FLOGO_TASK_TYPE.TASK_ROOT:
-          MapperTranslator.addTileToOutputContext(rootSchema, tile, includeEmptySchemas);
+        case FLOGO_ACTIVITY_TYPE:
+          MapperTranslator.addTileToOutputContext(rootSchema, tile);
           break;
         case 'metadata':
           MapperTranslator.addStreamMetadataToOutputSchema(rootSchema, tile);
-          break;
-        default:
-          const currentTile: Task = tile;
-          rootSchema.properties[currentTile.name] = { type: currentTile.type };
           break;
       }
     });
@@ -75,18 +57,14 @@ export class MapperTranslator {
     return rootSchema;
   }
 
-  private static addStreamMetadataToOutputSchema(
-    rootSchema,
-    streamMetadata: StreamMetadata
-  ) {
+  private static addStreamMetadataToOutputSchema(rootSchema, streamMetadata) {
     const streamInputs = streamMetadata.input;
     if (streamInputs && streamInputs.length > 0) {
       const streamInputsSchema = MapperTranslator.attributesToObjectDescriptor(
         streamInputs
       );
-      streamInputsSchema.rootType = 'stream';
-      streamInputsSchema.title = 'stream';
-      rootSchema.properties['stream'] = streamInputsSchema;
+      streamInputsSchema.rootType = MapperTranslator.getRootType(streamMetadata);
+      rootSchema.properties[ROOT_TYPES.PIPELINE] = streamInputsSchema;
     }
   }
 
@@ -183,15 +161,12 @@ export class MapperTranslator {
     return { mappingType, value };
   }
 
-  static getRootType(tile: Task | StreamMetadata) {
-    if (tile.type === FLOGO_TASK_TYPE.TASK_ROOT) {
-      return tile.triggerType === FLOGO_ERROR_ROOT_NAME
-        ? ROOT_TYPES.ERROR
-        : ROOT_TYPES.TRIGGER;
-    } else if (tile.type === 'metadata') {
-      return ROOT_TYPES.STREAM;
+  static getRootType(tile: SchemaOutputs | StreamMetadata) {
+    if (tile.type === 'metadata') {
+      return ROOT_TYPES.PIPELINE;
+    } else if (tile.type === FLOGO_ACTIVITY_TYPE) {
+      return ROOT_TYPES.STAGE;
     }
-    return ROOT_TYPES.ACTIVITY;
   }
 
   static makeValidator(): MappingsValidatorFn {
@@ -215,27 +190,12 @@ export class MapperTranslator {
     return { value, mappingType: mappingTypeFromExpression(value) };
   }
 
-  private static addTileToOutputContext(
-    rootSchema,
-    tile,
-    includeEmptySchemas: boolean = false
-  ) {
-    const attributes = tile.attributes;
-    let outputs;
-    if (tile.type === FLOGO_TASK_TYPE.TASK) {
-      // try to get data from task from outputs
-      outputs = attributes && attributes.outputs ? attributes.outputs : [];
-    } else {
-      // it's a trigger, outputs for trigger doesn't seem to be consistent in the UI model impl
-      // hence checking in two places
-      outputs = (<any>tile).outputs || (attributes && attributes.outputs);
-    }
-    const hasAttributes = outputs && outputs.length > 0;
-    if (hasAttributes || includeEmptySchemas) {
+  private static addTileToOutputContext(rootSchema, tile) {
+    const outputs = tile.outputs;
+    if (outputs && outputs.length) {
       const tileSchema = MapperTranslator.attributesToObjectDescriptor(outputs || []);
       tileSchema.rootType = MapperTranslator.getRootType(tile);
-      tileSchema.title = tile.name;
-      const propName = tileSchema.rootType === ROOT_TYPES.ERROR ? 'error' : tile.id;
+      const propName = tile.stage;
       rootSchema.properties[propName] = tileSchema;
     }
   }

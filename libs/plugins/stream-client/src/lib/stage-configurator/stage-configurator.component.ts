@@ -28,6 +28,7 @@ import {
 } from '../shared/mapper';
 import { Tabs } from '../shared/tabs/models/tabs.model';
 import { StreamMetadata } from './models';
+import { SchemaOutputs } from '../core/interfaces/schema-outputs';
 
 const TASK_TABS = {
   INPUT_MAPPINGS: 'inputMappings',
@@ -68,6 +69,7 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   activitySchemaUrl: string;
   currentTile: Item;
   inputScope: any[];
+  outputScope: any[];
   tabs: Tabs;
 
   isActive = false;
@@ -124,9 +126,6 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     const activitySchema: ActivitySchema = (state.schemas[this.currentTile.ref] ||
       {}) as ActivitySchema;
     this.activitySchemaUrl = activitySchema.homepage;
-
-    //ppaidi-todo - implement logic here to get availableData context
-    this.inputScope = [];
     this.title = this.currentTile.name;
 
     this.isValidTaskName = true;
@@ -136,6 +135,7 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
 
     const streamMetadata = this.getStreamMetadata(state);
 
+    this.inputScope = this.getInputScope(itemId, state, streamMetadata);
     const { propsToMap, mappings } = this.getInputMappingsInfo(activitySchema);
     this.initInputMappings(propsToMap, this.inputScope, mappings);
 
@@ -144,14 +144,54 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     );
     this.initActivitySettings(settingPropsToMap, activitySettings);
 
+    this.outputScope = this.getOutputScope(activitySchema);
     const { outputPropsToMap, outputMappings } = this.getOutputMappingsInfo(
       streamMetadata
     );
-    this.initOutputMappings(outputPropsToMap, outputMappings);
+    this.initOutputMappings(outputPropsToMap, this.outputScope, outputMappings);
 
     this.setSelectTab(settingPropsToMap);
 
     this.open();
+  }
+
+  private getInputScope(stageId, state, streamMetadata) {
+    const { mainGraph } = state;
+    const scope = [{ ...streamMetadata }];
+    const prevStageSchema = this.getPrevStageSchema(stageId, mainGraph, state);
+    const schemaOutputs = this.getSchemaOutputs(prevStageSchema, 'previousStage');
+    if (!isEmpty(schemaOutputs)) {
+      scope.push(schemaOutputs);
+    }
+    return scope;
+  }
+
+  private getSchemaOutputs(schema, stage): SchemaOutputs {
+    return {
+      type: schema.type,
+      stage,
+      outputs: schema.outputs,
+    };
+  }
+
+  private getOutputScope(activitySchema) {
+    const scope = [];
+    const currentSchemaOutputs = this.getSchemaOutputs(activitySchema, 'currentStage');
+    scope.push(currentSchemaOutputs);
+    return scope;
+  }
+
+  private getPrevStageSchema(stageId, graph, state) {
+    const { mainItems } = state;
+    let prevStageSchema = {};
+    if (stageId !== graph.rootId) {
+      const selectedNode = graph.nodes[stageId].parents || [];
+      const [selectedNodeParent] = selectedNode;
+      const prevStage = mainItems[selectedNodeParent];
+      const activityRef = prevStage['ref'];
+      prevStageSchema = state.schemas[activityRef];
+    }
+    return prevStageSchema;
   }
 
   private getStreamMetadata(streamState: FlogoStreamState): StreamMetadata {
@@ -195,11 +235,11 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     }));
   }
 
-  private initInputMappings(propsToMap, inputScope, mappings) {
+  private initInputMappings(propsToMap, scope, mappings) {
     const { subscription, controller } = this.configureMappingsController(
       TASK_TABS.INPUT_MAPPINGS,
       this.inputMapperStateSubscription,
-      { propsToMap, inputScope, mappings }
+      { propsToMap, scope, mappings }
     );
     this.inputMapperStateSubscription = subscription;
     this.inputMapperController = controller;
@@ -209,17 +249,17 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     const { subscription, controller } = this.configureMappingsController(
       TASK_TABS.SETTINGS,
       this.activitySettingsStateSubscription,
-      { propsToMap: settingPropsToMap, inputScope: [], mappings: activitySettings }
+      { propsToMap: settingPropsToMap, scope: [], mappings: activitySettings }
     );
     this.activitySettingsStateSubscription = subscription;
     this.settingsController = controller;
   }
 
-  private initOutputMappings(outputPropsToMap, outputMappings) {
+  private initOutputMappings(outputPropsToMap, scope = [], outputMappings) {
     const { subscription, controller } = this.configureMappingsController(
       TASK_TABS.OUTPUT_MAPPINGS,
       this.outputMapperStateSubscription,
-      { propsToMap: outputPropsToMap, inputScope: [], mappings: outputMappings }
+      { propsToMap: outputPropsToMap, scope, mappings: outputMappings }
     );
     this.outputMapperStateSubscription = subscription;
     this.outputMapperController = controller;
@@ -228,14 +268,14 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   private configureMappingsController(
     tabType: string,
     prevSubscription: Subscription,
-    { propsToMap, inputScope, mappings }
+    { propsToMap, scope, mappings }
   ) {
     if (prevSubscription && !prevSubscription.closed) {
       prevSubscription.unsubscribe();
     }
     const controller = this.mapperControllerFactory.createController(
       propsToMap,
-      inputScope,
+      scope,
       mappings,
       this.installedFunctions
     );

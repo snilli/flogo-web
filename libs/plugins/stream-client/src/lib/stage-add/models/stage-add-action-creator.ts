@@ -13,7 +13,7 @@ import {
 import { activitySchemaToStage } from './stage-factories';
 import { stageIdGenerator } from './profile';
 import { InsertTaskSelection, uniqueStageName, makeNode } from '../../core/models';
-import { Task, Item } from '../../core/interfaces';
+import { Item } from '../../core/interfaces';
 
 interface StreamAddData {
   ref: string;
@@ -68,7 +68,7 @@ function createNewStage(
 function createStage({ activitySchema, mainItems }) {
   let stage = activitySchemaToStage(activitySchema);
   const stageName = uniqueStageName(stage.name, mainItems);
-  stage = <Task>assign({}, stage, {
+  stage = <Item>assign({}, stage, {
     id: stageIdGenerator({ ...mainItems }, stage),
     name: stageName,
   });
