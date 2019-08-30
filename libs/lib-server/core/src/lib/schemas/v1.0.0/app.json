@@ -46,6 +46,12 @@
         "$ref": "trigger.json"
       }
     },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "action.json"
+      }
+    },
     "resources": {
       "type": "array",
       "items": {

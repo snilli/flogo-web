@@ -210,7 +210,7 @@ function createValidator(
     Schemas.v1.app,
     contribRefs,
     {
-      schemas: [Schemas.v1.common, Schemas.v1.trigger],
+      schemas: [Schemas.v1.common, Schemas.v1.trigger, Schemas.v1.action],
     },
     importsRefAgent
   );
