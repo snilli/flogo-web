@@ -24,9 +24,9 @@ export class ExtractActions implements ImportsActionsManager {
   ): ApplicationAction['settings'] {
     const actionForResource = Array.from(this.actionIds.values()).find(action => {
       const settings = action.settings;
-      return (
-        settings && parseResourceIdFromResourceUri(settings[propertyName]) === resourceId
-      );
+      const actionResourceId =
+        settings && parseResourceIdFromResourceUri(settings[propertyName] || '');
+      return actionResourceId === resourceId;
     });
     return actionForResource && actionForResource.settings;
   }
