@@ -47,6 +47,7 @@ export class ContextPanelAreaComponent implements OnChanges {
   @Input() isOpen: boolean;
   /** Text to display as the panel title */
   @Input() panelTitle: string;
+  @Input() triggerStyles: object;
   /**
    * CSS selector for the element in the wrapped content that represents the current panel context.
    *

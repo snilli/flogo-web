@@ -5,7 +5,11 @@
   (@wrappedContentState.done)="onAnimationEnd($event)"
 >
   <ng-content select="[context-panel-role='primary-area']"></ng-content>
-  <flogo-context-panel-trigger title="Context panel" (open)="openPanel()">
+  <flogo-context-panel-trigger
+    [label]="panelTitle"
+    (open)="openPanel()"
+    [ngStyle]="triggerStyles"
+  >
     {{ panelTitle }}
   </flogo-context-panel-trigger>
 </div>
@@ -28,7 +32,7 @@
   >
     <flogo-context-panel-header-toggler
       [isOpen]="isOpen"
-      [title]="panelTitle"
+      [label]="panelTitle"
       (open)="openPanel()"
       (close)="closePanel()"
     >

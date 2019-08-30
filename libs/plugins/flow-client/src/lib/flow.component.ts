@@ -75,6 +75,10 @@ export class FlowComponent implements OnInit, OnDestroy {
   app: any;
   isflowMenuOpen = false;
 
+  triggerPosition = {
+    left: '182px',
+  };
+
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(

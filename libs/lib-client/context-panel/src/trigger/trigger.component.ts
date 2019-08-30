@@ -26,7 +26,7 @@ import { CLOSE_WRAPPER_ANIMATION_DURATION, MINIMIZED_WIDTH } from '../variables'
 })
 export class TriggerComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Text to display as the panel title */
-  @Input() title: string;
+  @Input() label: string;
   /** Event emitted when component is clicked */
   @Output() open = new EventEmitter<void>();
 
