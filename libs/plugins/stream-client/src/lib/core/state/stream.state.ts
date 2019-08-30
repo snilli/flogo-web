@@ -17,6 +17,7 @@ export interface FlogoStreamState extends BaseResourceState<Item> {
   handlers: Dictionary<TriggerHandler>;
   currentSelection: null | CurrentSelection;
   triggerConfigure: TriggerConfigureState;
+  stageConfigure: string | null;
 }
 
 export const INITIAL_STREAM_STATE: FlogoStreamState = {
@@ -32,4 +33,5 @@ export const INITIAL_STREAM_STATE: FlogoStreamState = {
   currentSelection: null,
   triggerConfigure: null,
   metadata: null,
+  stageConfigure: null,
 };

@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 
+import { ContributionSchema } from '@flogo-web/core';
 import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 import { GraphNode } from '@flogo-web/lib-client/core';
 
@@ -19,6 +20,10 @@ export enum StreamActionType {
   SelectStage = '[Stream] Select item',
   SelectRemoveStage = '[Stream] Ask to delete stage',
   DeleteStage = '[Stream] Confirm delete stage',
+  ConfigureStage = '[Stream] Configure stage',
+  CancelStageConfiguration = '[Stream] Cancel stage configuration',
+  CommitStageConfiguration = '[Stream] Commit stage configuration',
+  ContributionInstalled = '[Stream] Contribution installed',
 }
 
 interface BaseStreamAction extends Action {
@@ -89,6 +94,25 @@ export class UpdateMetadata implements BaseStreamAction {
   constructor(public payload: StreamMetadata) {}
 }
 
+export class ConfigureStage implements BaseStreamAction {
+  readonly type = StreamActionType.ConfigureStage;
+  constructor(public payload: { itemId: string }) {}
+}
+
+export class CancelStageConfiguration implements BaseStreamAction {
+  readonly type = StreamActionType.CancelStageConfiguration;
+}
+
+export class CommitStageConfiguration implements BaseStreamAction {
+  readonly type = StreamActionType.CommitStageConfiguration;
+  constructor(public payload: Partial<Item>) {}
+}
+
+export class ContributionInstalled implements BaseStreamAction {
+  readonly type = StreamActionType.ContributionInstalled;
+  constructor(public payload: ContributionSchema) {}
+}
+
 export type StreamActionsUnion =
   | Init
   | ChangeName
@@ -101,4 +125,8 @@ export type StreamActionsUnion =
   | ConfirmDeleteStage
   | CancelCreateStage
   | StageItemCreated
-  | UpdateMetadata;
+  | UpdateMetadata
+  | ConfigureStage
+  | CancelStageConfiguration
+  | CommitStageConfiguration
+  | ContributionInstalled;

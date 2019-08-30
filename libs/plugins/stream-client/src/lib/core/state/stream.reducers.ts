@@ -4,7 +4,8 @@ import { StreamActionsUnion, StreamActionType } from './stream.actions';
 import { removeStage } from './cases/remove-stage';
 import { cleanDanglingTaskOutputMappings } from './clean-dangling-tasks-output-mappings';
 import { stageItemCreated } from './cases/stage-item-created';
-import { SelectionType } from '../models/selection';
+import { SelectionType } from '../models';
+import { commitStageConfiguration } from '../../stage-configurator/models';
 
 export function streamReducer(
   state: FlogoStreamState = INITIAL_STREAM_STATE,
@@ -60,6 +61,30 @@ export function streamReducer(
         ...state,
         metadata: {
           ...action.payload,
+        },
+      };
+    case StreamActionType.ConfigureStage:
+      return {
+        ...state,
+        stageConfigure: action.payload.itemId,
+      };
+    case StreamActionType.CancelStageConfiguration:
+      return {
+        ...state,
+        stageConfigure: null,
+      };
+    case StreamActionType.CommitStageConfiguration:
+      state = commitStageConfiguration(state, action.payload);
+      return {
+        ...state,
+        stageConfigure: null,
+      };
+    case StreamActionType.ContributionInstalled:
+      return {
+        ...state,
+        schemas: {
+          ...state.schemas,
+          [action.payload.ref]: action.payload,
         },
       };
   }

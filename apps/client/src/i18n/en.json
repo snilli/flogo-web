@@ -301,6 +301,11 @@
     "INPUT-PARAMS:INPUT-GROUPBY": "Input & Group by",
     "INPUT-PARAMS:OUTPUT": "Output",
     "INPUT-PARAMS:ADD-INPUT": "Add input",
-    "INPUT-PARAMS:ADD-OUTPUT": "Add output"
+    "INPUT-PARAMS:ADD-OUTPUT": "Add output",
+    "STAGE-CONFIGURATOR:STAGE-SETTINGS": "Stage Settings",
+    "STAGE-CONFIGURATOR:STAGE-INPUTS": "Stage Inputs",
+    "STAGE-CONFIGURATOR:STAGE-OUTPUTS": "Stage outputs",
+    "STAGE-CONFIGURATOR:AVAILABLE-DATA": "Available Data",
+    "STAGE-CONFIGURATOR:NAME-EXISTS": "This stage name has been used. Please try other name."
   }
 }

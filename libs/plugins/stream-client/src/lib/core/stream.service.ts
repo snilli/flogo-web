@@ -11,7 +11,6 @@ import {
   ContributionsService,
   ResourceService,
 } from '@flogo-web/lib-client/core';
-import { ContributionType } from '@flogo-web/core';
 import { LanguageService } from '@flogo-web/lib-client/language';
 import { NotificationsService } from '@flogo-web/lib-client/notifications';
 import {
@@ -19,7 +18,13 @@ import {
   ConfirmationResult,
 } from '@flogo-web/lib-client/confirmation';
 
-import { Init, RevertName, StreamActionType, StreamStoreState } from './state';
+import {
+  FlogoStreamState,
+  Init,
+  RevertName,
+  StreamActionType,
+  StreamStoreState,
+} from './state';
 import * as streamSelectors from './state/stream.selectors';
 import { generateStateFromResource, generateResourceFromState } from './models';
 
@@ -43,12 +48,7 @@ export class StreamService {
       this.previousStream = resource;
       /* streams-plugin-todo: need to process only app name and app id in app object in designer page */
       this.store.dispatch(
-        new Init(
-          generateStateFromResource(
-            resource,
-            contributions.filter(schema => schema.type === ContributionType.Activity)
-          )
-        )
+        new Init(generateStateFromResource(resource, contributions) as FlogoStreamState)
       );
     });
   }
