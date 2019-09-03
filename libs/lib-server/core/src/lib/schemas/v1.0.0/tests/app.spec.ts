@@ -5,6 +5,7 @@ const triggerSchema = require('../trigger.json');
 const commonSchema = require('../common.json');
 const flowSchema = require('../flow.json');
 const appSchema = require('../app.json');
+const actionSchema = require('../action.json');
 
 describe('JSONSchema: App', () => {
   let testContext;
@@ -17,7 +18,7 @@ describe('JSONSchema: App', () => {
   beforeEach(() => {
     testContext.ajvContext = makeAjvContext(
       'app',
-      [commonSchema, triggerSchema, flowSchema, appSchema],
+      [commonSchema, triggerSchema, flowSchema, actionSchema, appSchema],
       {
         removeAdditional: true,
       }
