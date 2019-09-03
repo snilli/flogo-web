@@ -32,6 +32,7 @@ describe('JSONSchema: App', () => {
       description: 'app description',
       triggers: [{ ...validSchemas.trigger }],
       resources: [{ ...validSchemas.resource }],
+      actions: [{ ...validSchemas.action }],
     };
     testContext.appUnderTest = cloneDeep(testContext.app);
   });
@@ -49,6 +50,23 @@ describe('JSONSchema: App', () => {
         .validateAndCreateAsserter(testContext.appUnderTest)
         .assertIsInvalid()
         .assertHasErrorForRequiredProp(requiredProp);
+    });
+  });
+
+  describe('/actions', () => {
+    ['id', 'ref'].forEach(requiredProperty => {
+      test(`should require ${requiredProperty} in 'actions'`, () => {
+        const actionUnderTest = { ...validSchemas.action };
+        delete actionUnderTest[requiredProperty];
+        const appUnderTest = {
+          ...testContext.appUnderTest,
+          actions: [{ ...actionUnderTest }],
+        };
+        testContext.validator
+          .validateAndCreateAsserter(appUnderTest)
+          .assertIsInvalid()
+          .assertHasErrorForRequiredProp(requiredProperty);
+      });
     });
   });
 
@@ -86,10 +104,12 @@ describe('JSONSchema: App', () => {
       ref: 'some_path_to_repo/trigger/cli',
     };
     const resource = { id: 'flow:test', data: {} };
+    const action = { id: 'action_1', ref: 'some_path_to_repo/stream', settings: {} };
 
     return {
       trigger,
       resource,
+      action,
     };
   }
 });
