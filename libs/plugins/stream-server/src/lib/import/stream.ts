@@ -6,13 +6,23 @@ import {
   StreamActionSettings,
   StreamResourceModel,
 } from '@flogo-web/plugins/stream-core';
-import { ResourceImportContext } from '@flogo-web/lib-server/core';
+import { ResourceImportContext, ValidationError } from '@flogo-web/lib-server/core';
+
 import { STREAM_POINTER } from '../constants';
+import { makeResourceValidator } from './make-resource-validator';
 
 export function importStreamResource(
   resource: Resource<StreamData>,
   context: ResourceImportContext
 ): Resource<StreamData> {
+  const validate = makeResourceValidator(
+    Array.from(context.contributions.keys()),
+    context.importsRefAgent
+  );
+  const errors = validate(resource);
+  if (errors) {
+    throw new ValidationError('Stream data validation errors', errors);
+  }
   return {
     ...resource,
     metadata: extractMetadata(resource, context),
