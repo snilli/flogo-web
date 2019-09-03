@@ -39,7 +39,7 @@
 
   <flogo-context-panel-area
     class="context-panel-container"
-    [isOpen]="isSimulatorOpen"
+    [isOpen]="isSimulatorOpen$ | async"
     panelTitle="Stream simulator"
     [contextElementSelector]="SELECTOR_FOR_CURRENT_ELEMENT"
     openHeight="60vh"

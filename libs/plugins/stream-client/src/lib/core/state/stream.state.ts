@@ -35,5 +35,5 @@ export const INITIAL_STREAM_STATE: FlogoStreamState = {
   triggerConfigure: null,
   metadata: null,
   stageConfigure: null,
-  isSimulatorPanelOpen: false
+  isSimulatorPanelOpen: false,
 };

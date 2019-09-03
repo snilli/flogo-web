@@ -24,6 +24,7 @@ import {
 } from '../core';
 import { StreamStoreState as AppState } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -40,7 +41,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   streamState: FlogoStreamState;
   isStreamMenuOpen = false;
-  isSimulatorOpen: boolean;
+  isSimulatorOpen$: Observable<boolean>;
   SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
   triggerPosition = {
     left: '182px',
@@ -67,14 +68,9 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       .subscribe(contribDetails =>
         this.store.dispatch(new ContributionInstalled(contribDetails))
       );
-    this.store
-      .pipe(
-        select(StreamSelectors.selectSimulatorPanelOpen),
-        takeUntil(this.ngOnDestroy$)
-      )
-      .subscribe(isSimulatorOpen => {
-        this.isSimulatorOpen = isSimulatorOpen;
-      });
+    this.isSimulatorOpen$ = this.store.pipe(
+      select(StreamSelectors.selectSimulatorPanelOpen)
+    );
   }
 
   changePanelState(isSimulatorOpen: boolean) {
