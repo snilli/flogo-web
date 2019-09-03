@@ -18,6 +18,7 @@ export interface FlogoStreamState extends BaseResourceState<Item> {
   currentSelection: null | CurrentSelection;
   triggerConfigure: TriggerConfigureState;
   stageConfigure: string | null;
+  isSimulatorPanelOpen: boolean;
 }
 
 export const INITIAL_STREAM_STATE: FlogoStreamState = {
@@ -34,4 +35,5 @@ export const INITIAL_STREAM_STATE: FlogoStreamState = {
   triggerConfigure: null,
   metadata: null,
   stageConfigure: null,
+  isSimulatorPanelOpen: false
 };

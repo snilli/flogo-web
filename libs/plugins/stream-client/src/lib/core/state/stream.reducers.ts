@@ -87,6 +87,11 @@ export function streamReducer(
           [action.payload.ref]: action.payload,
         },
       };
+    case StreamActionType.SimulatorPanelStatusChange:
+      return {
+        ...state,
+        isSimulatorPanelOpen: action.payload.isSimulatorOpen,
+      };
   }
   return state;
 }

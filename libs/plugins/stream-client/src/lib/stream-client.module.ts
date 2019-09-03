@@ -26,6 +26,7 @@ import { StreamDiagramComponent } from './stream-diagram';
 import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
+import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { StageConfiguratorModule } from './stage-configurator/stage-configurator
     StageAddModule,
     MonacoEditorModule,
     StageConfiguratorModule,
+    ContextPanelModule,
   ],
   providers: [
     StreamService,

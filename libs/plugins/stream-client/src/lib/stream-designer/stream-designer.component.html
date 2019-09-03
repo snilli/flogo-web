@@ -36,7 +36,24 @@
       </div>
     </div>
   </flogo-designer-header>
-  <div class="secondary-area">
+
+  <flogo-context-panel-area
+    class="context-panel-container"
+    [isOpen]="isSimulatorOpen"
+    panelTitle="Stream simulator"
+    [contextElementSelector]="SELECTOR_FOR_CURRENT_ELEMENT"
+    openHeight="60vh"
+    [triggerStyles]="triggerPosition"
+    (open)="changePanelState(true)"
+    (close)="changePanelState(false)"
+  >
+    <div context-panel-role="primary-area" class="primary-area">
+      <ng-container *ngTemplateOutlet="streamContent"></ng-container>
+    </div>
+    <div context-panel-role="panel-content" class="panel-content"></div>
+  </flogo-context-panel-area>
+
+  <ng-template #streamContent>
     <flogo-stream-triggers></flogo-stream-triggers>
     <flogo-stream-params-schema-button
       role="button"
@@ -44,8 +61,8 @@
       (click)="openInputSchemaModal()"
     ></flogo-stream-params-schema-button>
     <flogo-stream-diagram></flogo-stream-diagram>
-  </div>
-  <flogo-stream-stage-configurator></flogo-stream-stage-configurator>
+    <flogo-stream-stage-configurator></flogo-stream-stage-configurator>
+  </ng-template>
 </div>
 
 <flogo-stream-params-schema

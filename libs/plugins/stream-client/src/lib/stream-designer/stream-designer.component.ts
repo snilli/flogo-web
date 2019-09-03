@@ -19,6 +19,8 @@ import {
   FlogoStreamState,
   selectStreamState,
   StreamService,
+  StreamSelectors,
+  StreamDiagramActions as StreamActions,
 } from '../core';
 import { StreamStoreState as AppState } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
@@ -38,6 +40,11 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   streamState: FlogoStreamState;
   isStreamMenuOpen = false;
+  isSimulatorOpen: boolean;
+  SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
+  triggerPosition = {
+    left: '182px',
+  };
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
@@ -60,8 +67,21 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       .subscribe(contribDetails =>
         this.store.dispatch(new ContributionInstalled(contribDetails))
       );
+    this.store
+      .pipe(
+        select(StreamSelectors.selectSimulatorPanelOpen),
+        takeUntil(this.ngOnDestroy$)
+      )
+      .subscribe(isSimulatorOpen => {
+        this.isSimulatorOpen = isSimulatorOpen;
+      });
   }
 
+  changePanelState(isSimulatorOpen: boolean) {
+    this.store.dispatch(
+      new StreamActions.SimulatorPanelStatusChange({ isSimulatorOpen })
+    );
+  }
   navigateToApp() {
     this.streamService.navigateToApp(this.streamState.app.id);
   }
