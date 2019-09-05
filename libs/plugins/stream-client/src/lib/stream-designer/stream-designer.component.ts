@@ -42,7 +42,6 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   streamState: FlogoStreamState;
   isStreamMenuOpen = false;
   isSimulatorOpen$: Observable<boolean>;
-  SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
   triggerPosition = {
     left: '182px',
   };
