@@ -304,7 +304,7 @@
     "INPUT-PARAMS:ADD-OUTPUT": "Add output",
     "STAGE-CONFIGURATOR:STAGE-SETTINGS": "Stage Settings",
     "STAGE-CONFIGURATOR:STAGE-INPUTS": "Stage Inputs",
-    "STAGE-CONFIGURATOR:STAGE-OUTPUTS": "Stage outputs",
+    "STAGE-CONFIGURATOR:STAGE-OUTPUTS": "Stage Outputs",
     "STAGE-CONFIGURATOR:AVAILABLE-DATA": "Available Data",
     "STAGE-CONFIGURATOR:NAME-EXISTS": "This stage name has been used. Please try other name."
   }

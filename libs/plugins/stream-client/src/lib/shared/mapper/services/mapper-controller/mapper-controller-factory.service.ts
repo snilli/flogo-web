@@ -268,27 +268,11 @@ export class MapperControllerFactory {
     const resolver = root.data.rootType;
     const nodeName = root.data.nodeName;
     const makeResolvable = expr => '$' + expr;
-
-    if (resolver === ROOT_TYPES.TRIGGER || resolver === ROOT_TYPES.ERROR) {
-      expressionHead = `${resolver}.`;
-      expressionHead += propName ? propName.data.nodeName : '';
+    if (resolver === ROOT_TYPES.STAGE) {
       expressionHead = makeResolvable(expressionHead);
-      expressionTailParts = nodes.slice(2);
-    } else if (resolver === ROOT_TYPES.ACTIVITY) {
-      expressionHead = `${ROOT_TYPES.ACTIVITY}[${root.data.nodeName}].`;
-      expressionHead += propName ? propName.data.nodeName : '';
-      expressionHead = makeResolvable(expressionHead);
-      expressionTailParts = nodes.slice(2);
-    } else if (resolver === ROOT_TYPES.STREAM) {
-      expressionHead = makeResolvable(nodeName);
       expressionTailParts = nodes.slice(1);
-    } else if (resolver === ROOT_TYPES.ITERATOR) {
-      expressionHead = `${nodeName}`;
-      expressionHead += propName ? `[${propName.data.nodeName}]` : '';
-      expressionHead = makeResolvable(expressionHead);
-      expressionTailParts = nodes.slice(2);
-    } else {
-      expressionHead = nodeName.indexOf('$') === -1 ? '$.' + nodeName : nodeName;
+    } else if (resolver === ROOT_TYPES.PIPELINE) {
+      expressionHead = makeResolvable(nodeName);
       expressionTailParts = nodes.slice(1);
     }
     return [expressionHead]
