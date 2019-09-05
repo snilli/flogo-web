@@ -40,66 +40,6 @@ describe('JSONSchema: Flow', () => {
   });
 
   describe('#/definitions', () => {
-    describe('/metadataItem', () => {
-      let metadataItemValidator;
-      beforeEach(() => {
-        metadataItemValidator = testContext.ajvContext.createValidatorForSubschema(
-          'metadataItem'
-        );
-      });
-
-      test('should allow correct metadata items', () => {
-        metadataItemValidator
-          .validateAndCreateAsserter({ ...validSchemas.metadataItem })
-          .assertIsValid();
-      });
-
-      test('should require name', () => {
-        metadataItemValidator
-          .validateAndCreateAsserter({ type: 'number' })
-          .assertIsInvalid()
-          .assertHasErrorForRequiredProp('name');
-      });
-
-      test('should not allow empty name', () => {
-        metadataItemValidator
-          .validateAndCreateAsserter({ name: '', type: 'number' })
-          .assertIsInvalid()
-          .assertHasErrorForEmptyProp('name');
-      });
-
-      test('should require type', () => {
-        metadataItemValidator
-          .validateAndCreateAsserter({ name: 'myProp' })
-          .assertIsInvalid()
-          .assertHasErrorForRequiredProp('type');
-      });
-    });
-
-    describe('/metadata', () => {
-      let metadataValidator;
-      beforeEach(() => {
-        metadataValidator = testContext.ajvContext.createValidatorForSubschema(
-          'metadata'
-        );
-      });
-
-      test('should accept input mappings', () => {
-        const action = { input: [{ ...validSchemas.metadataItem }] };
-        expect(metadataValidator.validate(action)).toBe(true);
-      });
-
-      test('should accept output mappings', () => {
-        const action = { output: [{ ...validSchemas.metadataItem }] };
-        expect(metadataValidator.validate(action)).toBe(true);
-      });
-
-      test('should accept both input and output mappings', () => {
-        const action = { ...validSchemas.metadata };
-        expect(metadataValidator.validate(action)).toBe(true);
-      });
-    });
-
     describe('/activity', () => {
       let activityValidator;
       beforeEach(() => {

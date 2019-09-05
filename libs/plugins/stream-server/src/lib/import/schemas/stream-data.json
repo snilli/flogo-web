@@ -26,7 +26,7 @@
       "properties": {
         "ref": {
           "type": "string",
-          "minLength": 1
+          "activity-installed": true
         },
         "id": {
           "type": "string",

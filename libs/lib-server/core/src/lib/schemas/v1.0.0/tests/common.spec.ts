@@ -85,4 +85,67 @@ describe('JSONSchema: Common', () => {
       expect(validate([])).toBe(true);
     });
   });
+
+  describe('#/definitions/metadataItem', () => {
+    let metadataItemValidator;
+    beforeEach(() => {
+      metadataItemValidator = testContext.ajvContext.createValidatorForSubschema(
+        'metadataItem'
+      );
+    });
+
+    test('should allow correct metadata items', () => {
+      metadataItemValidator
+        .validateAndCreateAsserter({ name: 'sampleMetadata', type: 'string' })
+        .assertIsValid();
+    });
+
+    test('should require name', () => {
+      metadataItemValidator
+        .validateAndCreateAsserter({ type: 'number' })
+        .assertIsInvalid()
+        .assertHasErrorForRequiredProp('name');
+    });
+
+    test('should not allow empty name', () => {
+      metadataItemValidator
+        .validateAndCreateAsserter({ name: '', type: 'number' })
+        .assertIsInvalid()
+        .assertHasErrorForEmptyProp('name');
+    });
+
+    test('should require type', () => {
+      metadataItemValidator
+        .validateAndCreateAsserter({ name: 'myProp' })
+        .assertIsInvalid()
+        .assertHasErrorForRequiredProp('type');
+    });
+  });
+
+  describe('#/definitions/metadata', () => {
+    let metadataValidator;
+    const metadataItem = { name: 'sampleMetadata', type: 'string' };
+    const metadata = {
+      input: [{ ...metadataItem }],
+      output: [{ ...metadataItem }],
+    };
+    beforeEach(() => {
+      metadataValidator = testContext.ajvContext.createValidatorForSubschema('metadata');
+    });
+
+    test('should accept input mappings', () => {
+      const action = { input: [{ ...metadataItem }] };
+      expect(metadataValidator.validate(action)).toBe(true);
+    });
+
+    test('should accept output mappings', () => {
+      const action = { output: [{ ...metadataItem }] };
+      expect(metadataValidator.validate(action)).toBe(true);
+    });
+
+    test('should accept both input and output mappings', () => {
+      const action = { ...metadata };
+      expect(metadataValidator.validate(action)).toBe(true);
+    });
+  });
 });
