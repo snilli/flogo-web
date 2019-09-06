@@ -136,5 +136,4 @@ export type StreamActionsUnion =
   | CancelStageConfiguration
   | CommitStageConfiguration
   | ContributionInstalled
-  | UpdateMetadata
   | SimulatorPanelStatusChange;
