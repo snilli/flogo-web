@@ -17,6 +17,11 @@ import { GRAPH_NAME } from '../constants';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
+export const selectSimulatorPanelOpen = createSelector(
+  selectStreamState,
+  (state: FlogoStreamState) => state.isSimulatorPanelOpen
+);
+
 export const selectTriggers = createSelector(
   selectStreamState,
   (streamState: FlogoStreamState) => streamState.triggers

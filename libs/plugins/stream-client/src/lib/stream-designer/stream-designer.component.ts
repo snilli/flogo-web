@@ -19,9 +19,12 @@ import {
   FlogoStreamState,
   selectStreamState,
   StreamService,
+  StreamSelectors,
+  StreamDiagramActions as StreamActions,
 } from '../core';
 import { StreamStoreState as AppState } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -38,6 +41,10 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   streamState: FlogoStreamState;
   isStreamMenuOpen = false;
+  isSimulatorOpen$: Observable<boolean>;
+  triggerPosition = {
+    left: '182px',
+  };
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
@@ -60,8 +67,16 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       .subscribe(contribDetails =>
         this.store.dispatch(new ContributionInstalled(contribDetails))
       );
+    this.isSimulatorOpen$ = this.store.pipe(
+      select(StreamSelectors.selectSimulatorPanelOpen)
+    );
   }
 
+  changePanelState(isSimulatorOpen: boolean) {
+    this.store.dispatch(
+      new StreamActions.SimulatorPanelStatusChange({ isSimulatorOpen })
+    );
+  }
   navigateToApp() {
     this.streamService.navigateToApp(this.streamState.app.id);
   }

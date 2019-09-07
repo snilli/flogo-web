@@ -24,6 +24,7 @@ export enum StreamActionType {
   CancelStageConfiguration = '[Stream] Cancel stage configuration',
   CommitStageConfiguration = '[Stream] Commit stage configuration',
   ContributionInstalled = '[Stream] Contribution installed',
+  SimulatorPanelStatusChange = '[Stream][Simulator panel] Simulator panel status change',
 }
 
 interface BaseStreamAction extends Action {
@@ -113,6 +114,11 @@ export class ContributionInstalled implements BaseStreamAction {
   constructor(public payload: ContributionSchema) {}
 }
 
+export class SimulatorPanelStatusChange implements BaseStreamAction {
+  readonly type = StreamActionType.SimulatorPanelStatusChange;
+  constructor(public payload: { isSimulatorOpen: boolean }) {}
+}
+
 export type StreamActionsUnion =
   | Init
   | ChangeName
@@ -129,4 +135,5 @@ export type StreamActionsUnion =
   | ConfigureStage
   | CancelStageConfiguration
   | CommitStageConfiguration
-  | ContributionInstalled;
+  | ContributionInstalled
+  | SimulatorPanelStatusChange;
