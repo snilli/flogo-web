@@ -51,7 +51,7 @@ function _mergeOpts(opts: BuildOptions): BuildOptions {
     target: undefined,
     optimize: false,
     embedConfig: false,
-    configDir: undefined,
+    file: undefined,
     compile: { os: false, arch: false },
     ...opts,
   };
@@ -67,8 +67,8 @@ function _translateOptsToCommandArgs(opts: BuildOptions) {
     args.push('-e');
   }
 
-  if (opts.embedConfig && opts.configDir) {
-    args.push('-c', opts.configDir);
+  if (opts.file) {
+    args.push('-f', opts.file);
   }
 
   if (opts.shimTriggerId) {

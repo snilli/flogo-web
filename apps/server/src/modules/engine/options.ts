@@ -11,6 +11,10 @@ export interface CliOptions {
    */
   embedConfig?: boolean;
   /**
+   * Specify a flogo.json to build
+   */
+  file?: string;
+  /**
    * Optimize for embedded flows. Default false.
    */
   optimize?: boolean;
