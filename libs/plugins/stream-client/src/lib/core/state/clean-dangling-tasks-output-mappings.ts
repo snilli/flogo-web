@@ -1,16 +1,16 @@
 import { isEmpty, pick, fromPairs } from 'lodash';
-import { ContributionSchema, isMapperActivity } from '@flogo-web/core';
 import { Dictionary } from '@flogo-web/lib-client/core';
 
 import { Item } from '../interfaces';
 import { FlogoStreamState } from './stream.state';
+import { ROOT_TYPES } from '../../shared/mapper/constants';
 
 /**
  * When stream schema's output change we need to remove the task mappings that were referencing them
  * @param state
  */
 export function cleanDanglingTaskOutputMappings(state: FlogoStreamState) {
-  const outputNames =
+  let outputNames =
     state.metadata && state.metadata.output
       ? state.metadata.output.map(o => o.name)
       : null;
@@ -18,26 +18,23 @@ export function cleanDanglingTaskOutputMappings(state: FlogoStreamState) {
     return state;
   }
 
-  const cleanItems = itemCleaner(state.schemas, outputNames);
+  outputNames = normalizeOutputs(outputNames);
+
+  const cleanItems = itemCleaner(outputNames);
 
   const mainItems = cleanItems(state.mainItems);
-  if (mainItems !== state.mainItems) {
-    state = { ...state, mainItems };
-  }
+  state = { ...state, mainItems };
 
   return state;
 }
 
 function itemCleaner(
-  schemas: Dictionary<ContributionSchema>,
   outputNames: string[]
 ): (items: Dictionary<Item>) => Dictionary<Item> {
-  const isMapperContribAndHasMapping = ([taskId, task]: [string, Item]) => {
-    const schema = schemas[task.ref];
-    return isMapperActivity(schema) && !isEmpty(task.inputMappings);
+  const hasMapping = ([taskId, task]: [string, Item]) => {
+    return !isEmpty(task.output);
   };
-  return (items: Dictionary<Item>) =>
-    cleanTasks(items, outputNames, isMapperContribAndHasMapping);
+  return (items: Dictionary<Item>) => cleanTasks(items, outputNames, hasMapping);
 }
 
 function cleanTasks(
@@ -52,7 +49,7 @@ function cleanTasks(
         taskId,
         {
           ...task,
-          inputMappings: pick(task.inputMappings, outputNames),
+          output: pick(task.output, outputNames),
         },
       ] as [string, Item];
     });
@@ -64,4 +61,8 @@ function cleanTasks(
     };
   }
   return items;
+}
+
+function normalizeOutputs(outputs) {
+  return outputs.map(output => `$${ROOT_TYPES.PIPELINE}.${output}`);
 }
