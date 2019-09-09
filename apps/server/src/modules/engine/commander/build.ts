@@ -3,6 +3,7 @@ import { runShellCMD } from '../../../common/utils/process';
 import { logger } from '../../../common/logging';
 
 import { mergeEnvWithOpts } from './merge-env-with-opts';
+import { BuildOptions } from '../options';
 
 /**
  * Build the engine.
@@ -25,7 +26,7 @@ import { mergeEnvWithOpts } from './merge-env-with-opts';
  *
  * @returns {Promise<{path: string}>} path to generated binary
  */
-export function build(enginePath, opts) {
+export function build(enginePath, opts: BuildOptions) {
   const defaultEnginePath = joinPath(enginePath);
 
   opts = _mergeOpts(opts);
@@ -45,7 +46,7 @@ export function build(enginePath, opts) {
 // Helpers
 // ////////////////////////
 
-function _mergeOpts(opts) {
+function _mergeOpts(opts: BuildOptions): BuildOptions {
   return {
     target: undefined,
     optimize: false,
@@ -56,7 +57,7 @@ function _mergeOpts(opts) {
   };
 }
 
-function _translateOptsToCommandArgs(opts) {
+function _translateOptsToCommandArgs(opts: BuildOptions) {
   const args = [] as string[];
   if (opts.optimize) {
     args.push('-o');

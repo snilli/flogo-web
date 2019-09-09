@@ -1,9 +1,11 @@
+import { BuildOptions } from '../options';
+
 const DEFAULT_CGO_ENABLED = '0';
 
 interface Dictionary<T = any> {
   [key: string]: T | undefined;
 }
-export function mergeEnvWithOpts(opts: Dictionary, processEnv: Dictionary<string>) {
+export function mergeEnvWithOpts(opts: BuildOptions, processEnv: Dictionary<string>) {
   let customEnv: Dictionary = {};
   if (processEnv.CGO_ENABLED === undefined) {
     customEnv.CGO_ENABLED = DEFAULT_CGO_ENABLED;
