@@ -11,6 +11,8 @@ import { ResourceImportContext, ValidationError } from '@flogo-web/lib-server/co
 import { STREAM_POINTER } from '../constants';
 import { makeResourceValidator } from './make-resource-validator';
 
+const KEY_STAGE_INDEX = 2;
+
 export function importStreamResource(
   resource: Resource<StreamData>,
   context: ResourceImportContext
@@ -72,7 +74,7 @@ function formatStage(stage: StreamResourceModel.Stage, idx: number): InternalSta
   // ref may have the full path of the contribution and we just need the name of the contribution.
   const contribName = ref.split('/').pop();
   return {
-    id: `${contribName}_${idx + 2}`,
+    id: `${contribName}_${idx + KEY_STAGE_INDEX}`,
     ref,
     name,
     description,

@@ -1,12 +1,12 @@
 import { FlogoAppModel } from '@flogo-web/core';
 import {
-  ImportsActionsManager,
+  ImportActionsRegistry,
   parseResourceIdFromResourceUri,
 } from '@flogo-web/lib-server/core';
 
 type ApplicationAction = FlogoAppModel.Action;
 
-export class ExtractActions implements ImportsActionsManager {
+export class FlogoActionExtractor implements ImportActionsRegistry {
   private actionIds: Map<string, ApplicationAction>;
 
   constructor(actions: ApplicationAction[] = []) {

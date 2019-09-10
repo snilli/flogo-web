@@ -1,12 +1,12 @@
 import { Resource, CONTRIB_REFS, ContributionType, ValueType } from '@flogo-web/core';
 import { createActionImporter } from './create-action-importer';
-import { ImportsRefAgent, ImportsActionsManager } from '@flogo-web/lib-server/core';
+import { ImportsRefAgent, ImportActionsRegistry } from '@flogo-web/lib-server/core';
 
 const importsRefAgent: ImportsRefAgent = {
   getPackageRef: (type, ref) => ref,
 };
 
-const actionsManager: ImportsActionsManager = {
+const actionsManager: ImportActionsRegistry = {
   getSettingsForResourceId: (id, propName) => null,
   getSettingsForId: id => null,
   getRefForId: id => id,

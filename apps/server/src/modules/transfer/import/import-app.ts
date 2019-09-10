@@ -13,7 +13,7 @@ import {
   ResourceImporter,
   ValidationErrorDetail,
   ImportsRefAgent,
-  ImportsActionsManager,
+  ImportActionsRegistry,
 } from '@flogo-web/lib-server/core';
 
 import { constructApp } from '../../../core/models/app';
@@ -22,7 +22,7 @@ import { tryAndAccumulateValidationErrors } from '../common/try-validation-error
 import { IMPORT_SYNTAX } from '../common/parse-imports';
 import { validatorFactory } from './validator';
 import { importTriggers } from './import-triggers';
-import { createFromImports, ExtractActions } from './imports';
+import { createFromImports, FlogoActionExtractor } from './imports';
 
 interface DefaultAppModelResource extends FlogoAppModel.Resource {
   data: {
@@ -48,7 +48,7 @@ export function importApp(
     validateImports(rawApp.imports, contributions);
   }
   const importsRefAgent = createFromImports(rawApp.imports, contributions);
-  const actionsManager: ImportsActionsManager = new ExtractActions(rawApp.actions);
+  const actionsManager: ImportActionsRegistry = new FlogoActionExtractor(rawApp.actions);
   const newApp = cleanAndValidateApp(
     rawApp as FlogoAppModel.App,
     Array.from(contributions.values()),
@@ -246,7 +246,7 @@ function createHandlerImportResolver(
   resolveResourceImporter: ImportersResolver,
   contributions: Map<string, ContributionSchema>,
   importsRefAgent: ImportsRefAgent,
-  actionsManager: ImportsActionsManager
+  actionsManager: ImportActionsRegistry
 ) {
   const getResourceReference = action => {
     return action.ref ? action.ref : actionsManager.getRefForId(action.id);

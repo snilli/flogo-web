@@ -11,14 +11,14 @@ export interface ResourceImportContext {
   normalizedTriggerIds: Map<string, string>;
   normalizedResourceIds: Map<string, string>;
   importsRefAgent: ImportsRefAgent;
-  actionsManager: ImportsActionsManager;
+  actionsManager: ImportActionsRegistry;
 }
 
 export interface HandlerImportContext {
   contributions: Map<string, ContributionSchema>;
   triggerSchema: ContributionSchema;
   rawHandler: FlogoAppModel.Handler;
-  actionsManager: ImportsActionsManager;
+  actionsManager: ImportActionsRegistry;
 }
 
 export interface ResourceImporter<TResourceData = unknown> {
@@ -71,7 +71,7 @@ export interface ImportsRefAgent {
  *    ],
  *  }```
  */
-export interface ImportsActionsManager {
+export interface ImportActionsRegistry {
   /**
    * Get the reference `ref` in the action definition entity for an action Id
    *
