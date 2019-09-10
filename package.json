@@ -120,6 +120,7 @@
     "@types/lokijs": "^1.5.2",
     "@types/mocha": "^5.0.0",
     "@types/node": "10.12.10",
+    "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "~1.4.29",
     "bootstrap": "^3.3.7",
     "codelyzer": "^5.0.1",
