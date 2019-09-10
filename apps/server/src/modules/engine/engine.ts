@@ -99,7 +99,7 @@ class Engine {
    * @return {Promise.<TResult>|*}
    * @deprecated
    */
-  build(options: BuildOptions) {
+  build(options?: BuildOptions) {
     options = Object.assign({}, { type: TYPE_TEST }, options);
 
     let buildTargetDir;
