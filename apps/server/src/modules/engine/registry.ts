@@ -22,12 +22,12 @@ export function setDefaultResourceTypes(resourceTypes: string[]) {
  * @param opts.forceCreate {boolean} default false
  * @returns {*}
  */
-export function getInitializedEngine(
+export async function getInitializedEngine(
   enginePath,
   opts: { forceCreate?: boolean; noLib?: boolean; libVersion?: string } = {}
-) {
+): Promise<Engine> {
   if (engineRegistry[enginePath] && !opts.forceCreate) {
-    return Promise.resolve(engineRegistry[enginePath]);
+    return engineRegistry[enginePath];
   }
 
   let libVersion;
@@ -40,11 +40,10 @@ export function getInitializedEngine(
   engineRegistry[enginePath] = engine;
 
   const initTimer = logger.startTimer();
-  return initEngine(engine, opts).then(() => {
-    engineRegistry[enginePath] = engine;
-    initTimer.done('EngineInit');
-    return engine;
-  });
+  await initEngine(engine, opts);
+  initTimer.done('EngineInit');
+
+  return engine;
 }
 
 /**

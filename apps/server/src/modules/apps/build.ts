@@ -2,17 +2,17 @@ import { readFile } from 'fs-extra';
 
 import { logger } from '../../common/logging';
 import { config } from './../../config/app-config';
-import { getInitializedEngine } from '../engine';
+import { getInitializedEngine, BuildOptions } from '../engine';
 
 import { writeJSONFile } from '../../common/utils';
 
-const defaultBuildOptions = options => ({
+const defaultBuildOptions = (options: BuildOptions): BuildOptions => ({
   optimize: true,
   embedConfig: true,
   ...options,
 });
 
-export async function buildBinary(appId, options) {
+export async function buildBinary(appId, options: BuildOptions) {
   return orchestrateBuild(appId, engine => engine.build(defaultBuildOptions(options)));
 }
 
@@ -22,7 +22,10 @@ export async function buildBinary(appId, options) {
  * @param options.shimTriggerId
  * @return {Promise<T>}
  */
-export async function buildPlugin(exportApp, options) {
+export async function buildPlugin(
+  exportApp,
+  options: BuildOptions & { shimTriggerId: string }
+) {
   return orchestrateBuild(exportApp, engine =>
     engine.buildPlugin(defaultBuildOptions(options))
   ).then(result => ({

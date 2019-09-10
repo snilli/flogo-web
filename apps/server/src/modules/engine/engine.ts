@@ -8,18 +8,15 @@ import { processHost } from '../../common/utils/process';
 import { buildAndCopyBinary } from './build/binary';
 import { buildPlugin } from './build/plugin';
 
+import { logger } from '../../common/logging';
+
 import { loader } from './loader';
 import { commander } from './commander';
 import { execController as exec } from './exec-controller';
-import { logger } from '../../common/logging';
+import { TYPE_BUILD, TYPE_TEST, BuildOptions, Options } from './options';
 
 const DIR_TEST_BIN = 'bin-test';
 const DIR_BUILD_BIN = 'bin-build';
-
-const TYPE_TEST = 'test';
-const TYPE_BUILD = 'build';
-
-type Options = Record<string, any>;
 
 class Engine {
   static TYPE_TEST: string;
@@ -102,7 +99,7 @@ class Engine {
    * @return {Promise.<TResult>|*}
    * @deprecated
    */
-  build(options: Options) {
+  build(options?: BuildOptions) {
     options = Object.assign({}, { type: TYPE_TEST }, options);
 
     let buildTargetDir;
@@ -232,5 +229,5 @@ class Engine {
 Engine.TYPE_TEST = TYPE_TEST;
 Engine.TYPE_BUILD = TYPE_BUILD;
 
-export { Engine, TYPE_TEST, TYPE_BUILD };
+export { Engine };
 export default Engine;
