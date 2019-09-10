@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import * as io from 'socket.io-client';
 import { HOSTNAME } from './restapi';
 
@@ -43,7 +43,7 @@ export class LogService {
   addLine(data) {
     const message = {
       level: data.level,
-      timestamp: format(data.timestamp, 'PP HH:mm:ss.SSS'),
+      timestamp: format(parseISO(data.timestamp), 'PP HH:mm:ss.SSS'),
       message: data.message,
     };
 
