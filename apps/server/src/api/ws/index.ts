@@ -11,7 +11,7 @@ export function init(server) {
     engineLogStreamer.registerClient(ws);
 
     sockets.add(ws);
-    ws.on('close', () => {
+    ws.on('disconnect', () => {
       sockets.delete(ws);
     });
   });
