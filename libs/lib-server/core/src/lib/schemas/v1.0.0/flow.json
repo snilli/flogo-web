@@ -10,7 +10,7 @@
       "type": "string"
     },
     "metadata": {
-      "$ref": "#/definitions/metadata"
+      "$ref": "common.json#/definitions/metadata"
     },
     "tasks": {
       "type": "array",
@@ -44,38 +44,6 @@
     }
   },
   "definitions": {
-    "metadata": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "input": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/metadataItem"
-          }
-        },
-        "output": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/metadataItem"
-          }
-        }
-      }
-    },
-    "metadataItem": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["name", "type"],
-      "properties": {
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "type": {
-          "$ref": "common.json#/definitions/valueType"
-        }
-      }
-    },
     "task": {
       "type": "object",
       "additionalProperties": false,

@@ -1,5 +1,10 @@
 import { MetadataAttribute } from '@flogo-web/core';
 
+export interface StreamActionSettings {
+  pipelineURI: string;
+  groupBy: string;
+}
+
 export namespace StreamResourceModel {
   export interface StreamResourceData {
     name?: string;

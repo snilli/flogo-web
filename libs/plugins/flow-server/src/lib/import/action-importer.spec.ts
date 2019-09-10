@@ -1,9 +1,15 @@
 import { Resource, CONTRIB_REFS, ContributionType, ValueType } from '@flogo-web/core';
 import { createActionImporter } from './create-action-importer';
-import { ImportsRefAgent } from '@flogo-web/lib-server/core';
+import { ImportsRefAgent, ImportActionsRegistry } from '@flogo-web/lib-server/core';
 
 const importsRefAgent: ImportsRefAgent = {
   getPackageRef: (type, ref) => ref,
+};
+
+const actionsManager: ImportActionsRegistry = {
+  getSettingsForResourceId: (id, propName) => null,
+  getSettingsForId: id => null,
+  getRefForId: id => id,
 };
 
 test('It imports an action', () => {
@@ -14,6 +20,7 @@ test('It imports an action', () => {
     normalizedTriggerIds: new Map(),
     normalizedResourceIds: new Map([['flow:somesubflow', 'updatedSubflowId']]),
     importsRefAgent,
+    actionsManager,
   });
   expect(importedFlow).toEqual(expect.objectContaining(getExpectedImport()));
 });
@@ -28,6 +35,7 @@ test('It errors if an activity is not installed', () => {
       normalizedTriggerIds: new Map(),
       normalizedResourceIds: new Map(),
       importsRefAgent,
+      actionsManager,
     });
   } catch (e) {
     expect(e).toMatchObject({

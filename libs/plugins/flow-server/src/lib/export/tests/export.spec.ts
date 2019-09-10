@@ -23,6 +23,10 @@ test('it exports a flow', () => {
       getAliasRef: (type, ref): string => ref,
       registerFunctionName: () => {},
     },
+    actionAgent: {
+      getActionId: resourceId => resourceId,
+      registerAction: (ref, id, {}) => {},
+    },
   });
   expect(exported).toEqual(getExpectedFlow());
 });

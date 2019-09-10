@@ -64,6 +64,38 @@
           "$comment": "Type any, so no 'type' keyword"
         }
       }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/metadataItem"
+          }
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/metadataItem"
+          }
+        }
+      }
+    },
+    "metadataItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "$ref": "#/definitions/valueType"
+        }
+      }
     }
   }
 }
