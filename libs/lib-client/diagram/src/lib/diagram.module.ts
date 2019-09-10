@@ -8,16 +8,19 @@ import { TileInsertComponent } from './tiles/tile-insert.component';
 import { TileTaskComponent } from './tiles/tile-task.component';
 
 import { TileBranchComponent } from './tiles/tile-branch.component';
+import { TileSsvgComponent } from './tiles/tiles-svg';
 
 @NgModule({
   imports: [CommonModule, LanguageModule],
-  exports: [DiagramComponent],
+
+  exports: [DiagramComponent, TileInsertComponent, TileTaskComponent, TileSsvgComponent],
   declarations: [
     DiagramComponent,
     DiagramRowComponent,
     TileInsertComponent,
     TileBranchComponent,
     TileTaskComponent,
+    TileSsvgComponent,
   ],
   providers: [],
 })
