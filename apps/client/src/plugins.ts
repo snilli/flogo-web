@@ -6,7 +6,7 @@ export const resourcePlugins: ResourcePluginManifest[] = [
     type: 'flow',
     path: 'flow',
     loadChildren: () => import('@flogo-web/plugins/flow-client').then(m => m.FlowModule),
-    color: '#96a7f8',
+    color: '#33c6d8',
   },
   {
     label: 'Stream',
@@ -14,6 +14,6 @@ export const resourcePlugins: ResourcePluginManifest[] = [
     path: 'stream',
     loadChildren: () =>
       import('@flogo-web/plugins/stream-client').then(m => m.StreamClientModule),
-    color: '#33c6d8',
+    color: '#96a7f8',
   },
 ];
