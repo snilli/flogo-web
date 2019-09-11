@@ -1,5 +1,6 @@
 <flogo-diagram-tiles-svg> </flogo-diagram-tiles-svg>
-<flogo-diagram-tile-task
+<div class="tiles-wrapper">
+  <flogo-diagram-tile-task
   *ngFor="let tile of tiles; trackBy: trackTileBy"
   class="tile__separator"
   [tile]="tile"
@@ -15,3 +16,5 @@
   [currentSelection]="currentSelection"
   (select)="addStage()"
 ></flogo-diagram-tile-insert>
+</div>
+
