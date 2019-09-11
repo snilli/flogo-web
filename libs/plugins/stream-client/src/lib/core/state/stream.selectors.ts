@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
-import { Dictionary } from '@flogo-web/lib-client/core';
+import { DiagramSelectionType, Tile, TileType } from '@flogo-web/lib-client/diagram';
+import { Dictionary, DiagramGraph } from '@flogo-web/lib-client/core';
 import {
   ContributionType,
   FunctionsSchema,
@@ -113,6 +113,32 @@ export const getDiagramSelection = createSelector(
     }
   }
 );
+
+export const getStagesAsTiles = createSelector(
+  selectGraph,
+  (graph: DiagramGraph) => {
+    return graphToTiles(graph);
+  }
+);
+
+function graphToTiles(graph) {
+  const rootId = graph.rootId;
+  if (!rootId) {
+    return [];
+  }
+  const tiles: Tile[] = [];
+  let currentStage = graph.nodes[rootId];
+  while (currentStage.children.length) {
+    const nextStageId = currentStage.children[0];
+    const nextStage = graph.nodes[nextStageId];
+    tiles.push({
+      type: TileType.Task,
+      task: nextStage,
+    });
+    currentStage = nextStage;
+  }
+  return tiles;
+}
 
 export const getInstalledActivities = createSelector(
   selectSchemas,

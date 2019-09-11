@@ -1,8 +1,17 @@
 <flogo-diagram-tiles-svg> </flogo-diagram-tiles-svg>
-<flogo-diagram
+<flogo-diagram-tile-task
+  *ngFor="let tile of tiles; trackBy: trackTileBy"
+  class="tile__separator"
+  [tile]="tile"
+  [currentSelection]="currentSelection"
+  (select)="selectStage($event)"
+  (remove)="onDiagramAction($event)"
+  (configure)="onDiagramAction($event)"
+></flogo-diagram-tile-task>
+<flogo-diagram-tile-insert
   fgAddStage
-  [flow]="items$ | async"
-  [selection]="currentSelection$ | async"
-  (action)="onDiagramAction($event)"
->
-</flogo-diagram>
+  class="tile--slot tile__separator"
+  [tile]="insertTile"
+  [currentSelection]="currentSelection"
+  (select)="addStage()"
+></flogo-diagram-tile-insert>

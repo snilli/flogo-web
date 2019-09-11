@@ -26,7 +26,7 @@ const BRANCH_ANIMATION_DURATION = 300;
 })
 export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
   @Input()
-  selection: DiagramSelection;
+  currentSelection: DiagramSelection;
 
   constructor(private el: ElementRef, private addStageService: AddActivityService) {}
 
@@ -34,7 +34,7 @@ export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
     this.addStageService.startSubscriptions();
   }
 
-  ngOnChanges({ selection }: SimpleChanges) {
+  ngOnChanges({ currentSelection: selection }: SimpleChanges) {
     if (selection && !selection.firstChange) {
       const currentSelection = selection.currentValue;
       const previousSelection = selection.previousValue;
@@ -54,9 +54,7 @@ export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
         }, 0);
       } else {
         setTimeout(() => {
-          const selectedInsertTile = this.el.nativeElement.querySelector(
-            `.${SELECTED_INSERT_TILE_CLASS} .${BUTTON_INSERT_CLASS}`
-          );
+          const selectedInsertTile = this.el.nativeElement;
           this.addStageService.open(selectedInsertTile, currentSelection.taskId);
         }, BRANCH_ANIMATION_DURATION);
       }
