@@ -11,12 +11,7 @@ import {
   HostBinding,
 } from '@angular/core';
 
-import {
-  DiagramSelection,
-  DiagramSelectionType,
-  BUTTON_INSERT_CLASS,
-  SELECTED_INSERT_TILE_CLASS,
-} from '@flogo-web/lib-client/diagram';
+import { DiagramSelection, DiagramSelectionType } from '@flogo-web/lib-client/diagram';
 
 import { AddActivityService } from './add-activity.service';
 

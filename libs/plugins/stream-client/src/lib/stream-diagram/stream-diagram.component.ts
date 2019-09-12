@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -11,7 +11,6 @@ import {
 import {
   DiagramAction,
   DiagramActionType,
-  DiagramActionChild,
   DiagramSelection,
   DiagramActionSelf,
   Tile,
