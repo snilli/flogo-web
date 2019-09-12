@@ -6,8 +6,6 @@ export enum FLOGO_TASK_TYPE {
 export const GRAPH_NAME = 'mainGraph';
 export const ITEMS_DICTIONARY_NAME = 'mainItems';
 
-export const FLOGO_ERROR_ROOT_NAME = '__error-trigger';
-
 export const TRIGGER_MENU_OPERATION = {
   SHOW_SETTINGS: 'show-settings',
   DELETE: 'delete',
@@ -22,4 +20,9 @@ export const MAPPING_TYPE = {
   LITERAL_ASSIGNMENT: TYPE_LITERAL_ASSIGNMENT,
   EXPRESSION_ASSIGNMENT: TYPE_EXPRESSION_ASSIGNMENT,
   OBJECT_TEMPLATE: TYPE_OBJECT_TEMPLATE,
+};
+
+export const ROOT_TYPES = {
+  STAGE: 'stage',
+  PIPELINE: 'pipeline',
 };

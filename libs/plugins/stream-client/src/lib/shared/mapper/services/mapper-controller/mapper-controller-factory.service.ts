@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ROOT_TYPES } from '../../constants';
 import {
   MapperContext,
   MapperTreeNode,
@@ -15,7 +14,7 @@ import { TreeService } from '../tree.service';
 import { TreeNodeFactoryService } from '../tree-node-factory.service';
 import { MapperController } from './mapper-controller';
 import { createMapperContext } from './create-mapper-context';
-import { InstalledFunctionSchema } from '../../../../core/interfaces';
+import { InstalledFunctionSchema, ROOT_TYPES } from '../../../../core';
 
 @Injectable()
 export class MapperControllerFactory {

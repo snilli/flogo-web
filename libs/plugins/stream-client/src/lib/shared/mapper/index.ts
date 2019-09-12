@@ -1,6 +1,5 @@
 export * from './mapper.module';
 export * from './mapper.component';
-export * from './constants';
 
 export { MapExpression, Mappings, MapperState } from './models';
 export {
