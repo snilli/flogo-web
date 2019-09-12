@@ -20,7 +20,11 @@
         "stages": {
           "type": "array",
           "items": {
-            "$ref": "./common.json#/definitions/stage"
+            "allOf": [{
+              "$ref": "./common.json#/definitions/stage"
+            }, {
+              "required": ["id", "name"]
+            }]
           }
         }
       }
