@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { config } from '../../config/app-config';
+import { config } from '../../config';
 import { createFolder as ensureDir } from '../../common/utils/file';
 
 import { copyBinaryToDestination, removeDir } from './file-utils';
@@ -12,8 +12,11 @@ import { logger } from '../../common/logging';
 
 import { loader } from './loader';
 import { commander } from './commander';
-import { execController as exec } from './exec-controller';
+import { execEngine } from './process/exec-controller';
 import { TYPE_BUILD, TYPE_TEST, BuildOptions, Options } from './options';
+import { RunningProcess } from './process/running-process';
+import { setupStdioRedirection } from './process/logging';
+import { resolveFlowRunnerEnv } from './process/resolve-flow-runner-env';
 
 const DIR_TEST_BIN = 'bin-test';
 const DIR_BUILD_BIN = 'bin-build';
@@ -22,11 +25,12 @@ class Engine {
   static TYPE_TEST: string;
   static TYPE_BUILD: string;
 
+  public readonly path: string;
   private readonly hostExt: string;
   private libVersion: string;
-  private path: string;
   private runLogger: object;
   private installedContributions: object[];
+  private currentProcess: RunningProcess;
 
   constructor(pathToEngine: string, libVersion: string, runLogger: object) {
     this.path = pathToEngine;
@@ -117,13 +121,13 @@ class Engine {
     return ensureDir(options.target).then(() => buildAndCopyBinary(this.path, options));
   }
 
-  buildPlugin(options: Options) {
+  buildPlugin(options: BuildOptions) {
     return ensureDir(path.join(this.path, DIR_BUILD_BIN)).then(() =>
       buildPlugin(this.path, options)
     );
   }
 
-  buildOnly(options: Options) {
+  buildOnly(options?: BuildOptions) {
     return commander.build(this.path, options);
   }
 
@@ -132,16 +136,28 @@ class Engine {
     return ensureDir(targetDir).then(() => copyBinaryToDestination(this.path, targetDir));
   }
 
-  start() {
-    return exec.start(this.path, this.getExecutableName(), {
-      binDir: DIR_TEST_BIN,
-      logPath: config.publicPath,
-      logger: this.runLogger,
-    });
+  async start() {
+    if (!this.currentProcess || this.currentProcess.closed) {
+      const engineName = this.getExecutableName();
+      this.currentProcess = execEngine(this.path, engineName, {
+        binDir: DIR_TEST_BIN,
+        env: resolveFlowRunnerEnv(),
+      });
+      setupStdioRedirection(this.currentProcess, engineName, {
+        logPath: config.publicPath,
+        logger: this.runLogger,
+      });
+    }
+    return this.currentProcess;
   }
 
   stop() {
-    return exec.stop(this.getExecutableName());
+    // todo: process tracking/management should be done independent from the engine
+    // as the process is related to the plugin
+    if (this.currentProcess && !this.currentProcess.closed) {
+      this.currentProcess.kill();
+    }
+    return this.currentProcess ? this.currentProcess.whenClosed : Promise.resolve();
   }
 
   getExecutableName() {
@@ -230,4 +246,3 @@ Engine.TYPE_TEST = TYPE_TEST;
 Engine.TYPE_BUILD = TYPE_BUILD;
 
 export { Engine };
-export default Engine;
