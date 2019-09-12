@@ -274,6 +274,9 @@ export class MapperControllerFactory {
     } else if (resolver === ROOT_TYPES.PIPELINE) {
       expressionHead = makeResolvable(nodeName);
       expressionTailParts = nodes.slice(1);
+    } else {
+      expressionHead = nodeName.indexOf('$') === -1 ? '$.' + nodeName : nodeName;
+      expressionTailParts = nodes.slice(1);
     }
     return [expressionHead]
       .concat(expressionTailParts.map(n => n.data.nodeName))

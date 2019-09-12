@@ -160,38 +160,42 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
     const scope = [{ ...streamMetadata }];
     const prevStageSchema = this.getPrevStageSchema(stageId, mainGraph, state);
     const schemaOutputs = this.getSchemaOutputs(prevStageSchema, 'previousStage');
-    if (!isEmpty(schemaOutputs)) {
+    if (schemaOutputs) {
       scope.push(schemaOutputs);
     }
     return scope;
   }
 
   private getSchemaOutputs(schema, stage): SchemaOutputs {
-    return {
-      type: schema.type,
-      stage,
-      outputs: schema.outputs,
-    };
+    if (!isEmpty(schema)) {
+      return {
+        type: schema.type,
+        stage,
+        outputs: schema.outputs,
+      };
+    }
+    return null;
   }
 
   private getOutputScope(activitySchema) {
     const scope = [];
     const currentSchemaOutputs = this.getSchemaOutputs(activitySchema, 'currentStage');
-    scope.push(currentSchemaOutputs);
+    if (currentSchemaOutputs) {
+      scope.push(currentSchemaOutputs);
+    }
     return scope;
   }
 
   private getPrevStageSchema(stageId, graph, state) {
     const { mainItems } = state;
-    let prevStageSchema = {};
-    if (stageId !== graph.rootId) {
-      const selectedNode = graph.nodes[stageId].parents || [];
-      const [selectedNodeParent] = selectedNode;
-      const prevStage = mainItems[selectedNodeParent];
+    const selectedNode = graph.nodes[stageId];
+    if (stageId !== graph.rootId && !isEmpty(selectedNode.parents)) {
+      const [prevNode] = selectedNode.parents;
+      const prevStage = mainItems[prevNode];
       const activityRef = prevStage['ref'];
-      prevStageSchema = state.schemas[activityRef];
+      return state.schemas[activityRef];
     }
-    return prevStageSchema;
+    return null;
   }
 
   private getStreamMetadata(streamState: FlogoStreamState): StreamMetadata {
