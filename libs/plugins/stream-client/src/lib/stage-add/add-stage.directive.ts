@@ -8,6 +8,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  HostBinding,
 } from '@angular/core';
 
 import {
@@ -25,8 +26,9 @@ const BRANCH_ANIMATION_DURATION = 300;
   selector: '[fgAddStage]',
 })
 export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
-  @Input()
-  currentSelection: DiagramSelection;
+  @Input() currentSelection: DiagramSelection;
+
+  @HostBinding('style.opacity') buttonOpacity: 1 | undefined = undefined;
 
   constructor(private el: ElementRef, private addStageService: AddActivityService) {}
 
@@ -50,10 +52,12 @@ export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
         isEqual(currentSelection, previousSelection)
       ) {
         setTimeout(() => {
+          this.buttonOpacity = undefined;
           this.addStageService.close();
         }, 0);
       } else {
         setTimeout(() => {
+          this.buttonOpacity = 1;
           const selectedInsertTile = this.el.nativeElement;
           this.addStageService.open(selectedInsertTile, currentSelection.taskId);
         }, BRANCH_ANIMATION_DURATION);

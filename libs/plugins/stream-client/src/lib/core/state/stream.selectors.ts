@@ -122,20 +122,21 @@ export const getStagesAsTiles = createSelector(
 );
 
 function graphToTiles(graph) {
-  const rootId = graph.rootId;
-  if (!rootId) {
-    return [];
-  }
+  let currentId = graph.rootId;
   const tiles: Tile[] = [];
-  let currentStage = graph.nodes[rootId];
-  while (currentStage.children.length) {
-    const nextStageId = currentStage.children[0];
-    const nextStage = graph.nodes[nextStageId];
-    tiles.push({
-      type: TileType.Task,
-      task: nextStage,
-    });
-    currentStage = nextStage;
+  while (currentId) {
+    const currentStage = graph.nodes[currentId];
+    if (currentStage) {
+      tiles.push({
+        type: TileType.Task,
+        task: currentStage,
+      });
+    }
+    let nextStageId = null;
+    if (currentStage && currentStage.children.length) {
+      nextStageId = currentStage.children[0];
+    }
+    currentId = nextStageId;
   }
   return tiles;
 }

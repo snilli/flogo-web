@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -43,6 +43,8 @@ export class StreamDiagramComponent implements OnDestroy {
   tileTypes = TileType;
   nodeTypes = NodeType;
   trackTileBy = trackTileByFn;
+  availableSlots: number;
+  placeholders = [];
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(private store: Store<StreamStoreState>) {
@@ -72,6 +74,7 @@ export class StreamDiagramComponent implements OnDestroy {
           parentId: lastTile ? lastTile.task.id : null,
           isRoot: !lastTile,
         };
+        this.updateAvailableSlots(streamTiles);
       });
   }
 
@@ -102,5 +105,18 @@ export class StreamDiagramComponent implements OnDestroy {
   }
   selectStage(taskTile: TaskTile) {
     this.store.dispatch(new StreamDiagramActions.SelectStage(taskTile.task.id));
+  }
+  private updateAvailableSlots(streamTiles) {
+    this.availableSlots = 10 - streamTiles.length;
+    // substract the slot for the add button
+    const visiblePlaceholdersCount = this.availableSlots - 1;
+    if (
+      visiblePlaceholdersCount > 0 &&
+      this.placeholders.length !== visiblePlaceholdersCount
+    ) {
+      this.placeholders = new Array(visiblePlaceholdersCount);
+    } else {
+      this.placeholders = [];
+    }
   }
 }

@@ -1,20 +1,23 @@
 <flogo-diagram-tiles-svg> </flogo-diagram-tiles-svg>
 <div class="tiles-wrapper">
   <flogo-diagram-tile-task
-  *ngFor="let tile of tiles; trackBy: trackTileBy"
-  class="tile__separator"
-  [tile]="tile"
-  [currentSelection]="currentSelection"
-  (select)="selectStage($event)"
-  (remove)="onDiagramAction($event)"
-  (configure)="onDiagramAction($event)"
-></flogo-diagram-tile-task>
-<flogo-diagram-tile-insert
-  fgAddStage
-  class="tile--slot tile__separator"
-  [tile]="insertTile"
-  [currentSelection]="currentSelection"
-  (select)="addStage()"
-></flogo-diagram-tile-insert>
+    *ngFor="let tile of tiles; trackBy: trackTileBy"
+    class="tile__separator"
+    [tile]="tile"
+    [currentSelection]="currentSelection"
+    (select)="selectStage($event)"
+    (remove)="onDiagramAction($event)"
+    (configure)="onDiagramAction($event)"
+  ></flogo-diagram-tile-task>
+  <flogo-diagram-tile-insert
+    fgAddStage
+    *ngIf="availableSlots > 0"
+    class="add-button tile__separator visible-on-hover"
+    [tile]="insertTile"
+    [currentSelection]="currentSelection"
+    (select)="addStage()"
+  ></flogo-diagram-tile-insert>
+  <div class="tile-placeholders">
+    <div class="tile-placeholder visible-on-hover" *ngFor="let i of placeholders"></div>
+  </div>
 </div>
-
