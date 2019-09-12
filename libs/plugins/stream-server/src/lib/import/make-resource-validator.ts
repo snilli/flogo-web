@@ -6,7 +6,7 @@ import {
   ValidationRuleFactory,
 } from '@flogo-web/lib-server/core';
 
-import { StreamSchemas } from './schemas';
+import { StreamSchemas } from '../schemas';
 
 export function makeResourceValidator(
   installedRefs: string[],
@@ -15,7 +15,7 @@ export function makeResourceValidator(
   return createValidator(
     StreamSchemas.resource,
     {
-      schemas: [StreamSchemas.data, Schemas.v1.common],
+      schemas: [StreamSchemas.data, StreamSchemas.common, Schemas.v1.common],
     },
     [
       {

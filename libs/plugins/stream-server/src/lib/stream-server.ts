@@ -5,15 +5,15 @@ import {
   ResourceImportContext,
   HandlerImportContext,
   HandlerExportContext,
-  HookContext,
   ResourceExportContext,
 } from '@flogo-web/lib-server/core';
 import { StreamData } from '@flogo-web/plugins/stream-core';
 
 import { exportStreamResource, registerAction } from './export';
 import { importHandler, importStreamResource } from './import';
+import { RESOURCE_TYPE } from './constants';
+import { streamHooks } from './hooks';
 
-const RESOURCE_TYPE = 'stream';
 const RESOURCE_REF = 'github.com/project-flogo/stream';
 
 export const streamPlugin: FlogoPlugin = {
@@ -49,18 +49,7 @@ export const streamPlugin: FlogoPlugin = {
       },
     });
 
-    // register resource hooks
-    // this is optional, you can remove it if your resource does not need hooks
-    server.resources.useHooks({
-      before: {
-        create(context: HookContext) {
-          if (context.resource.type === RESOURCE_TYPE) {
-            console.log(`before creating resource of type ${context.resource.type}`);
-          } else {
-            console.log(`ignoring resources of type ${context.resource.type}`);
-          }
-        },
-      },
-    });
+    // registering create and update hooks
+    server.resources.useHooks(streamHooks);
   },
 };
