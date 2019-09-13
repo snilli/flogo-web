@@ -16,6 +16,7 @@ import { FLOW_REF } from './constants';
 
 const resourceType = {
   type: 'flow',
+  resourceType: 'flow',
   ref: FLOW_REF,
   import: {
     resource(data, context: ResourceImportContext) {

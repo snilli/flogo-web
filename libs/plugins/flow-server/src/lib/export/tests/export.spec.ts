@@ -104,6 +104,7 @@ function getFlowToExport(): Resource<FlowData> {
       output: [{ name: 'out1', type: ValueType.String, value: null }],
     },
     type: 'flow',
+    resourceType: 'flow',
     data: {
       tasks: [
         {

@@ -65,6 +65,7 @@ function getSampleFlowResource(): Resource {
     name: 'GetStatus',
     description: 'A description',
     type: 'flow',
+    resourceType: 'flow',
     metadata: {
       input: [
         {

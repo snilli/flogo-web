@@ -18,6 +18,7 @@ export interface ResourceExtensionRegistrar {
 export interface ResourceType<TResourceData = unknown> {
   type: string;
   ref: string;
+  resourceType: string;
   import: ResourceImporter<TResourceData>;
   export: ResourceExporter<TResourceData>;
 }

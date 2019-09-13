@@ -266,6 +266,7 @@ export function savableFlow(inFlow: UiFlow): FlowResource {
   const resource: FlowResource = {
     id: inFlow.id,
     type: 'flow',
+    resourceType: 'flow',
     name: inFlow.name || '',
     description: inFlow.description || '',
     metadata: _parseMetadata(

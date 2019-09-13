@@ -81,6 +81,7 @@ function getAppToExport(): App {
         id: '9ldwPipJc',
         name: 'Some flow',
         type: 'flow',
+        resourceType: 'flow',
         createdAt: '2019-02-15T02:38:07.333Z',
         updatedAt: null,
         description: '',
@@ -90,6 +91,7 @@ function getAppToExport(): App {
         id: '7lfwPqpJd',
         name: 'Some stream',
         type: 'stream',
+        resourceType: 'pipeline',
         description: '',
         data: {},
       },
@@ -145,7 +147,7 @@ function getExpectedApp(): FlogoAppModel.App {
         },
       },
       {
-        id: 'stream:some_stream',
+        id: 'pipeline:some_stream',
         data: {
           name: 'Some stream',
         },

@@ -71,6 +71,7 @@ describe('Component: FlowsListComponent', () => {
         description: '',
         id: 'flow_1',
         type: RESOURCE_TYPE_FLOW,
+        resourceType: RESOURCE_TYPE_FLOW,
         createdAt: '2018-01-25T09:50:29.664Z',
         updatedAt: '2018-01-25T09:55:11.088Z',
         data: {
@@ -83,6 +84,7 @@ describe('Component: FlowsListComponent', () => {
         description: 'hello',
         id: 'flow_2',
         type: RESOURCE_TYPE_FLOW,
+        resourceType: RESOURCE_TYPE_FLOW,
         createdAt: '2018-01-25T09:50:29.664Z',
         updatedAt: '2018-01-25T09:55:11.088Z',
         data: {
@@ -95,6 +97,7 @@ describe('Component: FlowsListComponent', () => {
         description: '',
         id: 'flow_3',
         type: RESOURCE_TYPE_FLOW,
+        resourceType: RESOURCE_TYPE_FLOW,
         createdAt: '2018-01-25T09:50:29.664Z',
         updatedAt: '2018-01-25T09:55:11.088Z',
         data: {

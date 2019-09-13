@@ -27,6 +27,7 @@ export class AppsApiServiceMock extends AppsService {
             'A flow for apietusam faccum esequi berum. Hentias porerum ent omniend itatempoer porem uga. Luptati optaquisist quibus rem quam unt Hentias porerum ent omniend itatempoer porem uga. Luptati optaquisist quibus rem quam unt Luptas oilsksd as asdfwo',
           createdAt: new Date().toISOString(),
           type: 'flow',
+          resourceType: 'flow',
           data: null,
         },
         {
@@ -36,6 +37,7 @@ export class AppsApiServiceMock extends AppsService {
             'A basic flow for apietusam faccum esequi berum. Hentias porerum ent omniend itatempoer porem uga. Luptati optaquisist quibus rem quam unt',
           createdAt: new Date().toISOString(),
           type: 'flow',
+          resourceType: 'flow',
           data: null,
         },
         {
@@ -45,6 +47,7 @@ export class AppsApiServiceMock extends AppsService {
             'A complex flow for apietusam faccum esequi berum. Hentias porerum ent omniend itatempoer porem uga. Luptati optaquisist quibus rem quam unt',
           createdAt: new Date().toISOString(),
           type: 'flow',
+          resourceType: 'flow',
           data: null,
         },
       ],

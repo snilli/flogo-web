@@ -4,6 +4,7 @@ export interface Resource<TResourceData = unknown> {
   id: string;
   name: string;
   type: string;
+  resourceType: string;
   createdAt?: string;
   updatedAt?: string;
   description?: string;

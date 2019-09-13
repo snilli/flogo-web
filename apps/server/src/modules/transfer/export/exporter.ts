@@ -95,7 +95,7 @@ export class Exporter {
     resources.forEach(resource => {
       const oldId = resource.id;
       resource.id =
-        resource.type + ':' + this.uniqueIdAgent.generateUniqueId(resource.name);
+        resource.resourceType + ':' + this.uniqueIdAgent.generateUniqueId(resource.name);
       previousResourceIdsLinker.set(oldId, resource);
     });
     return { resources, previousResourceIdsLinker };

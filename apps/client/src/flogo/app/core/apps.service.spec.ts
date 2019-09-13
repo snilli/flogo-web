@@ -12,8 +12,20 @@ describe('AppsService', () => {
     resourceStateStub = {
       resources$: of([]),
       resources: [
-        { id: 'resourceA', name: 'resource a', type: 'flow', data: null },
-        { id: 'resourceB', name: 'resource b', type: 'flow', data: null },
+        {
+          id: 'resourceA',
+          name: 'resource a',
+          type: 'flow',
+          resourceType: 'flow',
+          data: null,
+        },
+        {
+          id: 'resourceB',
+          name: 'resource b',
+          type: 'flow',
+          resourceType: 'flow',
+          data: null,
+        },
       ],
       triggers: ([
         { id: 'trigger1', name: 'trigger 1' },
@@ -53,6 +65,7 @@ describe('AppsService', () => {
           id: 'resourceB',
           name: 'resource b',
           type: 'flow',
+          resourceType: 'flow',
           data: null,
         });
         expect(resourceStateStub.triggers.length).toEqual(2);
@@ -90,6 +103,7 @@ describe('AppsService', () => {
       id: 'resourceB',
       name: 'resource b',
       type: 'flow',
+      resourceType: 'flow',
       data: null,
     });
 
@@ -101,6 +115,7 @@ describe('AppsService', () => {
           id: 'resourceA',
           name: 'resource a',
           type: 'flow',
+          resourceType: 'flow',
           data: null,
         },
       ])
