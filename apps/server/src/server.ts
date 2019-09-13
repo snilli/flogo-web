@@ -1,14 +1,22 @@
-import { rootContainer, createApp as createServerApp } from './init';
+import { rootContainer, createApp as createServerApp, boostrapEngine } from './init';
 
 import { initDb } from './common/db';
 import { logger } from './common/logging';
-import { config } from './config/app-config';
+import { config } from './config';
 import { init as initWebsocketApi } from './api/ws';
-import { getInitializedEngine } from './modules/engine';
-import { syncTasks } from './modules/contrib-install-controller/sync-tasks';
+
+import { EngineProcess } from './modules/engine';
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  // application specific logging, throwing an error, or other logic here
+});
 
 initDb()
-  .then(() => initEngine(config.defaultEngine.path))
+  .then(() => {
+    const engineProcess = rootContainer.get(EngineProcess);
+    return boostrapEngine(config.defaultEngine.path, engineProcess);
+  })
   .then(() =>
     createServerApp({
       port: config.app.port as string,
@@ -34,15 +42,6 @@ function initWebSocketApi(newServer) {
   }
   logger.info("Won't start websocket service");
   return null;
-}
-
-async function initEngine(enginePath) {
-  const engine = await getInitializedEngine(enginePath, {
-    forceCreate: !!process.env['FLOGO_WEB_ENGINE_FORCE_CREATION'],
-  });
-  await engine.build();
-  await engine.stop().then(() => engine.start());
-  await syncTasks(engine);
 }
 
 function showBanner() {

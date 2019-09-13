@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 
-import { RunningProcess } from './running-process';
+import { RunningChildProcess } from './running-child-process';
 
 export function setupStdioRedirection(
-  engineProcess: RunningProcess,
+  engineProcess: RunningChildProcess,
   engineName,
   options: { logger?; logPath?: string } = {}
 ) {

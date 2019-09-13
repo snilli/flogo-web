@@ -1,9 +1,9 @@
 import path from 'path';
-import execa from 'execa';
+import spawn from 'cross-spawn';
 
 import { fileExists } from '../../../common/utils/file';
-import { RunningProcess } from './running-process';
-import { resolveFlowRunnerEnv } from './resolve-flow-runner-env';
+import { processHost } from '../../../common/utils/process';
+import { RunningChildProcess } from './running-child-process';
 
 const DEFAULT_ENV = {
   FLOGO_LOG_LEVEL: 'DEBUG',
@@ -17,7 +17,7 @@ export function execEngine(
     binDir?: string;
     env?: { [key: string]: any };
   } = {}
-): RunningProcess {
+): RunningChildProcess {
   options = {
     binDir: 'bin',
     env: {
@@ -44,26 +44,22 @@ export function execEngine(
   engineProcess.whenClosed = new Promise(resolve => {
     resolveClosed = resolve;
   });
-  engineProcess.finally(() => {
+  engineProcess.on('exit', code => {
     engineProcess.closed = true;
-    resolveClosed();
+    resolveClosed(code);
   });
 
   return engineProcess;
 }
 
 function startProcess(engineName: string, cwd: string, env: Record<string, string>) {
-  const command = engineName;
-  // let args = [];
-  // todo: test if it actually works in windows
-  // if (processHost.isWindows()) {
-  //   command = process.env.comspec;
-  //   args = ['/c', engineName];
-  // }
-  return execa(command, [] /* args */, {
-    cwd,
-    env,
-    extendEnv: true,
-    shell: true,
-  }) as RunningProcess;
+  const commandEnv = { ...process.env, ...env };
+
+  let command = `./${engineName}`;
+  let args = [];
+  if (processHost.isWindows()) {
+    command = process.env.comspec;
+    args = ['/c', engineName];
+  }
+  return spawn(command, args, { cwd, env: commandEnv });
 }

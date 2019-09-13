@@ -4,7 +4,7 @@ import { createLogger, transports, format, Logger } from 'winston';
 import { config } from '../../config/app-config';
 import { Stream } from 'stream';
 
-interface EngineLogger extends Logger {
+export interface EngineLogger extends Logger {
   registerDataStream(stdout?: Stream, stderr?: Stream): void;
 }
 
