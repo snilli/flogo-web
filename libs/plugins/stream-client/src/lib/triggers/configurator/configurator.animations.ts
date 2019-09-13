@@ -11,7 +11,7 @@ import {
   trigger,
 } from '@angular/animations';
 
-const INITIAL_TRIGGER_POSITION = 'translate(-18px, 86px)';
+const INITIAL_TRIGGER_POSITION = 'translate(-20px, 80px)';
 
 export const configuratorAnimations = [
   trigger('configurationPanel', [
@@ -43,8 +43,8 @@ export const configuratorAnimations = [
         ]),
         query('.js-trigger-element', [
           style({
-            width: '46px',
-            marginBottom: '12px',
+            width: '56px',
+            marginBottom: '17px',
             opacity: 0,
             transform: INITIAL_TRIGGER_POSITION,
           }),
@@ -77,8 +77,8 @@ export const configuratorAnimations = [
               '200ms 50ms cubic-bezier(0.4, 0.0, 0.2, 1)',
               style({
                 transform: INITIAL_TRIGGER_POSITION,
-                width: '46px',
-                marginBottom: '12px',
+                width: '56px',
+                marginBottom: '17px',
               })
             ),
             animate('150ms ease-in-out', style({ opacity: 0 })),
