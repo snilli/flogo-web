@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { DiagramSelectionType, Tile, TileType } from '@flogo-web/lib-client/diagram';
+import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
 import { Dictionary, DiagramGraph } from '@flogo-web/lib-client/core';
 import {
   ContributionType,
@@ -14,6 +14,7 @@ import { InstalledFunctionSchema } from '../interfaces';
 import { CurrentSelection, SelectionType } from '../models';
 import { Activity } from '../../stage-add';
 import { GRAPH_NAME } from '../constants';
+import { graphToTiles } from './graph-to-tiles';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
@@ -114,32 +115,14 @@ export const getDiagramSelection = createSelector(
   }
 );
 
-export const getStagesAsTiles = createSelector(
-  selectGraph,
-  (graph: DiagramGraph) => {
-    return graphToTiles(graph);
-  }
-);
-
-function graphToTiles(graph) {
-  let currentId = graph.rootId;
-  const tiles: Tile[] = [];
-  while (currentId) {
-    const currentStage = graph.nodes[currentId];
-    if (currentStage) {
-      tiles.push({
-        type: TileType.Task,
-        task: currentStage,
-      });
+export const getStagesAsTiles = (maxTileCount: number) => {
+  return createSelector(
+    selectGraph,
+    (graph: DiagramGraph) => {
+      return graphToTiles(graph, maxTileCount);
     }
-    let nextStageId = null;
-    if (currentStage && currentStage.children.length) {
-      nextStageId = currentStage.children[0];
-    }
-    currentId = nextStageId;
-  }
-  return tiles;
-}
+  );
+};
 
 export const getInstalledActivities = createSelector(
   selectSchemas,

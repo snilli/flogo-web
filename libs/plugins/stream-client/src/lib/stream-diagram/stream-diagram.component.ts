@@ -27,7 +27,7 @@ import {
   getDiagramSelection,
   getStagesAsTiles,
 } from '../core/state';
-
+const MAX_TILES = 10;
 @Component({
   selector: 'flogo-stream-diagram',
   templateUrl: './stream-diagram.component.html',
@@ -62,7 +62,7 @@ export class StreamDiagramComponent implements OnDestroy {
 
     this.store
       .pipe(
-        select(getStagesAsTiles),
+        select(getStagesAsTiles(MAX_TILES)),
         takeUntil(this.ngOnDestroy$)
       )
       .subscribe((streamTiles: TaskTile[]) => {
@@ -106,7 +106,7 @@ export class StreamDiagramComponent implements OnDestroy {
     this.store.dispatch(new StreamDiagramActions.SelectStage(taskTile.task.id));
   }
   private updateAvailableSlots(streamTiles) {
-    this.availableSlots = 10 - streamTiles.length;
+    this.availableSlots = MAX_TILES - streamTiles.length;
     // substract the slot for the add button
     const visiblePlaceholdersCount = this.availableSlots - 1;
     if (
