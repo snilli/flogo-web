@@ -3,9 +3,10 @@ import { EngineProjectDetails } from '../engine';
 import { execEngine } from './exec-controller';
 import { unmanaged, injectable } from 'inversify';
 
-export type AfterStartFn = (
-  params: { subprocess: RunningChildProcess; projectDetails: EngineProjectDetails }
-) => any;
+export type AfterStartFn = (params: {
+  subprocess: RunningChildProcess;
+  projectDetails: EngineProjectDetails;
+}) => any;
 
 export type EnvResolverFn = () => { [key: string]: any };
 
@@ -47,6 +48,6 @@ export class EngineProcess {
     if (this.currentProcess && !this.currentProcess.closed) {
       this.currentProcess.kill();
     }
-    return this.currentProcess ? this.currentProcess.whenClosed : Promise.resolve();
+    return this.currentProcess ? this.currentProcess.whenClosed : Promise.resolve(0);
   }
 }
