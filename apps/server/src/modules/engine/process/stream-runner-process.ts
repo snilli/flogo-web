@@ -7,7 +7,7 @@ import { setupStdioRedirection } from './logging';
 export class StreamRunnerProcess extends EngineProcess {
   private internalAppJsonPath: string;
 
-  constructor(logger: Logger) {
+  constructor(logger?: Logger) {
     super({
       resolveEnv: () => this.resolveStreamEnv(),
       afterStart: ({ subprocess }) => {
@@ -24,6 +24,14 @@ export class StreamRunnerProcess extends EngineProcess {
 
   getAppJsonPath() {
     return this.internalAppJsonPath;
+  }
+
+  isRunning() {
+    return this.currentProcess && !this.currentProcess.closed;
+  }
+
+  getCurrentChildProcess() {
+    return this.currentProcess;
   }
 
   private resolveStreamEnv(): { [key: string]: any } {

@@ -11,7 +11,7 @@ export type EnvResolverFn = () => { [key: string]: any };
 
 @injectable()
 export class EngineProcess {
-  private currentProcess: RunningChildProcess;
+  protected currentProcess: RunningChildProcess;
   private afterStart: AfterStartFn;
   private resolveEnv: EnvResolverFn;
 

@@ -7,4 +7,5 @@ export const TOKENS = {
   ResourceIndexerDb: Symbol('ResourceIndexerDb'),
   ContributionsManager: Symbol('ContributionsManager'),
   EngineProvider: Symbol('EngineProvider'),
+  StreamSimulationConfig: Symbol('StreamSimulationConfig'),
 };

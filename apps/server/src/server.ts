@@ -6,6 +6,7 @@ import { config } from './config';
 import { init as initWebsocketApi } from './api/ws';
 
 import { EngineProcess } from './modules/engine';
+import { StreamSimulator } from './modules/simulator';
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
@@ -38,7 +39,9 @@ initDb()
 
 function initWebSocketApi(newServer) {
   if (!process.env['FLOGO_WEB_DISABLE_WS']) {
-    return initWebsocketApi(newServer);
+    return initWebsocketApi(newServer, {
+      streamSimulator: rootContainer.get(StreamSimulator),
+    });
   }
   logger.info("Won't start websocket service");
   return null;

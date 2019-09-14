@@ -171,6 +171,11 @@ const config = {
     port: '8080',
     testPath: 'status',
   },
+  streamSimulation: {
+    restControlUrl:
+      process.env.FLOGO_WEB_STREAM_TRIGGER_URL || 'http://localhost:9998/control',
+    wsUrl: process.env.FLOGO_WEB_STREAM_WS_URL || 'ws://localhost:9999/telemetry',
+  },
 };
 
 export { config };
