@@ -152,7 +152,7 @@
     "ngx-perfect-scrollbar": "^8.0.0",
     "nodemon": "^1.18.4",
     "perfect-scrollbar": "^1.4.0",
-    "prettier": "~1.15.3",
+    "prettier": "1.16.4",
     "primeng": "^7.0.0",
     "read-pkg": "^4.0.1",
     "server-destroy": "^1.0.1",
