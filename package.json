@@ -88,6 +88,7 @@
     "ws": "^7.1.2"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^8.2.0",
     "@angular-devkit/build-angular": "^0.801.1",
     "@angular/animations": "~8.2.3",
     "@angular/cdk": "~8.0.1",
@@ -101,6 +102,11 @@
     "@angular/platform-browser": "~8.2.3",
     "@angular/platform-browser-dynamic": "~8.2.3",
     "@angular/router": "~8.2.3",
+    "@finos/perspective": "^0.3.8",
+    "@finos/perspective-viewer": "^0.3.8",
+    "@finos/perspective-viewer-d3fc": "^0.3.8",
+    "@finos/perspective-viewer-hypergrid": "^0.3.8",
+    "@finos/perspective-webpack-plugin": "^0.3.8",
     "@ngrx/effects": "8.0.1",
     "@ngrx/store": "8.0.1",
     "@ngrx/store-devtools": "8.0.1",

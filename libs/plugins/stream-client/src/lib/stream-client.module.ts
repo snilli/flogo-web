@@ -9,6 +9,7 @@ import { LogsModule as FlogoLogsModule } from '@flogo-web/lib-client/logs';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
 import { DiagramModule } from '@flogo-web/lib-client/diagram';
 import { ResourceInterfaceBuilderModule } from '@flogo-web/lib-client/resource-interface-builder';
+import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
 import { MonacoEditorModule } from '@flogo-web/editor';
 
 import {
@@ -26,7 +27,7 @@ import { StreamDiagramComponent } from './stream-diagram';
 import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
-import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
+import { SimulatorModule } from './simulator/simulator.module';
 
 @NgModule({
   imports: [
@@ -52,6 +53,7 @@ import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
     MonacoEditorModule,
     StageConfiguratorModule,
     ContextPanelModule,
+    SimulatorModule,
   ],
   providers: [
     StreamService,
