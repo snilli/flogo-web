@@ -5,7 +5,6 @@ export let mockFlow: ApiFlowResource = {
   name: 'Test flow 1',
   description: 'Hello world!!',
   type: 'flow',
-  resourceType: 'flow',
   app: {
     id: 'e9712c97-4a9e-4e95-b815-33204ba1fb3a',
     name: 'Sample Application',

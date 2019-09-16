@@ -188,7 +188,6 @@ function normalizeResources(
       name: resource.data.name,
       description: resource.data.description,
       type: pluginTypesMapping.get(resourceType),
-      resourceType: resourceType,
       metadata: resource.data.metadata,
       createdAt: now,
       updatedAt: null,

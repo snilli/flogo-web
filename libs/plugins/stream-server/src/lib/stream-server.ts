@@ -14,7 +14,6 @@ import { exportStreamResource, registerAction } from './export';
 import { importHandler, importStreamResource } from './import';
 
 const RESOURCE_TYPE = 'stream';
-const RESOURCE_TYPE_NAME = 'pipeline';
 const RESOURCE_REF = 'github.com/project-flogo/stream';
 
 export const streamPlugin: FlogoPlugin = {
@@ -22,7 +21,7 @@ export const streamPlugin: FlogoPlugin = {
     // register resource type
     server.resources.addType({
       type: RESOURCE_TYPE,
-      resourceType: RESOURCE_TYPE_NAME,
+      resourceType: 'pipeline',
       ref: RESOURCE_REF,
       import: {
         resource(data: Resource<StreamData>, context: ResourceImportContext) {
@@ -54,12 +53,12 @@ export const streamPlugin: FlogoPlugin = {
     // this is optional, you can remove it if your resource does not need hooks
     server.resources.useHooks({
       before: {
-        async create(context: HookContext) {
+        create(context: HookContext) {
           if (context.resource.type === RESOURCE_TYPE) {
-            // Adding the resourceType while creating the resource
-            context.resource.resourceType = RESOURCE_TYPE_NAME;
+            console.log(`before creating resource of type ${context.resource.type}`);
+          } else {
+            console.log(`ignoring resources of type ${context.resource.type}`);
           }
-          return context;
         },
       },
     });

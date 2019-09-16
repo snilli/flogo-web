@@ -8,8 +8,6 @@ export const resourceHooks: ResourceHooks = {
     async create(context) {
       if (isFlowResource(context.resource)) {
         runValidation(context.resource.data);
-        // Adding the resourceType while creating the resource
-        context.resource.resourceType = 'flow';
       }
       return context;
     },
