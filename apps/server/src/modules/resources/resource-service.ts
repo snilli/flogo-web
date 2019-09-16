@@ -128,6 +128,20 @@ export class ResourceService {
     return context.resource as ExtendedResource;
   }
 
+  async getResource(resourceId: string): Promise<Resource> {
+    const app = await this.resourceRepository.findAppByResourceId(resourceId);
+    if (!app) {
+      return null;
+    }
+    const foundResource = app.resources.find(r => r.id === resourceId);
+    if (!foundResource) {
+      return null;
+    }
+    const context = this.createHookContext(foundResource);
+    await this.resourceHooks.wrapAndRun('list', context, identity);
+    return context.resource as Resource;
+  }
+
   async listRecent() {
     const recentIds = await this.resourceRepository.listRecent();
     const recentResources = await mapAsync(recentIds, ({ id }) => this.findOne(id));

@@ -1,8 +1,31 @@
 import { injectable } from 'inversify';
+import { cloneDeep } from 'lodash';
+
+import { AppExporter } from '../apps';
+import { ResourceService } from '../resources';
+
+const BASE_APP = {
+  name: 'flogo-simulation',
+  type: 'flogo:app',
+  appModel: '1.1.0',
+  triggers: [],
+  resources: [],
+};
+
+const BASE_HANDLER_SETTINGS = {
+  settings: {
+    header: true,
+  },
+};
 
 @injectable()
 export class SimulatableAppGenerator {
-  generateFor(
+  constructor(
+    private resourceService: ResourceService,
+    private appExporter: AppExporter
+  ) {}
+
+  async generateFor(
     resourceId: string,
     options: {
       filePath: string;
@@ -11,11 +34,60 @@ export class SimulatableAppGenerator {
     }
   ) {
     const repeatInterval = options.repeatInterval || 500;
-    return getMock(options.filePath, options.port, repeatInterval);
+    const opts = {
+      ...options,
+      repeatInterval,
+    };
+    // return getMock(options.filePath, options.port, repeatInterval);
+    const app = cloneDeep(BASE_APP);
+    const resource = await this.resourceService.getResource(resourceId);
+    app.resources.push(resource);
+    app.triggers.push(generateTrigger({ ...opts, resourceId }));
+    const transformedApp = await this.appExporter.export(app);
+    transformedApp.imports.push('github.com/project-flogo/stream/service/telemetry');
+    return transformedApp;
   }
 }
 
-function getMock(filePath, port, repeatInterval) {
+function generateTrigger(options) {
+  return {
+    id: 'flogo-timer',
+    ref: 'github.com/skothari-tibco/csvtimer',
+    settings: {
+      control: true,
+      port: options.port,
+    },
+    handlers: [generateHandler(options)],
+  };
+}
+
+function generateHandler({ resourceId, filePath, repeatInterval }) {
+  const handler = cloneDeep(BASE_HANDLER_SETTINGS);
+  // const actionMappings = prepareInputMappings();
+  const actionMappings = {
+    input: {
+      input: '$.data',
+    },
+  };
+  return {
+    ...handler,
+    settings: {
+      ...handler.settings,
+      repeatInterval,
+      filePath,
+    },
+    resourceId,
+    actionMappings,
+  };
+}
+
+/*function prepareInputMappings() {
+  return {
+    input: {},
+  };
+}*/
+
+/*function getMock(filePath, port, repeatInterval) {
   return {
     name: '20190828-1542',
     type: 'flogo:app',
@@ -93,6 +165,7 @@ function getMock(filePath, port, repeatInterval) {
     resources: [
       {
         id: 'pipeline:simple_filter',
+        "filePath": "...local\asf\file.csv"
         data: {
           metadata: {
             input: [
@@ -137,4 +210,4 @@ function getMock(filePath, port, repeatInterval) {
       },
     ],
   };
-}
+}*/
