@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { App, ContributionSchema } from '@flogo-web/core';
-import { ResourceExporter } from '@flogo-web/lib-server/core';
+import { ResourceExporter, ResourceConfiguration } from '@flogo-web/lib-server/core';
 
 import { isValidApplicationType } from '../../../common/utils';
 import { AppFormatter } from './app-formatter';
@@ -16,7 +16,7 @@ export function exportApp(
   app: App,
   resolveExporterFn: (resourceType: string) => ResourceExporter,
   activitySchemas: Map<string, ContributionSchema>,
-  resourceTypeToRef: Map<string, string>,
+  getResourceConfig: (resourceType: string) => ResourceConfiguration,
   options: ExportAppOptions = {}
 ) {
   if (!isValidApplicationType(app.type)) {
@@ -24,11 +24,16 @@ export function exportApp(
   }
   const formatter = new AppFormatter(
     activitySchemas,
-    resourceTypeToRef,
+    getResourceConfig,
     createExportResolver(resolveExporterFn)
   );
   const { isFullExportMode = true, selectResources = [] } = options;
-  const exporter = new Exporter(isFullExportMode, formatter, new UniqueIdAgent());
+  const exporter = new Exporter(
+    isFullExportMode,
+    formatter,
+    new UniqueIdAgent(),
+    getResourceConfig
+  );
   return exporter.export(cloneDeep(app), selectResources);
 }
 
