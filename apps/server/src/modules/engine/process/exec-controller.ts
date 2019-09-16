@@ -15,7 +15,7 @@ export function execEngine(
   // todo: add type
   options: {
     binDir?: string;
-    env?: { []: any };
+    env?: { [key: string]: any };
   } = {}
 ): RunningChildProcess {
   options = {
