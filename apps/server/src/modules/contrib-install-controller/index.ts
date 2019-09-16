@@ -188,7 +188,8 @@ export class ContribInstallController extends EventEmitter {
   startEngine() {
     logger.debug('Starting enigne.');
     this.updateInstallState(INSTALLATION_STATE.START);
-    return this.engineProcess.start(this.engine.getProjectDetails());
+    return Promise.resolve(true);
+    // return this.engineProcess.start(this.engine.getProjectDetails());
   }
 
   private updateInstallState(state: INSTALLATION_STATE) {
