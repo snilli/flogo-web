@@ -1,4 +1,4 @@
-import { Resource } from '@flogo-web/lib-server/core';
+import { Resource, ResourceConfiguration } from '@flogo-web/lib-server/core';
 
 import { DEFAULT_APP_TYPE, DEFAULT_APP_VERSION } from '../../../common/constants';
 import { normalizeName } from './utils/normalize-name';
@@ -9,7 +9,8 @@ export class Exporter {
   constructor(
     private isFullAppExportMode: boolean,
     private formatter: AppFormatter,
-    private uniqueIdAgent: UniqueIdAgent
+    private uniqueIdAgent: UniqueIdAgent,
+    private getResourceConfiguration: (resourceType: string) => ResourceConfiguration
   ) {}
 
   /**
@@ -93,9 +94,10 @@ export class Exporter {
   } {
     const previousResourceIdsLinker = new Map<string, Resource>();
     resources.forEach(resource => {
+      const { resourcePrefix } = this.getResourceConfiguration(resource.type);
       const oldId = resource.id;
       resource.id =
-        resource.type + ':' + this.uniqueIdAgent.generateUniqueId(resource.name);
+        resourcePrefix + ':' + this.uniqueIdAgent.generateUniqueId(resource.name);
       previousResourceIdsLinker.set(oldId, resource);
     });
     return { resources, previousResourceIdsLinker };

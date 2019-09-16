@@ -25,9 +25,14 @@ export class AppImporter {
 
   async import(app) {
     const contributions = await this.allContribsService.allByRef();
+    const resourceTypes = this.pluginRegistry.resourceTypes;
+    const pluginTypesMapping = new Map<string, string>(
+      resourceTypes.allTypes().map(t => [t.resourceType, t.type])
+    );
     const { id, ...newApp } = await importApp(
       app,
-      resourceImportResolver(this.pluginRegistry.resourceTypes),
+      resourceImportResolver(resourceTypes),
+      pluginTypesMapping,
       shortid.generate,
       contributions
     );

@@ -4,6 +4,7 @@ import {
   Resource,
   ExportRefAgent,
   ExportActionAgent,
+  ResourceConfiguration,
 } from '@flogo-web/lib-server/core';
 import {
   App,
@@ -33,7 +34,7 @@ const TRIGGER_KEYS: Array<keyof FlogoAppModel.Trigger> = [
 export class AppFormatter {
   constructor(
     private contributionSchemas: Map<string, ContributionSchema>,
-    private resourceTypeToRef: Map<string, string>,
+    private getResourceConfiguration: (resourceType: string) => ResourceConfiguration,
     private exporter: {
       resource: ResourceExporterFn;
       handler: HandlerExporterFn;
@@ -88,10 +89,11 @@ export class AppFormatter {
     const exportedResources: FlogoAppModel.Resource[] = [];
     resources.forEach(resource => {
       const exportedResource = this.exporter.resource(resource, exportContext);
+      const { ref } = this.getResourceConfiguration(resource.type);
       resourceInfoLookup.set(resource.id, {
         resource: exportedResource,
         type: resource.type,
-        ref: this.resourceTypeToRef.get(resource.type),
+        ref,
       });
       exportedResources.push(exportedResource);
     });

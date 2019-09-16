@@ -6,6 +6,11 @@ import {
   ContributionType,
 } from '@flogo-web/core';
 
+export interface ResourceConfiguration {
+  ref: string;
+  resourcePrefix: string;
+}
+
 export interface ResourceExportContext {
   contributions: Map<string, ContributionSchema>;
   resourceIdReconciler: Map<string, Resource>;

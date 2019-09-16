@@ -28,7 +28,11 @@ test('it exports an app', () => {
       };
     },
     new Map<string, ContributionSchema>(getContributionSchemas()),
-    new Map<string, string>([['flow', 'github.com/project-flogo/flow']])
+    type =>
+      ({
+        flow: { ref: 'github.com/project-flogo/flow', resourcePrefix: 'flow' },
+        stream: { ref: 'github.com/project-flogo/stream', resourcePrefix: 'pipeline' },
+      }[type])
   );
   expect(exported).toEqual(getExpectedApp());
 });
@@ -145,7 +149,7 @@ function getExpectedApp(): FlogoAppModel.App {
         },
       },
       {
-        id: 'stream:some_stream',
+        id: 'pipeline:some_stream',
         data: {
           name: 'Some stream',
         },
