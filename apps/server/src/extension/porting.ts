@@ -3,6 +3,7 @@ import {
   ResourceImporter,
   ResourceExporter,
   ResourceType,
+  ResourceConfiguration,
 } from '@flogo-web/lib-server/core';
 
 export class ResourceTypes {
@@ -29,6 +30,12 @@ export class ResourceTypes {
   exporter(type: string): ResourceExporter {
     this.throwIfUnknown(type);
     return this.types.get(type).export;
+  }
+
+  getConfiguration(type: string): ResourceConfiguration {
+    this.throwIfUnknown(type);
+    const { ref, resourceType: resourcePrefix } = this.types.get(type);
+    return { ref, resourcePrefix };
   }
 
   findbyRef(ref: string) {

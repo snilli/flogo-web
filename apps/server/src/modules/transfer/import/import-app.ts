@@ -40,6 +40,7 @@ export interface ImportersResolver {
 export function importApp(
   rawApp: FlogoAppModel.App,
   resolveImporter: ImportersResolver,
+  pluginTypesMapping: Map<string, string>,
   generateId: () => string,
   contributions: Map<string, ContributionSchema>
 ): App {
@@ -58,6 +59,7 @@ export function importApp(
   );
   const { resources, normalizedResourceIds } = normalizeResources(
     (rawApp.resources || []) as DefaultAppModelResource[],
+    pluginTypesMapping,
     generateId,
     now
   );
@@ -173,6 +175,7 @@ function cleanAndValidateApp(
 
 function normalizeResources(
   resources: DefaultAppModelResource[],
+  pluginTypesMapping: Map<string, string>,
   generateId: () => string,
   now: string
 ): { resources: Resource[]; normalizedResourceIds: Map<string, string> } {
@@ -184,7 +187,7 @@ function normalizeResources(
       id: generateId(),
       name: resource.data.name,
       description: resource.data.description,
-      type: resourceType,
+      type: pluginTypesMapping.get(resourceType),
       metadata: resource.data.metadata,
       createdAt: now,
       updatedAt: null,

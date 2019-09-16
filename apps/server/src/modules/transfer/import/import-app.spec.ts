@@ -12,6 +12,8 @@ const activities = require('../tests/samples/activities.json');
 
 const triggers = require('../tests/samples/triggers.json');
 
+const pluginTypeMap = new Map([['flow', 'flow']]);
+
 function idGenerator() {
   let nextId = 0;
   return () => {
@@ -53,6 +55,7 @@ test('import app', () => {
         }
       )
     ),
+    pluginTypeMap,
     idGenerator(),
     contribs
   );
@@ -79,6 +82,7 @@ test('It collects and forwards plugin import validation errors', () => {
     importApp(
       multiResourceApp,
       pluginResolver(importerResolver(throwError, throwError)),
+      pluginTypeMap,
       idGenerator(),
       contribs
     );
@@ -108,7 +112,13 @@ test('It collects and forwards plugin import validation errors', () => {
 test('It throws a validation error if resource is not supported', () => {
   expect.assertions(1);
   try {
-    importApp(cloneDeep(appToImport), pluginResolver(null), idGenerator(), contribs);
+    importApp(
+      cloneDeep(appToImport),
+      pluginResolver(null),
+      pluginTypeMap,
+      idGenerator(),
+      contribs
+    );
   } catch (e) {
     expect(e.details.errors).toEqual(
       expect.arrayContaining([

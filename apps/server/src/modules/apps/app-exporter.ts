@@ -14,6 +14,14 @@ function resourceExportResolver(resourceTypes: ResourceTypes) {
   };
 }
 
+function pluginConfigResolver(resourceTypes: ResourceTypes) {
+  return (resourceType: string) => {
+    return resourceTypes.isKnownType(resourceType)
+      ? resourceTypes.getConfiguration(resourceType)
+      : null;
+  };
+}
+
 @injectable()
 export class AppExporter {
   constructor(
@@ -24,14 +32,11 @@ export class AppExporter {
   async export(app, options?: ExportAppOptions) {
     const contributions = await this.allContribsService.allByRef();
     const resourceTypes = this.pluginRegistry.resourceTypes;
-    const resourceRefs = new Map<string, string>(
-      resourceTypes.allTypes().map(t => [t.type, t.ref] as [string, string])
-    );
     return exportApp(
       app,
       resourceExportResolver(resourceTypes),
       contributions,
-      resourceRefs,
+      pluginConfigResolver(resourceTypes),
       options
     );
   }
