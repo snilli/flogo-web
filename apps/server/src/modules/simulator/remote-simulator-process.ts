@@ -65,7 +65,9 @@ export class RemoteSimulatorProcess {
       this.ws = new Websocket(this.config.wsUrl);
       this.ws.on('message', d => {
         console.log('got message');
-        this.dataSubscription(d);
+        try {
+          this.dataSubscription(JSON.parse(d.toString()));
+        } catch (e) {}
       });
       this.ws.on('open', () => {
         console.log('opened ws connection');
