@@ -2,8 +2,6 @@ import got from 'got';
 import Websocket from 'ws';
 import { StreamRunnerProcess } from '../engine/process/stream-runner-process';
 
-export type RemoteProcessFactoryFn = () => RemoteSimulatorProcess;
-
 type ListenerFn = (data) => any;
 const NO_OP: ListenerFn = () => {};
 
@@ -54,13 +52,32 @@ export class RemoteSimulatorProcess {
     this.updateStatus(
       this.subprocess.isRunning() ? ProcessStatus.Running : ProcessStatus.Closed
     );
+    let isSubprocessClosed = false;
+    let retries = 0;
     this.subprocess.getCurrentChildProcess().whenClosed.then(exitCode => {
+      isSubprocessClosed = true;
       this.updateStatus(exitCode === 0 ? ProcessStatus.Closed : ProcessStatus.Errored);
     });
-    setImmediate(() => {
+    const wsConnect = () => {
+      if (isSubprocessClosed || this.subprocess !== subprocess) {
+        return;
+      }
       this.ws = new Websocket(this.config.wsUrl);
-      this.ws.on('message', this.dataSubscription);
-    });
+      this.ws.on('message', d => {
+        console.log('got message');
+        this.dataSubscription(d);
+      });
+      this.ws.on('open', () => {
+        console.log('opened ws connection');
+      });
+      this.ws.on('error', (e: any) => {
+        console.error('Could not connect to telemetry ws: ', e);
+        if (e.code === 'ECONNREFUSED' && retries++ <= 5) {
+          setTimeout(wsConnect, 3000);
+        }
+      });
+    };
+    setTimeout(wsConnect, 3000);
   }
 
   teardown() {
@@ -68,11 +85,12 @@ export class RemoteSimulatorProcess {
       this.subprocess.stop();
     }
 
-    if (
-      this.ws.readyState === Websocket.OPEN ||
-      this.ws.readyState === Websocket.CONNECTING
-    ) {
-      this.ws.close();
+    if (this.ws && [Websocket.OPEN, Websocket.CONNECTING].includes(this.ws.readyState)) {
+      try {
+        this.ws.close();
+      } catch (err) {
+        console.warn(err);
+      }
     }
 
     this.dataSubscription = NO_OP;

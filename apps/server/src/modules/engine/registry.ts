@@ -5,6 +5,7 @@ import { config } from '../../config/app-config';
 import { ContribInstallController } from '../contrib-install-controller';
 import { installResourceTypes } from './install-resource-types';
 import { EngineProcess } from './process/engine-process';
+import { tempInstallSimulatorDeps } from './temp-install-simulator-deps';
 
 const CONTRIB_INSTALLER = 'contribInstaller';
 const engineRegistry: { [key: string]: any } = {};
@@ -84,6 +85,7 @@ async function createEngine(engine, defaultFlogoDescriptorPath, skipBundleInstal
     logger.info(`Will install contrib bundle at ${contribBundlePath}`);
     await installResourceTypes(engine, defaultResourceTypes);
     await engine.installContribBundle(contribBundlePath);
+    await tempInstallSimulatorDeps(engine.getProjectDetails());
   } catch (e) {
     logger.error('Found error while initializing engine:');
     logger.error(e);

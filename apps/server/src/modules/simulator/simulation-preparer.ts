@@ -22,7 +22,8 @@ export class SimulationPreparer {
   constructor(
     @inject(TOKENS.EngineProvider) private engineProvider: () => Promise<Engine>,
     private simulatableAppGenerator: SimulatableAppGenerator,
-    @inject(TOKENS.StreamSimulationConfig) private config: SimulationConfiguration
+    @inject(TOKENS.StreamSimulationConfig) private config: SimulationConfiguration,
+    @inject(TOKENS.EngineLogger) private engineLogger
   ) {}
 
   async prepare({
@@ -40,7 +41,8 @@ export class SimulationPreparer {
       restControlUrl: restControlUrl,
       wsUrl: wsUrl,
     });
-    const engineProcess = new StreamRunnerProcess();
+    const engineProcess = new StreamRunnerProcess(this.engineLogger);
+    engineProcess.setAppJsonPath(TMP_PATH);
     const engine = await this.engineProvider();
     engineProcess.start(engine.getProjectDetails());
     remoteSimulatorProcess.setup(engineProcess);

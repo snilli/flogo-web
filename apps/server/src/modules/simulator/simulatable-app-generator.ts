@@ -23,6 +23,7 @@ function getMock(filePath, port, repeatInterval) {
     description: '',
     appModel: '1.1.0',
     imports: [
+      // 'github.com/project-flogo/stream/trigger/test-timer testtimer',
       'github.com/skothari-tibco/csvtimer',
       'github.com/project-flogo/stream/activity/filter',
       'github.com/project-flogo/contrib/activity/log',
@@ -31,18 +32,40 @@ function getMock(filePath, port, repeatInterval) {
       'github.com/project-flogo/stream',
     ],
     triggers: [
+      // {
+      //   id: 'flogo-timer',
+      //   ref: 'testtimer',
+      //   settings: {
+      //     port: `${port}`,
+      //     control: true,
+      //   },
+      //   handlers: [
+      //     {
+      //       settings: {
+      //         header: true,
+      //         filePath: filePath,
+      //         repeatInterval: `${repeatInterval}`,
+      //       },
+      //       actions: [
+      //         {
+      //           id: 'simple_agg',
+      //           input: {
+      //             foo: '=$.data.foo',
+      //             bar: '=$.data.bar',
+      //           },
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
       {
         id: 'flogo-timer',
-        ref: 'github.com/skothari-tibco/csvtimer',
-        settings: {
-          port: `${port}`,
-          control: true,
-        },
+        ref: '#csvtimer',
         handlers: [
           {
             settings: {
               header: true,
-              filePath: filePath,
+              filePath,
               repeatInterval: `${repeatInterval}`,
             },
             actions: [

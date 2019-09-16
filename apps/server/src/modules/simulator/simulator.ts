@@ -1,8 +1,4 @@
-import {
-  RemoteSimulatorProcess,
-  RemoteProcessFactoryFn,
-  ProcessStatus,
-} from './remote-simulator-process';
+import { RemoteSimulatorProcess, ProcessStatus } from './remote-simulator-process';
 import { Socket } from 'socket.io';
 import { SimulationPreparer } from './simulation-preparer';
 import { injectable } from 'inversify';
@@ -41,12 +37,15 @@ export class SimulationClient {
         case 'restart':
           this.simulator.restart();
           break;
+        case 'stop':
+          this.simulator.stop();
+          break;
       }
     });
   }
 
   send(data: any) {
-    this.socket.send(data);
+    this.socket.emit('data', data);
   }
 
   emitStatus(status) {
@@ -85,17 +84,20 @@ export class StreamSimulator {
   }
 
   async startNewProcess({ pipelineId, simulationDataFile }) {
+    console.log('simulator: starting new process', { pipelineId, simulationDataFile });
     this.teardownRemoteProcess();
 
     this.currentProcess = await this.enginePreparer.prepare({
       pipelineId,
       simulationDataFile,
     });
-    this.currentProcess.onData(this.sendToClient.bind(this));
+    this.currentProcess.onData(this.sendData.bind(this));
+    this.currentProcess.onStatusChange(this.sendStatus.bind(this));
   }
 
   onClientDisconnection(client: SimulationClient) {
     if (this.currentClient === client) {
+      console.log('simulator: client disconnected');
       this.currentClient.unregister(this);
       this.currentClient = null;
 
@@ -109,18 +111,22 @@ export class StreamSimulator {
   }
 
   pause() {
+    console.log('simulator: pausing');
     this.currentProcess.pause();
   }
 
   resume() {
+    console.log('simulator: resuming');
     this.currentProcess.resume();
   }
 
   stop() {
+    console.log('simulator: stopping');
     this.teardownRemoteProcess();
   }
 
   restart() {
+    console.log('simulator: restarting');
     this.currentProcess.restart();
   }
 
@@ -130,14 +136,16 @@ export class StreamSimulator {
     }
   }
 
-  private sendToClient(data) {
+  private sendData(data) {
     if (this.currentClient) {
+      console.log('sending data to client', data);
       this.currentClient.send(data);
     }
   }
 
-  private emitStatus(status: ProcessStatus) {
+  private sendStatus(status) {
     if (this.currentClient) {
+      console.log('sending status to client', status);
       this.currentClient.emitStatus(status);
     }
   }

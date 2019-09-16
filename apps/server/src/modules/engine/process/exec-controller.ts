@@ -15,18 +15,13 @@ export function execEngine(
   // todo: add type
   options: {
     binDir?: string;
-    env?: { [key: string]: any };
+    env?: { []: any };
   } = {}
 ): RunningChildProcess {
   options = {
     binDir: 'bin',
-    env: {
-      ...DEFAULT_ENV,
-      ...options.env,
-    },
     ...options,
   };
-  options = Object.assign({}, { binDir: 'bin' }, options);
   console.log(`[info] starting engine ${engineName}`);
 
   const binPath = path.join(enginePath, options.binDir);
@@ -53,7 +48,7 @@ export function execEngine(
 }
 
 function startProcess(engineName: string, cwd: string, env: Record<string, string>) {
-  const commandEnv = { ...process.env, ...env };
+  const commandEnv = { ...process.env, ...DEFAULT_ENV, ...env };
 
   let command = `./${engineName}`;
   let args = [];

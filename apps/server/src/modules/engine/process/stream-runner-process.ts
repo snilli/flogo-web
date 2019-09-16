@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import { Logger } from 'winston';
 import { EngineProcess } from './engine-process';
 import { setupStdioRedirection } from './logging';
+import { RunningChildProcess } from './running-child-process';
 
 @injectable()
 export class StreamRunnerProcess extends EngineProcess {
@@ -10,7 +11,14 @@ export class StreamRunnerProcess extends EngineProcess {
   constructor(logger?: Logger) {
     super({
       resolveEnv: () => this.resolveStreamEnv(),
-      afterStart: ({ subprocess }) => {
+      afterStart: ({ subprocess }: { subprocess: RunningChildProcess }) => {
+        // uncomment to log directly to console
+        // subprocess.stdout.on('data', data =>
+        //   console.log(`[stream-runner]`, data.toString())
+        // );
+        // subprocess.stderr.on('data', data =>
+        //   console.error(`[stream-runner]`, data.toString())
+        // );
         setupStdioRedirection(subprocess, 'stream-engine', {
           logger,
         });
