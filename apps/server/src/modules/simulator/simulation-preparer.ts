@@ -32,7 +32,7 @@ export class SimulationPreparer {
   }: PrepareOptions): Promise<RemoteSimulatorProcess> {
     const { restControlUrl, wsUrl } = this.config;
     const parsedRestUrl = new URL(restControlUrl);
-    const flogoJson = this.simulatableAppGenerator.generateFor(pipelineId, {
+    const flogoJson = await this.simulatableAppGenerator.generateFor(pipelineId, {
       filePath: simulationDataFile,
       port: parsedRestUrl.port,
     });

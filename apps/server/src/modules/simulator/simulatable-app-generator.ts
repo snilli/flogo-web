@@ -66,7 +66,7 @@ function generateHandler({ resourceId, filePath, repeatInterval }) {
   // const actionMappings = prepareInputMappings();
   const actionMappings = {
     input: {
-      input: '$.data',
+      input: '=$.data',
     },
   };
   return {
