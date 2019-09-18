@@ -8,12 +8,12 @@
 .btn-insert {
   .tile-placeholder;
   .flex-center;
-  color: @color-secondary;
+  color: var(--diagram-secondary, @color-secondary);
   background-color: transparent;
-  border: 2px dashed @color-secondary;
+  border: 2px dashed var(--diagram-secondary, @color-secondary);
   box-shadow: none;
   &:hover {
-    color: @columbia-blue;
+    color: var(--diagram-secondary, @columbia-blue);
     background-color: @tile-color-bg;
     transform: translateY(-2px);
     outline: none;
@@ -37,7 +37,7 @@
   .btn-insert:hover {
     box-shadow: 1px 2px 9px 0 rgba(0, 0, 0, 0.3);
     transform: translateY(0);
-    background-color: @tile-color-bg--selected;
+    background-color: var(--diagram-secondary, @tile-color-bg--selected);
     color: @color-bg;
     border: none;
   }
