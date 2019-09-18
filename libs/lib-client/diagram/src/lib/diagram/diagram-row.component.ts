@@ -15,7 +15,7 @@ import { Tile, TaskTile, TileType, DiagramAction, DiagramSelection } from '../in
 import { actionEventFactory } from '../action-event-factory';
 import { RowIndexService, isTaskTile, isInsertTile } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
-
+import { trackTileByFn } from '../tiles/track-tile-by';
 @Component({
   selector: 'flogo-diagram-row',
   templateUrl: './diagram-row.component.html',
@@ -33,18 +33,9 @@ export class DiagramRowComponent implements OnChanges {
   tileTypes = TileType;
   nodeTypes = NodeType;
   tiles: Tile[];
+  trackTileBy = trackTileByFn;
 
   constructor(private rowIndexService: RowIndexService) {}
-
-  trackTileBy(index, tile: Tile) {
-    if (isTaskTile(tile)) {
-      return tile.task.id;
-    } else if (isInsertTile(tile)) {
-      return `insert::${tile.parentId}`;
-    } else {
-      return tile.type;
-    }
-  }
 
   ngOnChanges({ row: rowChange }: SimpleChanges) {
     if (rowChange) {

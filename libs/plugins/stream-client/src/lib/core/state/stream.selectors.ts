@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
-import { Dictionary } from '@flogo-web/lib-client/core';
+import { Dictionary, DiagramGraph } from '@flogo-web/lib-client/core';
 import {
   ContributionType,
   FunctionsSchema,
@@ -14,6 +14,7 @@ import { InstalledFunctionSchema } from '../interfaces';
 import { CurrentSelection, SelectionType } from '../models';
 import { Activity } from '../../stage-add';
 import { GRAPH_NAME } from '../constants';
+import { graphToTiles } from './graph-to-tiles';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
@@ -113,6 +114,15 @@ export const getDiagramSelection = createSelector(
     }
   }
 );
+
+export const getStagesAsTiles = (maxTileCount: number) => {
+  return createSelector(
+    selectGraph,
+    (graph: DiagramGraph) => {
+      return graphToTiles(graph, maxTileCount);
+    }
+  );
+};
 
 export const getInstalledActivities = createSelector(
   selectSchemas,

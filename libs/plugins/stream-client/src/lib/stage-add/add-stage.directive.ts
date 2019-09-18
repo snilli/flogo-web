@@ -8,14 +8,10 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  HostBinding,
 } from '@angular/core';
 
-import {
-  DiagramSelection,
-  DiagramSelectionType,
-  BUTTON_INSERT_CLASS,
-  SELECTED_INSERT_TILE_CLASS,
-} from '@flogo-web/lib-client/diagram';
+import { DiagramSelection, DiagramSelectionType } from '@flogo-web/lib-client/diagram';
 
 import { AddActivityService } from './add-activity.service';
 
@@ -25,8 +21,9 @@ const BRANCH_ANIMATION_DURATION = 300;
   selector: '[fgAddStage]',
 })
 export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
-  @Input()
-  selection: DiagramSelection;
+  @Input() currentSelection: DiagramSelection;
+
+  @HostBinding('style.opacity') buttonOpacity: 1 | undefined = undefined;
 
   constructor(private el: ElementRef, private addStageService: AddActivityService) {}
 
@@ -34,7 +31,7 @@ export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
     this.addStageService.startSubscriptions();
   }
 
-  ngOnChanges({ selection }: SimpleChanges) {
+  ngOnChanges({ currentSelection: selection }: SimpleChanges) {
     if (selection && !selection.firstChange) {
       const currentSelection = selection.currentValue;
       const previousSelection = selection.previousValue;
@@ -50,13 +47,13 @@ export class AddStageDirective implements OnInit, OnChanges, OnDestroy {
         isEqual(currentSelection, previousSelection)
       ) {
         setTimeout(() => {
+          this.buttonOpacity = undefined;
           this.addStageService.close();
         }, 0);
       } else {
         setTimeout(() => {
-          const selectedInsertTile = this.el.nativeElement.querySelector(
-            `.${SELECTED_INSERT_TILE_CLASS} .${BUTTON_INSERT_CLASS}`
-          );
+          this.buttonOpacity = 1;
+          const selectedInsertTile = this.el.nativeElement;
           this.addStageService.open(selectedInsertTile, currentSelection.taskId);
         }, BRANCH_ANIMATION_DURATION);
       }

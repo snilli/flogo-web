@@ -50,6 +50,9 @@ export class MapperTranslator {
         case 'metadata':
           MapperTranslator.addStreamMetadataToOutputSchema(rootSchema, tile);
           break;
+        default:
+          rootSchema.properties[tile['name']] = { type: tile.type };
+          break;
       }
     });
     rootSchema.properties = Object.assign(rootSchema.properties, additionalSchemas);
@@ -164,9 +167,8 @@ export class MapperTranslator {
   static getRootType(tile: SchemaOutputs | StreamMetadata) {
     if (tile.type === 'metadata') {
       return ROOT_TYPES.PIPELINE;
-    } else if (tile.type === FLOGO_ACTIVITY_TYPE) {
-      return ROOT_TYPES.STAGE;
     }
+    return ROOT_TYPES.STAGE;
   }
 
   static makeValidator(): MappingsValidatorFn {

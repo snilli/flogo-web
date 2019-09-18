@@ -1,14 +1,99 @@
 @import (reference) '~@flogo-web/assets/styles/_variables';
 
 :host {
-  background-color: @gainsboro-nine;
+  background-color: #eaeaea;;
   overflow: auto;
   flex: 1;
   display: flex;
   align-items: flex-start;
-  padding-top: 23px;
+  --diagram-secondary: #96a7f8;
+  --add-button-width: 48px;
+}
+
+.tiles-wrapper{
+  display: flex;
+  padding: 8px;
+  margin-top: 24px;
+  width: 100%;
+  &:hover{
+    background-color:rgba(255, 255, 255, 0.3);
+    
+  }
+  &:hover{
+    .visible-on-hover{
+      opacity: 1;
+    }
+   
+  }
 }
 
 flogo-diagram {
   flex: 1;
+}
+
+.tile__separator {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    display: block;
+    background: #96a7f8;
+    opacity: 0.5;
+    width: 16px;
+    height: 8px;
+    z-index: 0;
+    top: 44%;
+    left: 0px;
+  }
+  &.add-button{
+    margin: 0 4px 0 48px;
+    &:before {
+      width: 51px;
+      left: -47px;
+    }
+  }
+}
+.tile-placeholders{
+  display: flex;
+  margin-left: 2px;
+ .tile-placeholder:first-child {
+    &:before {
+      width: 54px;
+    }
+  }
+}
+.tile-placeholder{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 60px;
+  width: 128px;
+  &:before {
+    content: '';
+    position: absolute;
+    display: block;
+    background: #96a7f8;
+    opacity: 0.5;
+    width: 88px;
+    height: 8px;
+    z-index: 0;
+    top: 42%;
+    right: 84px;
+  }
+  &:after{
+    background-color: #96a7f8;
+    opacity: 0.5;
+    display: block;
+    content: '';
+    border-radius: 8px;
+    height: 40px;
+    width: 40px;
+  }
+}
+
+.visible-on-hover{
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
 }

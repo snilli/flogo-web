@@ -28,6 +28,7 @@ import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
 import { SimulatorModule } from './simulator/simulator.module';
+import { FileStatusComponent } from './file-status/file-status.component';
 
 @NgModule({
   imports: [
@@ -61,6 +62,6 @@ import { SimulatorModule } from './simulator/simulator.module';
     FlogoProfileService,
     MicroServiceModelConverter,
   ],
-  declarations: [StreamDesignerComponent, StreamDiagramComponent],
+  declarations: [StreamDesignerComponent, StreamDiagramComponent, FileStatusComponent],
 })
 export class StreamClientModule {}

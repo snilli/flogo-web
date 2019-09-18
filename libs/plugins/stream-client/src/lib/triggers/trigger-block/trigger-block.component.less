@@ -6,7 +6,7 @@
 .trigger {
   width: 48px;
   height: 48px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   cursor: pointer;
   position: relative;
   display: flex;
@@ -27,13 +27,13 @@
   .flogo-icon-trigger {
     display: block;
     color: #1b4874;
-    font-size: 20px;
+    font-size: 28px;
   }
 
   .flogo-icon-trigger,
   .lambda-icon {
-    margin: (14px - @trigger-icon-clickable-padding)
-      (16px - @trigger-icon-clickable-padding);
+    margin: (18px - @trigger-icon-clickable-padding)
+      (18px - @trigger-icon-clickable-padding);
   }
 
   &.--lambda {
@@ -59,6 +59,9 @@
 .trigger-content {
   z-index: 1;
   margin-right: 3px;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  background-color: #b3d9ef;
 }
 
 .icon-svg__def {
