@@ -56,7 +56,7 @@ export function streamReducer(
     case StreamActionType.DeleteStage:
       return removeStage(state, action.payload);
     case StreamActionType.UpdateMetadata:
-      state = cleanDanglingTaskOutputMappings(state);
+      state = cleanDanglingTaskOutputMappings(state, action.payload);
       return {
         ...state,
         metadata: {

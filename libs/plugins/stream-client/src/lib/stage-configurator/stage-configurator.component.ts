@@ -19,12 +19,12 @@ import {
   CancelStageConfiguration,
   Item,
   CommitStageConfiguration,
+  ROOT_TYPES,
 } from '../core';
 import {
   MapperTranslator,
   MapperControllerFactory,
   MapperController,
-  ROOT_TYPES,
 } from '../shared/mapper';
 import { Tabs } from '../shared/tabs/models/tabs.model';
 import { StreamMetadata } from './models';
@@ -235,7 +235,7 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   private normalizeOutputs(outputs) {
     return outputs.map(output => ({
       ...output,
-      name: `$${ROOT_TYPES.PIPELINE}.${output.name}`,
+      name: `${ROOT_TYPES.PIPELINE}.${output.name}`,
     }));
   }
 
