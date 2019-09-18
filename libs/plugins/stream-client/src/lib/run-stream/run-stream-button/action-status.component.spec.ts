@@ -8,9 +8,8 @@ describe('ActionStatusComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ActionStatusComponent ]
-    })
-    .compileComponents();
+      declarations: [ActionStatusComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
