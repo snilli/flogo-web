@@ -27,6 +27,7 @@ import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
 import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
+import { FileStatusComponent } from './file-status/file-status.component';
 
 @NgModule({
   imports: [
@@ -59,6 +60,6 @@ import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
     FlogoProfileService,
     MicroServiceModelConverter,
   ],
-  declarations: [StreamDesignerComponent, StreamDiagramComponent],
+  declarations: [StreamDesignerComponent, StreamDiagramComponent, FileStatusComponent],
 })
 export class StreamClientModule {}
