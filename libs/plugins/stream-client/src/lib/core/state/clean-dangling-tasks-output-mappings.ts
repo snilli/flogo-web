@@ -1,43 +1,39 @@
 import { isEmpty, pick, fromPairs } from 'lodash';
-import { ContributionSchema, isMapperActivity } from '@flogo-web/core';
 import { Dictionary } from '@flogo-web/lib-client/core';
+import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 
 import { Item } from '../interfaces';
 import { FlogoStreamState } from './stream.state';
+import { ROOT_TYPES } from '../constants';
 
 /**
  * When stream schema's output change we need to remove the task mappings that were referencing them
- * @param state
+ * @param state {FlogoStreamState} stream state
+ * @param metadata {StreamMetadata} update stream metadata
  */
-export function cleanDanglingTaskOutputMappings(state: FlogoStreamState) {
-  const outputNames =
-    state.metadata && state.metadata.output
-      ? state.metadata.output.map(o => o.name)
-      : null;
-  if (!outputNames) {
-    return state;
-  }
+export function cleanDanglingTaskOutputMappings(
+  state: FlogoStreamState,
+  metadata: StreamMetadata
+) {
+  let outputNames = metadata && metadata.output ? metadata.output.map(o => o.name) : [];
 
-  const cleanItems = itemCleaner(state.schemas, outputNames);
+  outputNames = outputNames.map(prependPipeline);
+
+  const cleanItems = itemCleaner(outputNames);
 
   const mainItems = cleanItems(state.mainItems);
-  if (mainItems !== state.mainItems) {
-    state = { ...state, mainItems };
-  }
+  state = { ...state, mainItems };
 
   return state;
 }
 
 function itemCleaner(
-  schemas: Dictionary<ContributionSchema>,
   outputNames: string[]
 ): (items: Dictionary<Item>) => Dictionary<Item> {
-  const isMapperContribAndHasMapping = ([taskId, task]: [string, Item]) => {
-    const schema = schemas[task.ref];
-    return isMapperActivity(schema) && !isEmpty(task.inputMappings);
+  const hasMapping = ([taskId, task]: [string, Item]) => {
+    return !isEmpty(task.output);
   };
-  return (items: Dictionary<Item>) =>
-    cleanTasks(items, outputNames, isMapperContribAndHasMapping);
+  return (items: Dictionary<Item>) => cleanTasks(items, outputNames, hasMapping);
 }
 
 function cleanTasks(
@@ -48,11 +44,18 @@ function cleanTasks(
   const changed: Array<[string, Item]> = Object.entries(items)
     .filter(shouldClean)
     .map(([taskId, task]: [string, Item]) => {
+      const taskOutputs = Object.keys(task.output || {}) || [];
+      const nonPipelineOutputs = taskOutputs.filter(
+        output => output.split('.')[0] !== ROOT_TYPES.PIPELINE
+      );
       return [
         taskId,
         {
           ...task,
-          inputMappings: pick(task.inputMappings, outputNames),
+          output: {
+            ...pick(task.output, nonPipelineOutputs),
+            ...pick(task.output, outputNames),
+          },
         },
       ] as [string, Item];
     });
@@ -64,4 +67,8 @@ function cleanTasks(
     };
   }
   return items;
+}
+
+function prependPipeline(outputName: string) {
+  return `${ROOT_TYPES.PIPELINE}.${outputName}`;
 }

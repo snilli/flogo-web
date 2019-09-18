@@ -3,8 +3,7 @@ import { resolveExpressionType } from '@flogo-web/parser';
 import { EXPR_PREFIX, ValueType } from '@flogo-web/core';
 import { Dictionary } from '@flogo-web/lib-client/core';
 
-import { ROOT_TYPES } from '../constants';
-import { MAPPING_TYPE } from '../../../core';
+import { MAPPING_TYPE, ROOT_TYPES } from '../../../core';
 // todo: shared models should be moved to core
 import {
   StreamMetadata,
