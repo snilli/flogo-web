@@ -12,8 +12,8 @@ export class RunStreamComponent {
   @Output() setFilePath: EventEmitter<string> = new EventEmitter<string>();
   @Output() startSimulation: EventEmitter<any> = new EventEmitter();
 
-  disableRunStream: boolean = true;
-  fileUploadStatus: string = 'empty';
+  disableRunStream = true;
+  fileUploadStatus = 'empty';
 
   constructor(private restApi: RestApiService, private http: HttpClient) {}
 
