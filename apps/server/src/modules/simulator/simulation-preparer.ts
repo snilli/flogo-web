@@ -13,6 +13,10 @@ import { SimulationConfiguration } from './simulation-config';
 export interface PrepareOptions {
   pipelineId: string;
   simulationDataFile: string;
+  events: {
+    onData: (data) => any;
+    onStatusChange: (status) => any;
+  };
 }
 
 const TMP_PATH = join(tmpdir(), 'stream-simulating-app.json');
@@ -29,6 +33,7 @@ export class SimulationPreparer {
   async prepare({
     pipelineId,
     simulationDataFile,
+    events,
   }: PrepareOptions): Promise<RemoteSimulatorProcess> {
     const { restControlUrl, wsUrl } = this.config;
     const parsedRestUrl = new URL(restControlUrl);
@@ -41,6 +46,8 @@ export class SimulationPreparer {
       restControlUrl: restControlUrl,
       wsUrl: wsUrl,
     });
+    remoteSimulatorProcess.onStatusChange(events.onStatusChange);
+    remoteSimulatorProcess.onData(events.onData);
     const engineProcess = new StreamRunnerProcess(this.engineLogger);
     engineProcess.setAppJsonPath(TMP_PATH);
     const engine = await this.engineProvider();

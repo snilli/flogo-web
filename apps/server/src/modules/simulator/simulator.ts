@@ -1,4 +1,4 @@
-import { RemoteSimulatorProcess, ProcessStatus } from './remote-simulator-process';
+import { RemoteSimulatorProcess } from './remote-simulator-process';
 import { Socket } from 'socket.io';
 import { SimulationPreparer } from './simulation-preparer';
 import { injectable } from 'inversify';
@@ -90,9 +90,11 @@ export class StreamSimulator {
     this.currentProcess = await this.enginePreparer.prepare({
       pipelineId,
       simulationDataFile,
+      events: {
+        onData: this.sendData.bind(this),
+        onStatusChange: this.sendStatus.bind(this),
+      },
     });
-    this.currentProcess.onData(this.sendData.bind(this));
-    this.currentProcess.onStatusChange(this.sendStatus.bind(this));
   }
 
   onClientDisconnection(client: SimulationClient) {
