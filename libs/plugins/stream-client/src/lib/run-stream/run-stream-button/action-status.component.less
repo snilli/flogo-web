@@ -1,3 +1,131 @@
 :host {
   display: flex;
 }
+
+.tc-buttons {
+  display: inline-block;
+  white-space: nowrap;
+  outline: 0;
+  margin-right: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.tc-buttons-primary {
+  padding: 9px 15px;
+  line-height: 1.25;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  color: #ffffff;
+  background-color: #0081cb;
+  border-color: #0081cb;
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+  font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+.tc-buttons-primary:hover {
+  color: #ffffff;
+  background-color: #055dab;
+  border-color: #055dab;
+}
+.tc-buttons-primary:active {
+  color: #ffffff;
+  background-color: #0081cb;
+  border-color: #055dab;
+}
+.tc-buttons-primary:active:focus {
+  box-shadow: 0px 0px 3.7px 3.2px #afd9ff;
+  border-color: #055dab;
+}
+.tc-buttons-primary:focus {
+  outline: none;
+  color: #ffffff;
+  background-color: #0081cb;
+  border-color: #055dab;
+  box-shadow: 0px 0px 3.7px 3.2px #afd9ff;
+  border-color: #0081cb;
+}
+.tc-buttons-primary:disabled {
+  color: #ffffff;
+  background-color: #0081cb;
+  border-color: #e5e5e5;
+  opacity: 0.35;
+  filter: alpha(opacity=35);
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  cursor: not-allowed;
+}
+
+.tc-buttons-secondary {
+  padding: 9px 15px;
+  line-height: 1.25;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  color: #0081cb;
+  background-color: #ffffff;
+  border-color: #0081cb;
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+  font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+.tc-buttons-secondary:hover {
+  color: #055dab;
+  background-color: #ffffff;
+  border-color: #055dab;
+}
+.tc-buttons-secondary:active {
+  color: #055dab;
+  background-color: #ffffff;
+  border-color: #055dab;
+}
+.tc-buttons-secondary:active:focus {
+  box-shadow: 0px 0px 3.7px 3.2px #afd9ff;
+  border-color: #055dab;
+}
+.tc-buttons-secondary:focus {
+  outline: none;
+  color: #0081cb;
+  background-color: #ffffff;
+  border-color: #0081cb;
+  box-shadow: 0px 0px 3.7px 3.2px #afd9ff;
+  border-color: #ffffff;
+}
+.tc-buttons-secondary:disabled {
+  color: #0081cb;
+  background-color: #ffffff;
+  border-color: #0081cb;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  cursor: not-allowed;
+}
+
+.action-icon{
+  display: inline-block;
+  width: 24px;
+  height: 24px;;
+  margin-right: 8px;
+  vertical-align: middle;
+  background-position: center center;
+  background-repeat: no-repeat;
+  &.pause {
+    background-image: url("/assets/svg/ic-pause.svg");
+  }
+  &.stop {
+    background-image: url("/assets/svg/ic-stop.svg");
+  }
+  &.resume {
+    background-image: url("/assets/svg/ic-play.svg");
+  }
+}
