@@ -8,11 +8,11 @@
     (changeDescription)="changeStreamDescription($event)"
   >
     <div header-role="resource-logo" class="stream-logo"></div>
-    <div header-role="right-block">
-      Status: {{ simulatorStatus$ | async }}
-      <button (click)="startSimulation()">Run</button>
-      <button (click)="stopSimulation()">Stop</button>
-    </div>
+    <flogo-stream-run-stream-button
+      [resourceName]="streamState.name"
+      [resourceId]="streamState.id"
+      header-role="right-block"
+    ></flogo-stream-run-stream-button>
     <flogo-logs header-role="right-block"></flogo-logs>
     <div
       header-role="right-block"

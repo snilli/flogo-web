@@ -39,6 +39,7 @@ const config = {
   rootPath,
   publicPath: PUBLIC_DIR,
   logsPath: path.join(LOCAL_DIR, 'logs'),
+  uploadsPath: path.join(LOCAL_DIR, 'uploads'),
   logLevel,
   localPath: LOCAL_DIR,
   features,

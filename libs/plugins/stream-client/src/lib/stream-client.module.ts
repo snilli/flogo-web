@@ -28,7 +28,7 @@ import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
 import { SimulatorModule } from './simulator/simulator.module';
-import { FileStatusComponent } from './file-status/file-status.component';
+import { RunStreamModule } from './run-stream/run-stream.module';
 
 @NgModule({
   imports: [
@@ -55,6 +55,7 @@ import { FileStatusComponent } from './file-status/file-status.component';
     StageConfiguratorModule,
     ContextPanelModule,
     SimulatorModule,
+    RunStreamModule,
   ],
   providers: [
     StreamService,
@@ -62,6 +63,6 @@ import { FileStatusComponent } from './file-status/file-status.component';
     FlogoProfileService,
     MicroServiceModelConverter,
   ],
-  declarations: [StreamDesignerComponent, StreamDiagramComponent, FileStatusComponent],
+  declarations: [StreamDesignerComponent, StreamDiagramComponent],
 })
 export class StreamClientModule {}

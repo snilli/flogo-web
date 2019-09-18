@@ -1,0 +1,25 @@
+<div *ngIf="!isSimulatorRunning">
+  <button (click)="runStream()" class="flogo-button--default">Run stream</button>
+</div>
+<div *ngIf="isSimulatorRunning">
+  <button (click)="stopSimulation()" class="flogo-button--secondary">Stop</button>
+  <button
+    *ngIf="!isSimulatorPaused; else resume"
+    (click)="pauseSimulation()"
+    class="flogo-button--secondary"
+  >
+    Pause
+  </button>
+  <ng-template #resume>
+    <button (click)="resumeSimulation()" class="flogo-button--default">
+      Resume
+    </button>
+  </ng-template>
+</div>
+
+<flogo-stream-run-stream
+  *ngIf="showFileInput"
+  [resourceName]="resourceName"
+  (setFilePath)="setFilePath($event)"
+  (startSimulation)="startSimulation()"
+></flogo-stream-run-stream>

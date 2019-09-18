@@ -23,6 +23,7 @@ initDb()
       port: config.app.port as string,
       staticPath: config.publicPath,
       logsRoot: config.localPath,
+      uploadsRoot: config.uploadsPath,
       container: rootContainer,
     })
   )

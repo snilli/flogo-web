@@ -25,7 +25,6 @@ import {
 import { StreamStoreState as AppState } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
 import { Observable } from 'rxjs';
-import { SimulatorService } from '../simulator';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -47,15 +46,13 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     left: '182px',
   };
   simulationId: 0;
-  simulatorStatus$: Observable<string>;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(
     private store: Store<AppState>,
     private streamService: StreamService,
-    private contribInstallerService: ContribInstallerService,
-    private simulatorService: SimulatorService
+    private contribInstallerService: ContribInstallerService
   ) {}
 
   ngOnInit() {
@@ -74,17 +71,6 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     this.isSimulatorOpen$ = this.store.pipe(
       select(StreamSelectors.selectSimulatorPanelOpen)
     );
-
-    this.simulatorService.status$
-      .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe(s => console.log(`simulator-status::${s}`));
-
-    this.simulatorService.data$.pipe(takeUntil(this.ngOnDestroy$)).subscribe(data => {
-      console.log(`simulator-data`);
-      console.log(data);
-    });
-
-    this.simulatorStatus$ = this.simulatorService.status$;
   }
 
   changePanelState(isSimulatorOpen: boolean) {
@@ -110,18 +96,6 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   toggleStreamMenu() {
     this.isStreamMenuOpen = !this.isStreamMenuOpen;
-  }
-
-  startSimulation() {
-    // todo: send file name
-    this.simulatorService.start(
-      this.streamState.id,
-      '/Users/fcastill/flogoengine/streams-engine/single-number.csv'
-    );
-  }
-
-  stopSimulation() {
-    this.simulatorService.stop();
   }
 
   public openInputSchemaModal() {

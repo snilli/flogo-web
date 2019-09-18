@@ -11,6 +11,7 @@ import { handlers } from './handlers';
 import { mountServices } from './services';
 import { mountTestRunner } from './runner';
 import { mountResourceRoutes } from './resources';
+import { fileUpload } from './file-upload';
 
 export function createRouter(container: Container): Router {
   const router = new RouterConstructor({
@@ -24,6 +25,7 @@ export function createRouter(container: Container): Router {
   mountResourceRoutes(router, container);
   mountServices(router);
   mountTestRunner(router);
+  fileUpload(router);
 
   router.get('/_/features', context => {
     context.body = config.features;
