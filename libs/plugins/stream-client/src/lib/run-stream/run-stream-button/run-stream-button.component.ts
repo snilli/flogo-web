@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { SimulatorService } from '../../simulator';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
@@ -24,15 +23,6 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
   constructor(private simulatorService: SimulatorService) {}
 
   ngOnInit(): void {
-    this.simulatorService.status$
-      .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe(s => console.log(`simulator-status::${s}`));
-
-    this.simulatorService.data$.pipe(takeUntil(this.ngOnDestroy$)).subscribe(data => {
-      console.log(`simulator-data`);
-      console.log(data);
-    });
-
     this.simulatorStatus$ = this.simulatorService.status$;
   }
 

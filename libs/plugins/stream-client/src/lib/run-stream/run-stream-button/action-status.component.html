@@ -1,0 +1,7 @@
+<ng-container [ngSwitch]="status">
+  <ng-container *ngSwitchCase="statuses.Running"> </ng-container>
+  <ng-container *ngSwitchDefault>
+    <button type="button" (click)="run.emit()">Run Stream</button>
+    <button type="button" (click)="stop.emit()">Stop</button>
+  </ng-container>
+</ng-container>
