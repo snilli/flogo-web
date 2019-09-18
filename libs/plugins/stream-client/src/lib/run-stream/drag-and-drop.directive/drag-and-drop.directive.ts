@@ -14,7 +14,7 @@ import {
 })
 export class DragAndDropDirective implements OnChanges {
   @Input() status;
-  @Output() onFileDropped: EventEmitter<FileList> = new EventEmitter<FileList>();
+  @Output() fileDropped: EventEmitter<FileList> = new EventEmitter<FileList>();
 
   @HostBinding('style.background') private background;
   @HostBinding('style.border') private border = '2px dotted #b6b6b6';
@@ -38,7 +38,7 @@ export class DragAndDropDirective implements OnChanges {
     if (files.length > 0) {
       this.background = '#fafafa';
       this.border = '2px dotted #b6b6b6';
-      this.onFileDropped.emit(files);
+      this.fileDropped.emit(files);
     }
   }
 

@@ -100,10 +100,13 @@ function initRouter(logsRoot: string, uploadsRoot: string, container: Container)
 const REST_API_ROUTE = /\/[^\/]+\.[^.\/]+$/i;
 function stripTrailingSlash(): Koa.Middleware {
   return function stripTrailingSlashMiddleware(ctx: Koa.Context, next) {
-    let { path } = ctx.request;
-    path = path.endsWith('/') ? path.substring(0, path.length - 1) : path;
+    let requestPath = ctx.request.path;
+    requestPath = requestPath.endsWith('/')
+      ? requestPath.substring(0, requestPath.length - 1)
+      : requestPath;
     const isRestApiRoute =
-      !REST_API_ROUTE.test(path) && path.toLowerCase().search('/api/') === -1;
+      !REST_API_ROUTE.test(requestPath) &&
+      requestPath.toLowerCase().search('/api/') === -1;
     if (isRestApiRoute) {
       ctx.request.path = '/';
     }

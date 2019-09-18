@@ -7,7 +7,7 @@ import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 @Component({
   selector: 'flogo-stream-run-stream-button',
   templateUrl: 'run-stream-button.component.html',
-  styleUrls: ['run-stream-button.component.less'],
+  styleUrls: [],
 })
 export class RunStreamButtonComponent implements OnInit, OnDestroy {
   @Input() resourceName: string;
@@ -16,9 +16,9 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
   private ngOnDestroy$ = SingleEmissionSubject.create();
   simulatorStatus$: Observable<string>;
 
-  showFileInput: boolean = false;
-  isSimulatorRunning: boolean = false;
-  isSimulatorPaused: boolean = false;
+  showFileInput = false;
+  isSimulatorRunning = false;
+  isSimulatorPaused = false;
   filePath: string;
 
   constructor(private simulatorService: SimulatorService) {}

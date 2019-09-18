@@ -6,7 +6,7 @@
     class="file-upload--upload-file"
     fgDragDropFile
     [status]="fileUploadStatus"
-    (onFileDropped)="uploadFile($event)"
+    (fileDropped)="uploadFile($event)"
   >
     <flogo-stream-file-status
       [status]="fileUploadStatus"
