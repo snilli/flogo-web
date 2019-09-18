@@ -10,22 +10,15 @@
       (click)="enableField()"
     ></i>
   </label>
-  <!--streams-plugin-todo: use monaco-editor, remove textarea-->
-  <!--<monaco-editor
+  <monaco-editor
     *ngIf="useCodeEditor; else regularField"
-    class="settings-field settings-field&#45;&#45;code-editor"
+    class="settings-field settings-field--code-editor"
     #field
     [formValueChangeTransformerFn]="editorOut"
     [formValueWriteTransformerFn]="editorIn"
     [formControl]="settingControl"
-  ></monaco-editor>-->
-  <!--<textarea
-    *ngIf="useCodeEditor; else regularField"
-    class="settings-field settings-field&#45;&#45;code-editor"
-    #field
-    [formControl]="settingControl"
-  ></textarea>-->
-  <ng-template [ngIf]="!useCodeEditor">
+  ></monaco-editor>
+  <ng-template #regularField>
     <input
       class="settings-field"
       #field
