@@ -1,22 +1,16 @@
 import { EngineProjectDetails } from './engine';
 import { runShellCMD } from '../../common/utils/process';
-import { join } from 'path';
 
 export async function tempInstallSimulatorDeps(engineDetails: EngineProjectDetails) {
-  const srcPath = join(engineDetails.path, 'src');
   await runShellCMD(
-    'go',
+    'flogo',
     [
-      'mod',
-      'edit',
-      '-require',
+      'install',
+      '-r',
       'github.com/project-flogo/stream@master',
-      '-require',
-      'github.com/project-flogo/stream/service/telemetry@master',
-      '-replace',
-      'github.com/project-flogo/stream=github.com/project-flogo/stream@master',
+      'github.com/project-flogo/stream',
     ],
-    { cwd: srcPath }
+    { cwd: engineDetails.path }
   );
-  await runShellCMD('go', ['install'], { cwd: srcPath });
+  await runShellCMD('flogo', ['imports', 'sync'], { cwd: engineDetails.path });
 }
