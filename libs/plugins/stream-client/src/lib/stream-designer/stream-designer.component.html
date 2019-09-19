@@ -8,6 +8,11 @@
     (changeDescription)="changeStreamDescription($event)"
   >
     <div header-role="resource-logo" class="stream-logo"></div>
+    <flogo-stream-run-stream-button
+      [resourceName]="streamState.name"
+      [resourceId]="streamState.id"
+      header-role="right-block"
+    ></flogo-stream-run-stream-button>
     <flogo-logs header-role="right-block"></flogo-logs>
     <div
       header-role="right-block"
@@ -49,7 +54,10 @@
     <div context-panel-role="primary-area" class="primary-area">
       <ng-container *ngTemplateOutlet="streamContent"></ng-container>
     </div>
-    <div context-panel-role="panel-content" class="panel-content"></div>
+
+    <div class="panel-content" context-panel-role="panel-content">
+      <ng-container *ngTemplateOutlet="simulator"></ng-container>
+    </div>
   </flogo-context-panel-area>
 
   <ng-template #streamContent>
@@ -61,6 +69,16 @@
     ></flogo-stream-params-schema-button>
     <flogo-stream-diagram></flogo-stream-diagram>
     <flogo-stream-stage-configurator></flogo-stream-stage-configurator>
+  </ng-template>
+
+  <ng-template #simulator>
+    <flogo-stream-simulator
+      *ngIf="(isSimulatorOpen$ | async)"
+      [simulationId]="simulationId"
+      [simulateActivity]="selectedStageInfo$ | async"
+      [metadata]="streamState?.metadata"
+      [currentStageId]="currentSimulationStage$ | async"
+    ></flogo-stream-simulator>
   </ng-template>
 </div>
 

@@ -5,6 +5,7 @@ import {
   trigger as animationTrigger,
 } from '@angular/animations';
 import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
@@ -17,14 +18,13 @@ import {
   UpdateMetadata,
   ContributionInstalled,
   FlogoStreamState,
-  selectStreamState,
   StreamService,
   StreamSelectors,
   StreamDiagramActions as StreamActions,
+  StreamStoreState as AppState,
 } from '../core';
-import { StreamStoreState as AppState } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
-import { Observable } from 'rxjs';
+import { ROOT_PIPELINE_ID } from '../simulator';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -45,6 +45,10 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   triggerPosition = {
     left: '182px',
   };
+  simulationId: 0;
+  currentSimulationStage$: Observable<string | number>;
+  // todo: add type
+  selectedStageInfo$: Observable<any>;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
@@ -56,11 +60,15 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store
-      .pipe(select(selectStreamState))
+      .pipe(select(StreamSelectors.selectStreamState))
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(streamState => {
         this.streamState = streamState;
       });
+
+    this.currentSimulationStage$ = this.store.pipe(
+      select(StreamSelectors.getCurrentSimulationStage)
+    );
 
     this.contribInstallerService.contribInstalled$
       .pipe(takeUntil(this.ngOnDestroy$))
@@ -70,6 +78,10 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     this.isSimulatorOpen$ = this.store.pipe(
       select(StreamSelectors.selectSimulatorPanelOpen)
     );
+
+    this.selectedStageInfo$ = this.store.pipe(
+      select(StreamSelectors.getSelectedStageInfo)
+    );
   }
 
   changePanelState(isSimulatorOpen: boolean) {
@@ -77,6 +89,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       new StreamActions.SimulatorPanelStatusChange({ isSimulatorOpen })
     );
   }
+
   navigateToApp() {
     this.streamService.navigateToApp(this.streamState.app.id);
   }
@@ -97,11 +110,11 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     this.isStreamMenuOpen = !this.isStreamMenuOpen;
   }
 
-  public openInputSchemaModal() {
+  openInputSchemaModal() {
     this.defineInputSchema.openInputSchemaModel();
   }
 
-  public onStreamSchemaSave(metadata: StreamMetadata) {
+  onStreamSchemaSave(metadata: StreamMetadata) {
     this.store.dispatch(new UpdateMetadata(metadata));
   }
 

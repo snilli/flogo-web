@@ -20,6 +20,8 @@
     "github.com/project-flogo/contrib/function/string",
     "github.com/project-flogo/contrib/function/number",
     "github.com/project-flogo/contrib/function/json",
-    "github.com/project-flogo/contrib/function/coerce"
+    "github.com/project-flogo/contrib/function/coerce",
+    "github.com/skothari-tibco/csvtimer",
+    "github.com/project-flogo/stream/activity/filter"
   ]
 }

@@ -1,0 +1,14 @@
+<flogo-stream-run-action-status
+  [status]="simulatorStatus$ | async"
+  (run)="runStream()"
+  (pause)="pauseSimulation()"
+  (stop)="stopSimulation()"
+  (resume)="resumeSimulation()"
+></flogo-stream-run-action-status>
+
+<flogo-stream-run-stream
+  *ngIf="showFileInput"
+  [resourceName]="resourceName"
+  (setFilePath)="setFilePath($event)"
+  (startSimulation)="startSimulation()"
+></flogo-stream-run-stream>

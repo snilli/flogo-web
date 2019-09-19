@@ -9,6 +9,7 @@ import { LogsModule as FlogoLogsModule } from '@flogo-web/lib-client/logs';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
 import { DiagramModule } from '@flogo-web/lib-client/diagram';
 import { ResourceInterfaceBuilderModule } from '@flogo-web/lib-client/resource-interface-builder';
+import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
 import { MonacoEditorModule } from '@flogo-web/editor';
 
 import {
@@ -26,8 +27,8 @@ import { StreamDiagramComponent } from './stream-diagram';
 import { ParamsSchemaModule } from './params-schema';
 import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
-import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
-import { FileStatusComponent } from './file-status/file-status.component';
+import { SimulatorModule } from './simulator/simulator.module';
+import { RunStreamModule } from './run-stream/run-stream.module';
 
 @NgModule({
   imports: [
@@ -53,6 +54,8 @@ import { FileStatusComponent } from './file-status/file-status.component';
     MonacoEditorModule,
     StageConfiguratorModule,
     ContextPanelModule,
+    SimulatorModule,
+    RunStreamModule,
   ],
   providers: [
     StreamService,
@@ -60,6 +63,6 @@ import { FileStatusComponent } from './file-status/file-status.component';
     FlogoProfileService,
     MicroServiceModelConverter,
   ],
-  declarations: [StreamDesignerComponent, StreamDiagramComponent, FileStatusComponent],
+  declarations: [StreamDesignerComponent, StreamDiagramComponent],
 })
 export class StreamClientModule {}

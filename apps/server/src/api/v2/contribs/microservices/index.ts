@@ -1,6 +1,11 @@
+import { Container } from 'inversify';
+
 import { ContributionManager } from '../../../../modules/contributions';
-import { getContribInstallationController as getInstallationController } from '../../../../modules/engine';
-import { config } from '../../../../config/app-config';
+import {
+  getContribInstallationController as getInstallationController,
+  EngineProcess,
+} from '../../../../modules/engine';
+import { config } from '../../../../config';
 import { logger } from '../../../../common/logging';
 import { install as installContributionToEngine } from '../../../../modules/contrib-installer/microservice';
 import { ERROR_TYPES, ErrorManager } from '../../../../common/errors';
@@ -11,9 +16,10 @@ const CONTRIBUTION_TYPE = new Map([
   ['function', 'flogo:function'],
 ]);
 
-export function contribs(router) {
+export function contribs(router, container: Container) {
+  const engineProcess = container.get(EngineProcess);
   router.get(`/contributions/microservices`, listContributions);
-  router.post(`/contributions/microservices`, installContribution);
+  router.post(`/contributions/microservices`, installContribution(engineProcess));
 }
 
 /**
@@ -56,29 +62,32 @@ async function listContributions(ctx) {
  * type {string} Type of contribution to be installed.
  *
  */
-async function installContribution(ctx, next) {
-  ctx.req.setTimeout(0);
-  const url = ctx.request.body.url;
+function installContribution(engineProcess: EngineProcess) {
+  return async (ctx, next) => {
+    ctx.req.setTimeout(0, null);
+    const url = ctx.request.body.url;
 
-  if (!url) {
-    throw ErrorManager.createRestError('Unknown type of contribution', {
-      type: ERROR_TYPES.ENGINE.INSTALL,
-      message: 'Unknown type of contribution',
-      params: {
-        body:
-          'Should be in the pattern: {"url": "path_to_contribution", "type": "activity"}',
-      },
-    });
-  }
+    if (!url) {
+      throw ErrorManager.createRestError('Unknown type of contribution', {
+        type: ERROR_TYPES.ENGINE.INSTALL,
+        message: 'Unknown type of contribution',
+        params: {
+          body:
+            'Should be in the pattern: {"url": "path_to_contribution", "type": "activity"}',
+        },
+      });
+    }
 
-  logger.info(`[log] Install : '${url}'`);
-  const installController = await getInstallationController(
-    config.defaultEngine.path,
-    (contribRef, engine) => installContributionToEngine(contribRef, engine)
-  );
+    logger.info(`[log] Install : '${url}'`);
+    const installController = await getInstallationController(
+      config.defaultEngine.path,
+      (contribRef, engine) => installContributionToEngine(contribRef, engine),
+      engineProcess
+    );
 
-  const result = await installController.install(url);
-  ctx.body = { data: { ...result, originalUrl: url } };
+    const result = await installController.install(url);
+    ctx.body = { data: { ...result, originalUrl: url } };
 
-  next();
+    next();
+  };
 }

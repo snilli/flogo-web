@@ -2,6 +2,11 @@ import { createServer, Server } from 'http';
 import { Container } from 'inversify';
 import * as Koa from 'koa';
 import 'koa-body';
+import { logger } from '../common/logging';
+import { ERROR_TYPES, ErrorManager } from '../common/errors';
+import { mountRestApi } from '../api';
+import * as path from 'path';
+
 const KoaApp = require('koa');
 const Router = require('koa-router');
 const cors = require('@koa/cors');
@@ -10,18 +15,21 @@ const bodyParser = require('koa-body');
 const compress = require('koa-compress');
 const send = require('koa-send');
 
-import { logger } from '../common/logging';
-import { ERROR_TYPES, ErrorManager } from '../common/errors';
-import { mountRestApi } from '../api';
-
 export interface ServerConfig {
   port: string;
   staticPath: string;
   logsRoot: string;
+  uploadsRoot: string;
   container: Container;
 }
 
-export async function createApp({ port, staticPath, logsRoot, container }: ServerConfig) {
+export async function createApp({
+  port,
+  staticPath,
+  logsRoot,
+  uploadsRoot,
+  container,
+}: ServerConfig) {
   const app: Koa = new KoaApp();
   app.on('error', errorLogger);
   app.use(
@@ -35,7 +43,7 @@ export async function createApp({ port, staticPath, logsRoot, container }: Serve
   app.use(stripTrailingSlash());
   app.use(compressor());
 
-  const router = initRouter(logsRoot, container);
+  const router = initRouter(logsRoot, uploadsRoot, container);
   app.use(router.routes()).use(router.allowedMethods());
 
   app.use(serveStatic(staticPath, { defer: true }));
@@ -64,11 +72,17 @@ function errorLogger(): Koa.Middleware {
   };
 }
 
-function initRouter(logsRoot: string, container: Container) {
+function initRouter(logsRoot: string, uploadsRoot: string, container: Container) {
   const router = new Router();
   router.use(
     bodyParser({
       multipart: true,
+      formidable: {
+        uploadDir: uploadsRoot,
+        onFileBegin: (name, file) => {
+          file.path = path.join(uploadsRoot, name);
+        },
+      },
       onError() {
         throw ErrorManager.createRestError('Body parse error', {
           type: ERROR_TYPES.COMMON.BAD_SYNTAX,
@@ -86,10 +100,13 @@ function initRouter(logsRoot: string, container: Container) {
 const REST_API_ROUTE = /\/[^\/]+\.[^.\/]+$/i;
 function stripTrailingSlash(): Koa.Middleware {
   return function stripTrailingSlashMiddleware(ctx: Koa.Context, next) {
-    let { path } = ctx.request;
-    path = path.endsWith('/') ? path.substring(0, path.length - 1) : path;
+    let requestPath = ctx.request.path;
+    requestPath = requestPath.endsWith('/')
+      ? requestPath.substring(0, requestPath.length - 1)
+      : requestPath;
     const isRestApiRoute =
-      !REST_API_ROUTE.test(path) && path.toLowerCase().search('/api/') === -1;
+      !REST_API_ROUTE.test(requestPath) &&
+      requestPath.toLowerCase().search('/api/') === -1;
     if (isRestApiRoute) {
       ctx.request.path = '/';
     }

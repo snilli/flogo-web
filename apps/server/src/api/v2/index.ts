@@ -9,9 +9,9 @@ import { triggers } from './triggers';
 import { contribs as microserviceContribs } from './contribs/microservices';
 import { handlers } from './handlers';
 import { mountServices } from './services';
-import { mountEngine } from './engine';
 import { mountTestRunner } from './runner';
 import { mountResourceRoutes } from './resources';
+import { fileUpload } from './file-upload';
 
 export function createRouter(container: Container): Router {
   const router = new RouterConstructor({
@@ -20,12 +20,12 @@ export function createRouter(container: Container): Router {
   router.use(errorMiddleware);
   apps(router, container);
   triggers(router, container);
-  microserviceContribs(router);
+  microserviceContribs(router, container);
   handlers(router, container);
   mountResourceRoutes(router, container);
   mountServices(router);
-  mountEngine(router);
   mountTestRunner(router);
+  fileUpload(router);
 
   router.get('/_/features', context => {
     context.body = config.features;

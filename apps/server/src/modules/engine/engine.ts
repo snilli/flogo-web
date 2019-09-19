@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import { config } from '../../config/app-config';
 import { createFolder as ensureDir } from '../../common/utils/file';
 
 import { copyBinaryToDestination, removeDir } from './file-utils';
@@ -12,24 +11,32 @@ import { logger } from '../../common/logging';
 
 import { loader } from './loader';
 import { commander } from './commander';
-import { execController as exec } from './exec-controller';
 import { TYPE_BUILD, TYPE_TEST, BuildOptions, Options } from './options';
 
 const DIR_TEST_BIN = 'bin-test';
 const DIR_BUILD_BIN = 'bin-build';
 
+export interface EngineProjectDetails {
+  projectName: string;
+  path: string;
+  executableName: string;
+  binDir: string;
+}
+
 class Engine {
   static TYPE_TEST: string;
   static TYPE_BUILD: string;
 
+  public readonly path: string;
+  private readonly name: string;
   private readonly hostExt: string;
   private libVersion: string;
-  private path: string;
   private runLogger: object;
   private installedContributions: object[];
 
   constructor(pathToEngine: string, libVersion: string, runLogger: object) {
     this.path = pathToEngine;
+    this.name = path.parse(this.path).name;
     this.hostExt = processHost.getExtensionForExecutables();
     this.installedContributions = [];
     this.libVersion = libVersion;
@@ -73,11 +80,7 @@ class Engine {
   }
 
   remove() {
-    const deleteDir = () => removeDir(this.path);
-
-    return this.stop()
-      .then(deleteDir)
-      .catch(() => Promise.resolve(deleteDir()));
+    return removeDir(this.path);
   }
 
   exists() {
@@ -117,13 +120,13 @@ class Engine {
     return ensureDir(options.target).then(() => buildAndCopyBinary(this.path, options));
   }
 
-  buildPlugin(options: Options) {
+  buildPlugin(options: BuildOptions) {
     return ensureDir(path.join(this.path, DIR_BUILD_BIN)).then(() =>
       buildPlugin(this.path, options)
     );
   }
 
-  buildOnly(options: Options) {
+  buildOnly(options?: BuildOptions) {
     return commander.build(this.path, options);
   }
 
@@ -132,20 +135,17 @@ class Engine {
     return ensureDir(targetDir).then(() => copyBinaryToDestination(this.path, targetDir));
   }
 
-  start() {
-    return exec.start(this.path, this.getExecutableName(), {
-      binDir: DIR_TEST_BIN,
-      logPath: config.publicPath,
-      logger: this.runLogger,
-    });
-  }
-
-  stop() {
-    return exec.stop(this.getExecutableName());
-  }
-
   getExecutableName() {
-    return `${path.parse(this.path).name}${this.hostExt}`;
+    return `${this.name}${this.hostExt}`;
+  }
+
+  getProjectDetails(): EngineProjectDetails {
+    return {
+      projectName: this.name,
+      path: this.path,
+      binDir: DIR_TEST_BIN,
+      executableName: this.getExecutableName(),
+    };
   }
 
   /**
@@ -230,4 +230,3 @@ Engine.TYPE_TEST = TYPE_TEST;
 Engine.TYPE_BUILD = TYPE_BUILD;
 
 export { Engine };
-export default Engine;

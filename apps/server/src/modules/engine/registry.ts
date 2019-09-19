@@ -4,6 +4,8 @@ import { logger, engineLogger } from '../../common/logging';
 import { config } from '../../config/app-config';
 import { ContribInstallController } from '../contrib-install-controller';
 import { installResourceTypes } from './install-resource-types';
+import { EngineProcess } from './process/engine-process';
+import { tempInstallSimulatorDeps } from './temp-install-simulator-deps';
 
 const CONTRIB_INSTALLER = 'contribInstaller';
 const engineRegistry: { [key: string]: any } = {};
@@ -46,6 +48,8 @@ export async function getInitializedEngine(
   return engine;
 }
 
+// todo: this should be done through constructor injection
+// no need for a contrib installation controller registry
 /**
  * Gets initialized ContributionInstallController instance and setup the controller's Engine and
  * RemoteInstaller instances which are used for installing a contribution
@@ -53,12 +57,20 @@ export async function getInitializedEngine(
  * @param installContribution {Function}
  * @returns {*} Instance of  ContribInstallController
  */
-export function getContribInstallationController(enginePath, installContribution) {
+export function getContribInstallationController(
+  enginePath,
+  installContribution,
+  engineProcess: EngineProcess
+) {
   return getInitializedEngine(enginePath).then(engine => {
     if (!engineRegistry[CONTRIB_INSTALLER]) {
       engineRegistry[CONTRIB_INSTALLER] = new ContribInstallController();
     }
-    return engineRegistry[CONTRIB_INSTALLER].setupController(engine, installContribution);
+    return engineRegistry[CONTRIB_INSTALLER].setupController(
+      engine,
+      installContribution,
+      engineProcess
+    );
   });
 }
 
@@ -73,6 +85,7 @@ async function createEngine(engine, defaultFlogoDescriptorPath, skipBundleInstal
     logger.info(`Will install contrib bundle at ${contribBundlePath}`);
     await installResourceTypes(engine, defaultResourceTypes);
     await engine.installContribBundle(contribBundlePath);
+    await tempInstallSimulatorDeps(engine.getProjectDetails());
   } catch (e) {
     logger.error('Found error while initializing engine:');
     logger.error(e);

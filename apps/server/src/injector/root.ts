@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 
 import { TOKENS } from '../core';
-import { logger } from '../common/logging';
+import { logger, engineLogger } from '../common/logging';
 import { ResourcePluginRegistry } from '../extension';
 import { ResourceRepository } from '../modules/resources/resource.repository';
 
@@ -16,6 +16,7 @@ export function createRootContainer(): Container {
     .toSelf()
     .inSingletonScope();
   rootContainer.bind(TOKENS.Logger).toConstantValue(logger);
+  rootContainer.bind(TOKENS.EngineLogger).toConstantValue(engineLogger);
   rootContainer.bind(ResourceRepository).toSelf();
   rootContainer.load(PersistenceModule, ModelsModule, EngineModule);
   return rootContainer;
