@@ -162,8 +162,7 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
     this.valueChangeSubscription = this.values$
       .pipe(
         takeUntil(this.destroy$),
-        filter((v: any) => v && v.__simulationId === this.simulationId)
-        // valueAccumulator(this.simulationId)
+        valueAccumulator(this.simulationId)
       )
       .subscribe(values => {
         table.update(values);
