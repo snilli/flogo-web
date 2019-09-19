@@ -22,6 +22,7 @@
     "github.com/project-flogo/contrib/function/json",
     "github.com/project-flogo/contrib/function/coerce",
     "github.com/skothari-tibco/csvtimer",
-    "github.com/project-flogo/stream/activity/filter"
+    "github.com/project-flogo/stream/activity/filter",
+    "github.com/project-flogo/stream/activity/aggregate"
   ]
 }
