@@ -17,4 +17,5 @@ EulaMessage
   exit 0
 fi
 
-yarn --cwd=apps/server start
+cd apps/server
+node main.js
