@@ -1,5 +1,5 @@
 <flogo-stream-run-action-status
-  [status]="simulatorStatus$ | async"
+  [status]="simulatorStatus"
   (run)="runStream()"
   (pause)="pauseSimulation()"
   (stop)="stopSimulation()"
@@ -8,7 +8,9 @@
 
 <flogo-stream-run-stream
   *ngIf="showFileInput"
-  [resourceName]="resourceName"
+  [resourceId]="resourceId"
+  [fileName]="fileName"
+  [fileUploadStatus]="fileUploadStatus"
   (setFilePath)="setFilePath($event)"
   (startSimulation)="startSimulation()"
 ></flogo-stream-run-stream>

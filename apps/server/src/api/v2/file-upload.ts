@@ -9,7 +9,8 @@ function handleFileUpload(ctx) {
   ctx.response.status = 200;
   ctx.body = {
     data: {
-      filePath: filePath,
+      filePath,
+      fileName,
     },
   };
 }

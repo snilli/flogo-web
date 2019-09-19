@@ -10,6 +10,7 @@ import { createResource } from './create-resource';
 import { getResource } from './get-resource';
 import { updateResource } from './update-resource';
 import { deleteResource } from './delete-resource';
+import { getSimulateDataPath } from './get-sim-data-path';
 
 export function mountResourceRoutes(router: Router, container: Container) {
   const resourceServiceMiddleware = createResourceMiddleware(container);
@@ -20,6 +21,7 @@ export function mountResourceRoutes(router: Router, container: Container) {
   const resourceRouter = new Router<any, ResourceServiceContextData>();
   resourceRouter
     .get('/recent', listRecent)
+    .get('/simulateDataPath/:resourceId', getSimulateDataPath)
     .get('/:resourceId', getResource)
     .patch('/:resourceId', updateResource)
     .del('/:resourceId', deleteResource);

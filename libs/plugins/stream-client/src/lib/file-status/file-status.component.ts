@@ -6,6 +6,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./file-status.component.less'],
 })
 export class FileStatusComponent implements OnInit {
+  //todo: create enum for below statuses
   @Input() status: 'empty' | 'uploading' | 'uploaded' | 'errored' | 'dragging';
   @Output() remove: EventEmitter<void> = new EventEmitter();
   constructor() {}

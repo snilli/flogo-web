@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { StreamProcessStatus } from '@flogo-web/core';
-import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { RestApiService, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { SimulatorService } from '../../simulator';
 
 @Component({
@@ -10,29 +9,52 @@ import { SimulatorService } from '../../simulator';
   styleUrls: [],
 })
 export class RunStreamButtonComponent implements OnInit, OnDestroy {
-  @Input() resourceName: string;
   @Input() resourceId: string;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
-  simulatorStatus$: Observable<StreamProcessStatus>;
+  simulatorStatus: StreamProcessStatus;
 
   showFileInput = false;
   isSimulatorRunning = false;
   isSimulatorPaused = false;
   filePath: string;
+  fileName: string;
+  fileUploadStatus = 'empty';
 
-  constructor(private simulatorService: SimulatorService) {}
+  constructor(
+    private simulatorService: SimulatorService,
+    private restApi: RestApiService
+  ) {}
 
   ngOnInit(): void {
-    this.simulatorStatus$ = this.simulatorService.status$;
+    this.simulatorService.status$.subscribe(status => {
+      this.simulatorStatus = status;
+    });
   }
 
   runStream() {
+    if (!this.filePath && !this.showFileInput) {
+      this.setFileUploadStatus();
+    }
     this.showFileInput = !this.showFileInput;
   }
 
-  setFilePath(filePath) {
-    this.filePath = filePath;
+  setFileUploadStatus() {
+    this.restApi
+      .get(`resources/simulateDataPath/${this.resourceId}`)
+      .subscribe((resp: any) => {
+        const { filePath, fileName } = resp;
+        if (filePath) {
+          this.filePath = filePath;
+          this.fileName = fileName;
+          this.fileUploadStatus = 'uploaded';
+        }
+      });
+  }
+
+  setFilePath(fileDetails) {
+    this.filePath = fileDetails.filePath;
+    this.fileName = fileDetails.fileName;
   }
 
   startSimulation() {
@@ -47,11 +69,13 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
   }
 
   pauseSimulation() {
+    this.simulatorStatus = StreamProcessStatus.Paused;
     this.simulatorService.pause();
     this.isSimulatorPaused = true;
   }
 
   resumeSimulation() {
+    this.simulatorStatus = StreamProcessStatus.Running;
     this.simulatorService.resume();
     this.isSimulatorPaused = false;
   }
