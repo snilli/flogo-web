@@ -1,7 +1,7 @@
 import got from 'got';
 import Websocket from 'ws';
-import { StreamRunnerProcess } from '../engine/process/stream-runner-process';
 import { StreamProcessStatus } from '@flogo-web/core';
+import { StreamRunnerProcess } from '../engine/process/stream-runner-process';
 
 type ListenerFn = (data) => any;
 const NO_OP: ListenerFn = () => {};
@@ -79,7 +79,7 @@ export class RemoteSimulatorProcess {
         }
       });
     };
-    setTimeout(wsConnect, 3000);
+    setTimeout(wsConnect, 2000);
   }
 
   teardown() {

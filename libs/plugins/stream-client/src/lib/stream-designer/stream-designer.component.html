@@ -73,8 +73,11 @@
 
   <ng-template #simulator>
     <flogo-stream-simulator
+      *ngIf="(isSimulatorOpen$ | async)"
       [simulationId]="simulationId"
+      [simulateActivity]="selectedStageInfo$ | async"
       [metadata]="streamState?.metadata"
+      [currentStageId]="currentSimulationStage$ | async"
     ></flogo-stream-simulator>
   </ng-template>
 </div>

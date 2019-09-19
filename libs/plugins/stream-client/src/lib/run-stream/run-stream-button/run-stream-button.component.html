@@ -1,5 +1,5 @@
 <flogo-stream-run-action-status
-  [status]="simulatorStatus$"
+  [status]="simulatorStatus$ | async"
   (run)="runStream()"
   (pause)="pauseSimulation()"
   (stop)="stopSimulation()"

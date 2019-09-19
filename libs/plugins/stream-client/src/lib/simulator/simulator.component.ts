@@ -9,12 +9,11 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import { Observable, pipe } from 'rxjs';
-import { filter, shareReplay, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { Metadata, ValueType } from '@flogo-web/core';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
-import { SimulatorService, PipelineData, PipelineEventType } from './simulator.service';
+import { SimulatorService } from './simulator.service';
 
 interface Schemas {
   input?: { [field: string]: string };
@@ -35,6 +34,7 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
   };
   @Input() simulateActivity;
   @Input() simulationId: number;
+  @Input() currentStageId: string | number;
   private destroy$ = SingleEmissionSubject.create();
   private input$: Observable<any>;
   private output$: Observable<any>;
@@ -42,24 +42,20 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private zone: NgZone, private simulationService: SimulatorService) {}
 
   ngOnInit() {
-    this.zone.runOutsideAngular(() => {
-      const values$ = this.simulationService.data$.pipe(shareReplay());
-
-      const accumulate = (eventType: PipelineEventType) =>
-        pipe(
-          filter((event: PipelineData) => event && event.type === eventType),
-          map(event => event.data)
-        );
-
-      this.input$ = values$.pipe(accumulate(PipelineEventType.PipelineStarted));
-      this.output$ = values$.pipe(accumulate(PipelineEventType.StageFinished));
-    });
+    this.updateEvents();
   }
 
-  ngOnChanges({ metadata: metadataChange }: SimpleChanges) {
-    if (metadataChange) {
-      this.updateSchemas();
+  ngOnChanges({
+    metadata: metadataChange,
+    currentStageId: currentStageIdChange,
+  }: SimpleChanges) {
+    if (currentStageIdChange) {
+      this.updateEvents();
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.emitAndComplete();
   }
 
   updateSchemas() {
@@ -79,8 +75,9 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    this.destroy$.emitAndComplete();
+  private updateEvents() {
+    this.input$ = this.simulationService.observeData(this.currentStageId, 'started');
+    this.output$ = this.simulationService.observeData(this.currentStageId, 'finished');
   }
 }
 

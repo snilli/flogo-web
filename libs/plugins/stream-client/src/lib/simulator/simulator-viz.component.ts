@@ -36,7 +36,9 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
   @ViewChild('viewer', { static: true }) viewerElem: ElementRef;
 
   public currentView;
+  public currentTable;
   public isStarting = true;
+  private isReadyForChanges = false;
   private destroy$ = SingleEmissionSubject.create();
   private valueChangeSubscription: Subscription;
 
@@ -50,11 +52,15 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
     this.destroy$.emitAndComplete();
   }
 
-  ngOnChanges({ schema: schemaChanges, view: viewChanges }: SimpleChanges) {
-    if (this.isStarting) {
+  ngOnChanges({
+    schema: schemaChanges,
+    view: viewChanges,
+    values$: values$Change,
+  }: SimpleChanges) {
+    if (!this.isReadyForChanges) {
       return;
     }
-    if (schemaChanges) {
+    if (values$Change) {
       // const viewer = this.getViewer();
       // viewer.load(this.schema);
       // this.setColumns();
@@ -68,6 +74,10 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
 
   private configure() {
     this.isStarting = true;
+    if (this.currentTable) {
+      this.currentTable.clear();
+    }
+
     this.zone.runOutsideAngular(() => {
       combineLatest(
         this.perspectiveService.getWorker(),
@@ -78,16 +88,28 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
           take(1)
         )
         .subscribe(([worker, values]: [PerspectiveWorker, any[]]) => {
+          // var table = perspective.worker().table(data);
+
           const viewer = this.getViewer();
-          const table = worker.table(this.schema, <any>{ limit: VIZ_LIMIT });
-          table.update(values);
-          viewer.load(<any>table, <any>{ limit: VIZ_LIMIT });
-          (<any>this.getViewer()).reset();
+          const prevTable = this.currentTable;
+          this.currentTable = worker.table(values, { limit: VIZ_LIMIT } as any);
+          // docs say loading table is fine but TS complains, hence the cast to "any"
+          viewer.load(this.currentTable as any);
+          if (prevTable) {
+            prevTable.delete();
+          }
+          // viewer.load(values, { limit: VIZ_LIMIT });
+          // const table = worker.table(this.schema, <any>{ limit: VIZ_LIMIT });
+          // const table = worker.table(values);
+          // viewer.load(table);
+          // table.update(values);
+          // viewer.load(<any>table, <any>{ limit: VIZ_LIMIT });
+          // (<any>this.getViewer()).reset();
           if (this.view) {
             viewer.setAttribute('view', this.view);
           }
-          this.setColumns();
-          this.listenForUpdates();
+          // this.setColumns();
+          this.listenForUpdates(this.currentTable);
 
           this.isStarting = false;
           this.cd.detectChanges();
@@ -98,12 +120,13 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
   ngAfterViewInit() {
     const viewer = this.getViewer();
     viewer.addEventListener('perspective-config-update', () => {
-      const currentView = viewer.getAttribute('view');
+      const currentView = viewer.getAttribute('plugin');
       if (currentView !== this.currentView) {
-        this.currentView = viewer.getAttribute('view');
+        this.currentView = viewer.getAttribute('plugin');
         this.cd.markForCheck();
       }
     });
+    this.isReadyForChanges = true;
     this.configure();
   }
 
@@ -111,13 +134,15 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
     const viewer = this.getViewer();
     const currentViewName = viewer.getAttribute('view');
     if (currentViewName !== viewName) {
-      viewer.setAttribute('view', viewName);
+      this.currentView = viewName;
+      // viewer.setAttribute('view', viewName);
       if (viewName === 'hypergrid') {
-        (<any>viewer).reset();
-        this.setColumns();
-      } else {
-        this.setColumns(this.graphFields);
+        setTimeout(() => (<any>viewer).reset(), 0);
       }
+      // this.setColumns();
+      // } else {
+      //   this.setColumns(this.graphFields);
+      // }
     }
   }
 
@@ -130,23 +155,24 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
     return this.viewerElem && this.viewerElem.nativeElement;
   }
 
-  private listenForUpdates() {
+  private listenForUpdates(table) {
     if (this.valueChangeSubscription) {
       this.valueChangeSubscription.unsubscribe();
     }
     this.valueChangeSubscription = this.values$
       .pipe(
         takeUntil(this.destroy$),
-        valueAccumulator(this.simulationId)
+        filter((v: any) => v && v.__simulationId === this.simulationId)
+        // valueAccumulator(this.simulationId)
       )
       .subscribe(values => {
-        this.getViewer().update(values);
+        table.update(values);
       });
   }
 }
 
-function accumulateValues(values, value) {
-  values.unshift(value);
+function accumulateValues(values, newValues) {
+  values.unshift(...newValues);
   return values.slice(0, VIZ_LIMIT);
 }
 

@@ -41,6 +41,7 @@ export class SimulationPreparer {
       filePath: simulationDataFile,
       port: parsedRestUrl.port,
     });
+    console.log(TMP_PATH);
     await writeJSONFile(TMP_PATH, flogoJson);
     const remoteSimulatorProcess = new RemoteSimulatorProcess({
       restControlUrl: restControlUrl,

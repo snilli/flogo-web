@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SimulatorService } from '../../simulator';
+import { StreamProcessStatus } from '@flogo-web/core';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { SimulatorService } from '../../simulator';
 
 @Component({
   selector: 'flogo-stream-run-stream-button',
@@ -13,7 +14,7 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
   @Input() resourceId: string;
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
-  simulatorStatus$: Observable<string>;
+  simulatorStatus$: Observable<StreamProcessStatus>;
 
   showFileInput = false;
   isSimulatorRunning = false;

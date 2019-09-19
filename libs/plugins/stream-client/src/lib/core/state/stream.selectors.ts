@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 
 import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
 import { Dictionary, DiagramGraph } from '@flogo-web/lib-client/core';
@@ -11,10 +11,11 @@ import {
 
 import { FlogoStreamState } from './stream.state';
 import { InstalledFunctionSchema } from '../interfaces';
-import { CurrentSelection, SelectionType } from '../models';
+import { CurrentSelection, SelectionType, TaskSelection } from '../models';
 import { Activity } from '../../stage-add';
 import { GRAPH_NAME } from '../constants';
 import { graphToTiles } from './graph-to-tiles';
+import { ROOT_PIPELINE_ID } from '../../simulator';
 
 export const selectStreamState = createFeatureSelector<FlogoStreamState>('stream');
 
@@ -91,9 +92,32 @@ export const selectGraph = createSelector(
   streamState => streamState[GRAPH_NAME]
 );
 
+export const selectItems = createSelector(
+  selectStreamState,
+  streamState => streamState.mainItems
+);
+
 export const selectCurrentSelection = createSelector(
   selectStreamState,
   (state: FlogoStreamState) => state.currentSelection
+);
+
+const isTaskSelection = (selection): selection is TaskSelection =>
+  selection && selection.type === SelectionType.Task;
+export const getSelectedStageInfo = createSelector(
+  selectCurrentSelection,
+  selectItems,
+  selectSchemas,
+  (currentSelection, items, schemas) => {
+    if (isTaskSelection(currentSelection) && items[currentSelection.taskId]) {
+      const stage = items[currentSelection.taskId];
+      return {
+        ...stage,
+        schemaHomepage: schemas[stage.ref],
+      };
+    }
+    return null;
+  }
 );
 
 export const getDiagramSelection = createSelector(
@@ -123,6 +147,38 @@ export const getStagesAsTiles = (maxTileCount: number) => {
     }
   );
 };
+
+function findIndexForCurrentSelection(
+  graph: DiagramGraph,
+  currentSelection: TaskSelection
+) {
+  let index = 0;
+  let currentTask = graph.nodes[graph.rootId];
+  while (currentTask && currentTask.id !== currentSelection.taskId) {
+    index++;
+    const childId = currentTask.children[0];
+    if (!childId || graph.nodes[childId]) {
+      return null;
+    }
+    currentTask = graph.nodes[childId];
+  }
+  return index;
+}
+
+export const getCurrentSimulationStage = createSelector(
+  selectCurrentSelection,
+  selectGraph,
+  (currentSelection: CurrentSelection, graph: DiagramGraph) => {
+    if (
+      !graph.rootId ||
+      !currentSelection ||
+      currentSelection.type !== SelectionType.Task
+    ) {
+      return ROOT_PIPELINE_ID;
+    }
+    return `${findIndexForCurrentSelection(graph, currentSelection)}`;
+  }
+);
 
 export const getInstalledActivities = createSelector(
   selectSchemas,
