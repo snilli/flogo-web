@@ -49,9 +49,16 @@ export function streamReducer(
       }
       return state;
     case StreamActionType.SelectStage:
+      const previousSelection = state.currentSelection;
+      const isSameSelection =
+        previousSelection &&
+        previousSelection.type === SelectionType.Task &&
+        previousSelection.taskId === action.payload;
       return {
         ...state,
-        currentSelection: selectionFactory.makeStageSelection(action.payload),
+        currentSelection: !isSameSelection
+          ? selectionFactory.makeStageSelection(action.payload)
+          : null,
       };
     case StreamActionType.DeleteStage:
       return removeStage(state, action.payload);
