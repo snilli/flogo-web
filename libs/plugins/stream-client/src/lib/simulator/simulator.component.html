@@ -21,7 +21,7 @@
 
 <div class="column">
   <flogo-stream-simulator-viz
-    *ngIf="metadata?.input?.length > 0; else noInput"
+    *ngIf="!isInputEmpty; else noInput"
     class="viewer"
     [graphFields]="metadata?.inputGraphFields"
     [graphView]="metadata?.inputGraph"
@@ -47,13 +47,15 @@
     </div>
   </flogo-stream-simulator-viz>
   <ng-template #noInput
-    ><div class="section-empty">No inputs defined yet for this stream</div></ng-template
+    ><div class="section-empty">
+      Input data is not yet available for display
+    </div></ng-template
   >
 </div>
 
 <div class="column">
   <flogo-stream-simulator-viz
-    *ngIf="metadata?.output?.length > 0; else noOutput"
+    *ngIf="!isOutputEmpty; else noOutput"
     class="viewer"
     [graphView]="metadata?.outputGraph"
     [simulationId]="simulationId"
@@ -79,6 +81,8 @@
     </div>
   </flogo-stream-simulator-viz>
   <ng-template #noOutput
-    ><div class="section-empty">No outputs defined yet for this stream</div></ng-template
+    ><div class="section-empty">
+      Output data is not yet available to display
+    </div></ng-template
   >
 </div>
