@@ -9,7 +9,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { Metadata, ValueType } from '@flogo-web/core';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
@@ -35,6 +36,11 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() simulateActivity;
   @Input() simulationId: number;
   @Input() currentStageId: string | number;
+
+  isInputEmpty = true;
+  isOutputEmpty = true;
+
+  private updateSubs: Subscription[] = [];
   private destroy$ = SingleEmissionSubject.create();
   private input$: Observable<any>;
   private output$: Observable<any>;
@@ -76,8 +82,24 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateEvents() {
+    this.isInputEmpty = true;
+    this.isOutputEmpty = true;
+
+    if (this.updateSubs.length > 0) {
+      this.updateSubs.forEach(s => s.unsubscribe());
+    }
+
     this.input$ = this.simulationService.observeData(this.currentStageId, 'started');
     this.output$ = this.simulationService.observeData(this.currentStageId, 'finished');
+
+    this.updateSubs = [
+      this.input$.pipe(take(1)).subscribe(() => {
+        this.isInputEmpty = false;
+      }),
+      this.output$.pipe(take(1)).subscribe(() => {
+        this.isOutputEmpty = false;
+      }),
+    ];
   }
 }
 
