@@ -10,6 +10,7 @@
     <div header-role="resource-logo" class="stream-logo"></div>
     <flogo-stream-run-stream-button
       [resourceId]="streamState.id"
+      (openSimulationPanel)="changePanelState(true)"
       header-role="right-block"
     ></flogo-stream-run-stream-button>
     <flogo-logs header-role="right-block"></flogo-logs>

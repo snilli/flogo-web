@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { StreamProcessStatus } from '@flogo-web/core';
 import { RestApiService, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { SimulatorService } from '../../simulator';
@@ -10,6 +10,7 @@ import { SimulatorService } from '../../simulator';
 })
 export class RunStreamButtonComponent implements OnInit, OnDestroy {
   @Input() resourceId: string;
+  @Output() openSimulationPanel: EventEmitter<void> = new EventEmitter<void>();
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
   simulatorStatus: StreamProcessStatus;
@@ -61,6 +62,7 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
     this.simulatorService.start(this.resourceId, this.filePath);
     this.isSimulatorRunning = true;
     this.showFileInput = false;
+    this.openSimulationPanel.emit();
   }
 
   stopSimulation() {
