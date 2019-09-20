@@ -1,6 +1,5 @@
 import {
   Component,
-  ChangeDetectionStrategy,
   NgZone,
   OnInit,
   OnDestroy,
@@ -10,7 +9,7 @@ import {
 } from '@angular/core';
 
 import { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 import { Metadata, ValueType } from '@flogo-web/core';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
@@ -25,7 +24,6 @@ interface Schemas {
   selector: 'flogo-stream-simulator',
   templateUrl: './simulator.component.html',
   styleUrls: ['./simulator.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() metadata?: Metadata & {
@@ -49,6 +47,9 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.updateEvents();
+    this.simulationService.start$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateEvents());
   }
 
   ngOnChanges({

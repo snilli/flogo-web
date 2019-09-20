@@ -3,11 +3,11 @@ import {
   Observable,
   fromEvent,
   Subject,
-  ReplaySubject,
   concat,
   of,
   EMPTY,
   pipe,
+  BehaviorSubject,
 } from 'rxjs';
 import {
   takeUntil,
@@ -20,7 +20,7 @@ import {
   take,
   map,
 } from 'rxjs/operators';
-import { isObject, get } from 'lodash';
+import { isObject, isArray, get } from 'lodash';
 
 import { Injectable, OnDestroy, Inject } from '@angular/core';
 import { StreamProcessStatus } from '@flogo-web/core';
@@ -80,10 +80,9 @@ export class SimulatorService implements OnDestroy {
   public readonly rawEvents$: Observable<PipelineEvent>;
   public readonly status$: Observable<StreamProcessStatus>;
   public readonly dataEvents$: Observable<PipelineEvent>;
-  public readonly starting$: Observable<boolean>;
-  private readonly currentCacheSrc = new ReplaySubject<DataCache>(1);
+  public readonly start$ = new Subject<void>();
+  private readonly currentCacheSrc = new BehaviorSubject<DataCache>({});
   private destroy$ = SingleEmissionSubject.create();
-  private start$ = new Subject<void>();
 
   constructor(@Inject(HOSTNAME) hostname: string) {
     this.socket = io.connect(`${hostname}/stream-simulator`);
@@ -166,9 +165,18 @@ function getOrCreateNormalizer(
     rootNormalizers.set(phaseInfo.id, stageNormalizers);
   }
   let normalizer = stageNormalizers.get(phaseInfo.phase);
-  if (!normalizer) {
+  if (!normalizer && event.data) {
+    if (
+      isObject(event.data) &&
+      (event.data as any).result &&
+      isArray((event.data as any).result)
+    ) {
+      console.log(event.data['result']);
+    }
     normalizer = makeNormalizer(event);
     stageNormalizers.set(phaseInfo.phase, normalizer);
+  } else if (!normalizer) {
+    normalizer = identity;
   }
   return normalizer;
 }

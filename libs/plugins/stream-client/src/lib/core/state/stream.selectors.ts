@@ -157,7 +157,7 @@ function findIndexForCurrentSelection(
   while (currentTask && currentTask.id !== currentSelection.taskId) {
     index++;
     const childId = currentTask.children[0];
-    if (!childId || graph.nodes[childId]) {
+    if (!childId || !graph.nodes[childId]) {
       return null;
     }
     currentTask = graph.nodes[childId];

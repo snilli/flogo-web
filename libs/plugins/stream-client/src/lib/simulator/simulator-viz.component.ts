@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { Observable, combineLatest, pipe, Subscription } from 'rxjs';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
-import { scan, filter, takeUntil, take } from 'rxjs/operators';
+import { scan, filter, takeUntil, take, skipWhile } from 'rxjs/operators';
 import { PerspectiveWorker } from '@finos/perspective';
 import { PerspectiveService } from './perspective.service';
 import PerspectiveViewer from '@finos/perspective-viewer';
@@ -50,6 +50,14 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
 
   ngOnDestroy() {
     this.destroy$.emitAndComplete();
+    if (this.currentTable) {
+      this.currentTable.delete();
+    }
+
+    const viewer = this.getViewer();
+    if (viewer) {
+      viewer.delete();
+    }
   }
 
   ngOnChanges({
@@ -81,30 +89,29 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
     this.zone.runOutsideAngular(() => {
       combineLatest(
         this.perspectiveService.getWorker(),
-        this.values$.pipe(valueAccumulator(this.simulationId))
+        this.values$.pipe(
+          skipWhile(data => !data),
+          valueAccumulator(this.simulationId)
+        )
       )
         .pipe(
           takeUntil(this.destroy$),
           take(1)
         )
         .subscribe(([worker, values]: [PerspectiveWorker, any[]]) => {
-          // var table = perspective.worker().table(data);
-
           const viewer = this.getViewer();
           const prevTable = this.currentTable;
           this.currentTable = worker.table(values, { limit: VIZ_LIMIT } as any);
           // docs say loading table is fine but TS complains, hence the cast to "any"
           viewer.load(this.currentTable as any);
           if (prevTable) {
-            prevTable.delete();
+            try {
+              prevTable.delete();
+            } catch (e) {
+              console.warn(e);
+            }
           }
-          // viewer.load(values, { limit: VIZ_LIMIT });
-          // const table = worker.table(this.schema, <any>{ limit: VIZ_LIMIT });
-          // const table = worker.table(values);
-          // viewer.load(table);
-          // table.update(values);
-          // viewer.load(<any>table, <any>{ limit: VIZ_LIMIT });
-          // (<any>this.getViewer()).reset();
+
           if (this.view) {
             viewer.setAttribute('view', this.view);
           }
@@ -170,8 +177,9 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
   }
 }
 
+const isDisplayable = n => n !== null && n !== undefined;
 function accumulateValues(values, newValues) {
-  values.unshift(...newValues);
+  values.unshift(...newValues.filter(isDisplayable));
   return values.slice(0, VIZ_LIMIT);
 }
 

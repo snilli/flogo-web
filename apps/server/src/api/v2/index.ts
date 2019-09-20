@@ -3,6 +3,7 @@ import * as Router from 'koa-router';
 const RouterConstructor = require('koa-router');
 
 import { config } from '../../config/app-config';
+import { flushAndCloseDb } from '../../common/db';
 import { errorMiddleware } from './error-middleware';
 import { apps } from './apps';
 import { triggers } from './triggers';
@@ -29,6 +30,11 @@ export function createRouter(container: Container): Router {
 
   router.get('/_/features', context => {
     context.body = config.features;
+  });
+
+  router.post('/_/db\\:flush', async context => {
+    await flushAndCloseDb();
+    context.body = { status: 'okay' };
   });
 
   return router;
