@@ -20,7 +20,7 @@ import {
   take,
   map,
 } from 'rxjs/operators';
-import { isObject, isArray, get } from 'lodash';
+import { isObject, isArray, get, isEmpty } from 'lodash';
 
 import { Injectable, OnDestroy, Inject } from '@angular/core';
 import { StreamProcessStatus } from '@flogo-web/core';
@@ -88,11 +88,24 @@ export class SimulatorService implements OnDestroy {
     this.socket = io.connect(`${hostname}/stream-simulator`);
     this.status$ = fromEvent(this.socket, 'simulator-status');
     this.rawEvents$ = fromEvent(this.socket, 'data');
+
     const normalizers = new Map<string, Map<EventPhase, NormalizerFn>>();
     this.dataEvents$ = this.rawEvents$.pipe(
       windowWhen(() => this.start$),
       tap(() => normalizers.clear()),
-      switchMap(group$ => group$.pipe(map(event => normalizeData(normalizers, event)))),
+      switchMap(group$ =>
+        group$.pipe(
+          switchMap(event => {
+            if (checkIsSpecialDemoEvent(event)) {
+              return handleSpecialDemoEvent(event);
+            } else {
+              return of(event);
+            }
+          }),
+          map(event => normalizeData(normalizers, event)),
+          filter(event => !isEmpty(event.data))
+        )
+      ),
       shareReplay(1),
       takeUntil(this.destroy$)
     );
@@ -166,19 +179,27 @@ function getOrCreateNormalizer(
   }
   let normalizer = stageNormalizers.get(phaseInfo.phase);
   if (!normalizer && event.data) {
-    if (
-      isObject(event.data) &&
-      (event.data as any).result &&
-      isArray((event.data as any).result)
-    ) {
-      console.log(event.data['result']);
-    }
     normalizer = makeNormalizer(event);
     stageNormalizers.set(phaseInfo.phase, normalizer);
   } else if (!normalizer) {
     normalizer = identity;
   }
   return normalizer;
+}
+
+function checkIsSpecialDemoEvent(event: PipelineEvent) {
+  const data = event.data as any;
+  return isObject(data) && data.hasOwnProperty('result') && data.hasOwnProperty('report');
+}
+
+const replaceEventData = event => data => ({ ...event, data });
+function handleSpecialDemoEvent(event) {
+  const data = event.data as any;
+  if (isArray(data.result) && data['result'].length > 0) {
+    return of(...data.result.map(replaceEventData(event)));
+  } else {
+    return EMPTY;
+  }
 }
 
 function accumulateDataCache(cache: DataCache, event: PipelineEvent) {

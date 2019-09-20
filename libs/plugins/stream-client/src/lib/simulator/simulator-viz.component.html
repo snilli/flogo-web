@@ -33,4 +33,6 @@
   </div>
 </div>
 <perspective-viewer #viewer plugin="{{ currentView }}"></perspective-viewer>
-<flogo-loading-indicator *ngIf="isStarting" [active]="true"></flogo-loading-indicator>
+<div class="starting-msg" *ngIf="isStarting">
+  Waiting for data...
+</div>

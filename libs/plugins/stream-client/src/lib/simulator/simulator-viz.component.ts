@@ -86,6 +86,10 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
       this.currentTable.clear();
     }
 
+    if (this.valueChangeSubscription) {
+      this.valueChangeSubscription.unsubscribe();
+    }
+
     this.zone.runOutsideAngular(() => {
       combineLatest(
         this.perspectiveService.getWorker(),
