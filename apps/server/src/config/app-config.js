@@ -174,7 +174,7 @@ const config = {
   },
   streamSimulation: {
     restControlUrl:
-      process.env.FLOGO_WEB_STREAM_TRIGGER_URL || 'http://localhost:9998/control',
+      process.env.FLOGO_WEB_STREAM_TRIGGER_URL || 'http://localhost:9998/tester',
     wsUrl: process.env.FLOGO_WEB_STREAM_WS_URL || 'ws://localhost:9999/telemetry',
   },
 };

@@ -28,6 +28,10 @@ export class RemoteSimulatorProcess {
     return this._status;
   }
 
+  async start() {
+    return this.callRestControl('start', StreamProcessStatus.Running);
+  }
+
   async restart() {
     return this.callRestControl('restart', StreamProcessStatus.Running);
   }
@@ -117,7 +121,7 @@ export class RemoteSimulatorProcess {
 
   private callRestControl(action: string, statusIfSuccess: StreamProcessStatus) {
     this.throwIfProcessUnavailable(action);
-    return got(`${this.config.restControlUrl}/${action}`).then(r => {
+    return got.post(`${this.config.restControlUrl}/${action}`).then(r => {
       this.updateStatus(statusIfSuccess);
       return r;
     });

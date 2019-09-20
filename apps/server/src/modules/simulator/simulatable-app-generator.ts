@@ -14,7 +14,7 @@ const BASE_APP = {
 
 const BASE_HANDLER_SETTINGS = {
   settings: {
-    header: true,
+    columnNameAsKey: true,
   },
 };
 
@@ -44,17 +44,24 @@ export class SimulatableAppGenerator {
     app.resources.push(resource);
     app.triggers.push(generateTrigger({ ...opts, resourceId }));
     const transformedApp = await this.appExporter.export(app);
-    transformedApp.imports.push('github.com/project-flogo/stream/service/telemetry');
+    transformedApp.imports.push(
+      'github.com/project-flogo/stream/service/telemetry',
+      'github.com/project-flogo/catalystml-flogo/action',
+      'github.com/project-flogo/catalystml-flogo/activity/inference',
+      'github.com/project-flogo/catalystml-flogo/operations/cleaning',
+      'github.com/project-flogo/catalystml-flogo/operations/math',
+      'github.com/project-flogo/catalystml-flogo/operations/categorical',
+      'github.com/project-flogo/catalystml-flogo/operations/retyping'
+    );
     return transformedApp;
   }
 }
 
 function generateTrigger(options) {
   return {
-    id: 'flogo-timer',
-    ref: 'github.com/skothari-tibco/csvtimer',
+    id: 'flogo-tester',
+    ref: 'github.com/project-flogo/stream/trigger/streamtester',
     settings: {
-      control: true,
       port: options.port,
     },
     handlers: [generateHandler(options)],
@@ -80,134 +87,3 @@ function generateHandler({ resourceId, filePath, repeatInterval }) {
     actionMappings,
   };
 }
-
-/*function prepareInputMappings() {
-  return {
-    input: {},
-  };
-}*/
-
-/*function getMock(filePath, port, repeatInterval) {
-  return {
-    name: '20190828-1542',
-    type: 'flogo:app',
-    version: '0.0.1',
-    description: '',
-    appModel: '1.1.0',
-    imports: [
-      // 'github.com/project-flogo/stream/trigger/test-timer testtimer',
-      'github.com/skothari-tibco/csvtimer',
-      'github.com/project-flogo/stream/activity/filter',
-      'github.com/project-flogo/contrib/activity/log',
-      'github.com/project-flogo/stream/service/telemetry',
-      'github.com/project-flogo/contrib/trigger/rest',
-      'github.com/project-flogo/stream',
-    ],
-    triggers: [
-      // {
-      //   id: 'flogo-timer',
-      //   ref: 'testtimer',
-      //   settings: {
-      //     port: `${port}`,
-      //     control: true,
-      //   },
-      //   handlers: [
-      //     {
-      //       settings: {
-      //         header: true,
-      //         filePath: filePath,
-      //         repeatInterval: `${repeatInterval}`,
-      //       },
-      //       actions: [
-      //         {
-      //           id: 'simple_agg',
-      //           input: {
-      //             foo: '=$.data.foo',
-      //             bar: '=$.data.bar',
-      //           },
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      {
-        id: 'flogo-timer',
-        ref: '#csvtimer',
-        handlers: [
-          {
-            settings: {
-              header: true,
-              filePath,
-              repeatInterval: `${repeatInterval}`,
-            },
-            actions: [
-              {
-                id: 'simple_agg',
-                input: {
-                  foo: '=$.data.foo',
-                  bar: '=$.data.bar',
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    actions: [
-      {
-        ref: '#stream',
-        settings: {
-          pipelineURI: 'res://pipeline:simple_filter',
-        },
-        id: 'simple_agg',
-      },
-    ],
-    resources: [
-      {
-        id: 'pipeline:simple_filter',
-        "filePath": "...local\asf\file.csv"
-        data: {
-          metadata: {
-            input: [
-              {
-                name: 'foo',
-                type: 'integer',
-              },
-              {
-                name: 'bar',
-                type: 'integer',
-              },
-            ],
-            output: [
-              {
-                name: 'test',
-                type: 'any',
-              },
-            ],
-          },
-          stages: [
-            {
-              ref: '#filter',
-              settings: {
-                type: 'non-zero',
-                proceedOnlyOnEmit: true,
-              },
-              input: {
-                value: '=$.foo',
-              },
-            },
-            {
-              ref: '#log',
-              input: {
-                message: '=$.value',
-              },
-              output: {
-                'pipeline.test': "='cool'",
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-}*/

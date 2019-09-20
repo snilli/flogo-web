@@ -95,6 +95,7 @@ export class StreamSimulator {
         onStatusChange: this.sendStatus.bind(this),
       },
     });
+    await this.currentProcess.start();
   }
 
   onClientDisconnection(client: SimulationClient) {
