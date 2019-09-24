@@ -6,6 +6,7 @@
   flex: 1;
   display: flex;
   align-items: flex-start;
+  z-index: 0;
   --diagram-secondary: #96a7f8;
   --add-button-width: 48px;
 }
@@ -33,6 +34,7 @@ flogo-diagram {
 
 .tile__separator {
   position: relative;
+  min-width: 128px;
   &:before {
     content: '';
     position: absolute;
@@ -47,9 +49,10 @@ flogo-diagram {
   }
   &.add-button{
     margin: 0 4px 0 48px;
+    min-width: 44px;
     &:before {
-      width: 51px;
-      left: -47px;
+      width: 52px;
+      left: -48px;
     }
   }
 }
