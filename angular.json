@@ -191,8 +191,7 @@
               "node_modules/monaco-editor/min/vs/loader.js"
             ],
             "customWebpackConfig": {
-              "path": "./extra-webpack.config.js",
-              "mergeStrategies": { "externals": "replace" }
+              "path": "./extra-webpack.config.js"
             }
           },
           "configurations": {
