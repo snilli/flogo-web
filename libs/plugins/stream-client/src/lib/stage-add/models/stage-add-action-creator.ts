@@ -5,11 +5,7 @@ import { map, take } from 'rxjs/operators';
 
 import { NodeType, GraphNode } from '@flogo-web/lib-client/core';
 
-import {
-  FlogoStreamState,
-  StreamDiagramActions,
-  StreamSelectors,
-} from '../../core/state';
+import { FlogoStreamState, StreamActions, StreamSelectors } from '../../core/state';
 import { activitySchemaToStage } from './stage-factories';
 import { stageIdGenerator } from './profile';
 import { InsertTaskSelection, uniqueStageName, makeNode } from '../../core/models';
@@ -22,15 +18,13 @@ interface StreamAddData {
 export function createStageAddAction(
   store: Store<FlogoStreamState>,
   activityToAdd: StreamAddData
-): Observable<StreamDiagramActions.StageItemCreated> {
+): Observable<StreamActions.StageItemCreated> {
   return store.pipe(
     select(StreamSelectors.selectStreamState),
     take(1),
     map(
       streamState =>
-        new StreamDiagramActions.StageItemCreated(
-          createNewStage(streamState, activityToAdd)
-        )
+        new StreamActions.StageItemCreated(createNewStage(streamState, activityToAdd))
     )
   );
 }
@@ -38,7 +32,7 @@ export function createStageAddAction(
 function createNewStage(
   streamState: FlogoStreamState,
   activityData: StreamAddData
-): StreamDiagramActions.StageItemCreated['payload'] {
+): StreamActions.StageItemCreated['payload'] {
   const selection = streamState.currentSelection as InsertTaskSelection;
   const schema = streamState.schemas[activityData.ref];
   const { mainItems } = streamState;

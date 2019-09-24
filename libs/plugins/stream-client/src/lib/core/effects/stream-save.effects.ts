@@ -5,7 +5,7 @@ import { switchMap, filter, map } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
 
 import { StreamService } from '../stream.service';
-import { StreamDiagramActions, StreamActionType } from '../state';
+import { StreamActions, StreamActionType } from '../state';
 
 @Injectable()
 export class StreamSaveEffects {
@@ -14,7 +14,7 @@ export class StreamSaveEffects {
     ofType(StreamActionType.ChangeName),
     switchMap(() => this.streamOps.saveStreamName()),
     filter(isSaved => isSaved),
-    map(() => new StreamDiagramActions.StreamSaveSuccess())
+    map(() => new StreamActions.StreamSaveSuccess())
   );
 
   @Effect()
@@ -28,16 +28,16 @@ export class StreamSaveEffects {
     ),
     switchMap(action => this.saveStream(action)),
     filter(isSaved => isSaved),
-    map(() => new StreamDiagramActions.StreamSaveSuccess())
+    map(() => new StreamActions.StreamSaveSuccess())
   );
 
   @Effect()
   deleteStage$: Observable<Action> = this.actions$.pipe(
     ofType(StreamActionType.SelectRemoveStage),
-    switchMap((action: StreamDiagramActions.SelectRemoveStage) =>
+    switchMap((action: StreamActions.SelectRemoveStage) =>
       this.showDeleteMessage(action.payload)
     ),
-    map(removeItemId => new StreamDiagramActions.ConfirmDeleteStage(removeItemId))
+    map(removeItemId => new StreamActions.ConfirmDeleteStage(removeItemId))
   );
 
   constructor(private streamOps: StreamService, private actions$: Actions) {}
