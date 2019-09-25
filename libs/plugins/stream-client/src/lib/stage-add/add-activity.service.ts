@@ -4,7 +4,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 import { Observable } from 'rxjs';
 
-import { StreamDiagramActions, StreamSelectors, FlogoStreamState } from '../core/state';
+import { StreamActions, StreamSelectors, FlogoStreamState } from '../core/state';
 import { StageAddComponent, STAGEADD_OPTIONS } from './stage-add.component';
 import { Activity, StageAddOptions } from './core/stage-add-options';
 import { createStageAddAction } from './models/stage-add-action-creator';
@@ -32,7 +32,7 @@ export class AddActivityService {
 
   cancel() {
     this.close();
-    this.store.dispatch(new StreamDiagramActions.CancelCreateStage(this.parentId));
+    this.store.dispatch(new StreamActions.CancelCreateStage(this.parentId));
   }
 
   closeAndDestroy() {
@@ -105,7 +105,7 @@ export class AddActivityService {
 
   private selectedActivity(ref: string) {
     createStageAddAction(this.store, { ref }).subscribe(
-      (action: StreamDiagramActions.StageItemCreated) => {
+      (action: StreamActions.StageItemCreated) => {
         this.store.dispatch(action);
       }
     );

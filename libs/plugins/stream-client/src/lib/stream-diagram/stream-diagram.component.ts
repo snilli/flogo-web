@@ -23,7 +23,7 @@ import {
 import {
   StreamStoreState,
   selectGraph,
-  StreamDiagramActions,
+  StreamActions,
   getDiagramSelection,
   getStagesAsTiles,
 } from '../core/state';
@@ -85,12 +85,12 @@ export class StreamDiagramComponent implements OnDestroy {
     switch (action.type) {
       case DiagramActionType.Remove:
         this.store.dispatch(
-          new StreamDiagramActions.SelectRemoveStage((<DiagramActionSelf>action).id)
+          new StreamActions.SelectRemoveStage((<DiagramActionSelf>action).id)
         );
         break;
       case DiagramActionType.Configure:
         this.store.dispatch(
-          new StreamDiagramActions.ConfigureStage({
+          new StreamActions.ConfigureStage({
             itemId: (<DiagramActionSelf>action).id,
           })
         );
@@ -98,12 +98,10 @@ export class StreamDiagramComponent implements OnDestroy {
     }
   }
   addStage() {
-    this.store.dispatch(
-      new StreamDiagramActions.SelectCreateStage(this.insertTile.parentId)
-    );
+    this.store.dispatch(new StreamActions.SelectCreateStage(this.insertTile.parentId));
   }
   selectStage(taskTile: TaskTile) {
-    this.store.dispatch(new StreamDiagramActions.SelectStage(taskTile.task.id));
+    this.store.dispatch(new StreamActions.SelectStage(taskTile.task.id));
   }
   private updateAvailableSlots(streamTiles) {
     this.availableSlots = MAX_TILES - streamTiles.length;

@@ -20,7 +20,7 @@ import {
   FlogoStreamState,
   StreamService,
   StreamSelectors,
-  StreamDiagramActions as StreamActions,
+  StreamActions,
   StreamStoreState as AppState,
 } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
