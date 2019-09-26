@@ -11,6 +11,7 @@ import { DiagramModule } from '@flogo-web/lib-client/diagram';
 import { ResourceInterfaceBuilderModule } from '@flogo-web/lib-client/resource-interface-builder';
 import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
 import { MonacoEditorModule } from '@flogo-web/editor';
+import { ModalModule } from '@flogo-web/lib-client/modal';
 
 import {
   StreamService,
@@ -29,10 +30,12 @@ import { StageAddModule } from './stage-add';
 import { StageConfiguratorModule } from './stage-configurator/stage-configurator.module';
 import { SimulatorModule } from './simulator/simulator.module';
 import { RunStreamModule } from './run-stream/run-stream.module';
+import { ParamsSchemaComponent } from './params-schema/params-schema.component';
 
 @NgModule({
   imports: [
-    CommonModule,
+  CommonModule,
+    ModalModule,
     FlogoSharedModule,
     FlogoDesignerHeader,
     FlogoLogsModule,
@@ -64,5 +67,6 @@ import { RunStreamModule } from './run-stream/run-stream.module';
     MicroServiceModelConverter,
   ],
   declarations: [StreamDesignerComponent, StreamDiagramComponent],
+  entryComponents: [ParamsSchemaComponent],
 })
 export class StreamClientModule {}

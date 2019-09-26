@@ -1,5 +1,22 @@
 @import '~@flogo-web/assets/styles/_variables';
+@import (reference) '~@flogo-web/assets/styles/uxpl/modal';
 
+:host {
+  .modal-base();
+  width: 65%;
+  min-height: 350px;
+  max-height: 617px;
+  z-index: 0;
+  border-radius: 4px;
+  box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.3);
+  padding: 30px;
+
+  @media (min-width: 900px) {
+    min-width: 900px;
+    width: 62vw;
+  }
+
+}
 .stream-input-params-header {
   display: flex;
   flex-direction: row;
@@ -34,7 +51,6 @@
 
 .stream-input-params-container {
   display: flex;
-  border: 1px solid @primary-blue;
   height: 422px;
 }
 

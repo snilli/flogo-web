@@ -1,12 +1,10 @@
 import { isEmpty } from 'lodash';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-
-import { BsModalComponent } from 'ng2-bs3-modal';
-
 import { ValueType } from '@flogo-web/core';
 import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 import { ResourceInterfaceBuilderService } from '@flogo-web/lib-client/resource-interface-builder';
+import { modalAnimate, ModalControl } from '@flogo-web/lib-client/modal';
 
 @Component({
   selector: 'flogo-stream-params-schema',
@@ -15,20 +13,22 @@ import { ResourceInterfaceBuilderService } from '@flogo-web/lib-client/resource-
 })
 export class ParamsSchemaComponent implements OnInit {
   @ViewChild('modal', { static: true })
-  modal: BsModalComponent;
   paramsForm: FormGroup;
-  @Input() metadata: StreamMetadata;
-  @Output() save = new EventEmitter<StreamMetadata>();
+  metadata: StreamMetadata;
   selectTypes: ValueType[] = [];
   displayInputParams: boolean;
   groupBy: string;
 
-  constructor(private resourceInterfaceBuilderService: ResourceInterfaceBuilderService) {
+  constructor(
+    private resourceInterfaceBuilderService: ResourceInterfaceBuilderService,
+    public control: ModalControl<any>
+  ) {
     this.selectTypes = Array.from(ValueType.allTypes);
+    this.metadata = this.control.data;
   }
 
   ngOnInit() {
-    this.paramsForm = this.resourceInterfaceBuilderService.createForm();
+    this.configureForm();
   }
 
   updateGroupBy(groupBy) {
@@ -43,29 +43,9 @@ export class ParamsSchemaComponent implements OnInit {
     this.displayInputParams = true;
   }
 
-  openInputSchemaModel() {
-    this.displayInputParams = true;
-    const metadata = isEmpty(this.metadata)
-      ? {
-          input: [],
-          output: [],
-        }
-      : this.metadata;
-    this.paramsForm = this.resourceInterfaceBuilderService.createForm(
-      metadata.input,
-      metadata.output
-    );
-
-    if (this.metadata && this.metadata.groupBy) {
-      this.updateGroupBy(this.metadata.groupBy);
-    }
-
-    this.modal.open();
-  }
-
-  closeInputSchemaModel() {
+  closeInputSchemaModel(data) {
     this.displayInputParams = false;
-    this.modal.close();
+    this.control.close(data);
   }
 
   addParams(fromParams: string) {
@@ -88,8 +68,7 @@ export class ParamsSchemaComponent implements OnInit {
     const input = mapParamsToStream(updatedParams.input);
     const output = mapParamsToStream(updatedParams.output);
     const metadata = this.normalizeMetadata(input, output, this.groupBy);
-    this.save.next(metadata);
-    this.closeInputSchemaModel();
+    this.closeInputSchemaModel({ action: 'save', metadata: metadata });
   }
 
   normalizeMetadata(input, output, groupBy) {
@@ -107,5 +86,23 @@ export class ParamsSchemaComponent implements OnInit {
       this.updateGroupBy(null);
     }
     control.removeAt(index);
+  }
+
+  private configureForm() {
+    this.displayInputParams = true;
+    const metadata = isEmpty(this.metadata)
+      ? {
+          input: [],
+          output: [],
+        }
+      : this.metadata;
+    this.paramsForm = this.resourceInterfaceBuilderService.createForm(
+      metadata.input,
+      metadata.output
+    );
+
+    if (this.metadata && this.metadata.groupBy) {
+      this.updateGroupBy(this.metadata.groupBy);
+    }
   }
 }

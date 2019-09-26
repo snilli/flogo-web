@@ -1,5 +1,4 @@
-<bs-modal [size]="'lg'" #modal cssClass="input-params-modal">
-  <form [formGroup]="paramsForm" novalidate>
+<form [formGroup]="paramsForm" novalidate (submit)="saveParams()" class="fullscreen">
     <div class="stream-input-params-header">
       <div class="stream-input-params-header__title">
         <span class="stream-input-params-header__icon">
@@ -39,7 +38,6 @@
         class="flogo-button--default"
         data-dismiss="modal"
         [disabled]="!paramsForm.valid"
-        (click)="saveParams()"
       >
         {{ 'INPUT-PARAMS:SAVE' | translate }}
       </button>
@@ -154,5 +152,4 @@
         </div>
       </div>
     </div>
-  </form>
-</bs-modal>
+</form>

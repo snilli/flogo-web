@@ -7,11 +7,10 @@ import {
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import { ModalService } from '@flogo-web/lib-client/modal';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { ContribInstallerService } from '@flogo-web/lib-client/contrib-installer';
 import { StreamMetadata } from '@flogo-web/plugins/stream-core';
-
 import {
   ChangeDescription,
   ChangeName,
@@ -24,7 +23,6 @@ import {
   StreamStoreState as AppState,
 } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
-import { ROOT_PIPELINE_ID } from '../simulator';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -36,7 +34,6 @@ import { ROOT_PIPELINE_ID } from '../simulator';
 })
 export class StreamDesignerComponent implements OnInit, OnDestroy {
   @HostBinding('@initialAnimation') initialAnimation = true;
-  @ViewChild('inputSchemaModal', { static: true })
   defineInputSchema: ParamsSchemaComponent;
 
   streamState: FlogoStreamState;
@@ -49,13 +46,13 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   currentSimulationStage$: Observable<string | number>;
   // todo: add type
   selectedStageInfo$: Observable<any>;
-
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(
     private store: Store<AppState>,
     private streamService: StreamService,
-    private contribInstallerService: ContribInstallerService
+    private contribInstallerService: ContribInstallerService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit() {
@@ -111,11 +108,13 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   }
 
   openInputSchemaModal() {
-    this.defineInputSchema.openInputSchemaModel();
-  }
-
-  onStreamSchemaSave(metadata: StreamMetadata) {
-    this.store.dispatch(new UpdateMetadata(metadata));
+    this.modalService
+      .openModal<StreamMetadata>(ParamsSchemaComponent, this.streamState.metadata)
+      .result.subscribe((paramsSchemaData?) => {
+        if (paramsSchemaData) {
+          this.store.dispatch(new UpdateMetadata(paramsSchemaData.metadata));
+        }
+      });
   }
 
   deleteStream() {
