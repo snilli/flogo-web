@@ -34,7 +34,7 @@ import { ParamsSchemaComponent } from './params-schema/params-schema.component';
 
 @NgModule({
   imports: [
-  CommonModule,
+    CommonModule,
     ModalModule,
     FlogoSharedModule,
     FlogoDesignerHeader,
