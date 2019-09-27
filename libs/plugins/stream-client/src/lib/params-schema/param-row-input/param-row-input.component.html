@@ -1,5 +1,5 @@
 <div [formGroup]="paramGroup" class="form-input">
-  <div>
+  <div class="form-input-wrapper">
     <input
       class="form-input__name"
       type="text"
@@ -8,29 +8,55 @@
       [ngClass]="{ '--invalid': !paramGroup.get('name').valid }"
       (blur)="updateGroupByParam()"
     />
-  </div>
-
-  <div class="dropdown form-input__type type-selector">
-    <button
-      class="btn btn-default dropdown-toggle type-selector__label"
-      type="button"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="true"
-    >
-      <span>{{ paramGroup.get('type').value | lowercase }}</span>
-      <input type="hidden" formControlName="type" />
-      <span class="caret list-caret type-selector__caret"></span>
-    </button>
-    <ul class="dropdown-menu type-selector__dropdown-menu">
-      <li
-        *ngFor="let option of dropdownOptions"
-        class="list-label"
-        (click)="selectType(option)"
+    <div class="dropdown form-input__type type-selector">
+      <button
+        class="btn btn-default dropdown-toggle type-selector__label"
+        type="button"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="true"
       >
-        <a>{{ option }}</a>
-      </li>
-    </ul>
+        <span>{{ paramGroup.get('type').value | lowercase }}</span>
+        <input type="hidden" formControlName="type" />
+        <!--  <span class="carext list-caret type-selector__caret"></span> -->
+        <svg
+          class="type-selector__caret"
+          width="24px"
+          height="24px"
+          viewBox="0 0 24 24"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <defs></defs>
+          <g
+            id="System-icons"
+            stroke="none"
+            stroke-width="1"
+            fill="none"
+            fill-rule="evenodd"
+          >
+            <g id="system-icon/dropdown" fill="#79b8dc">
+              <g id="Group" transform="translate(6.000000, 10.000000)">
+                <path
+                  d="M6.0123,6.8601 L0.1755,1.0239 C-0.0585,0.7899 -0.0585,0.4101 0.1755,0.1755 C0.4101,-0.0585 0.7899,-0.0585 1.0245,0.1755 L6.0123,5.1633 L10.9755,0.1995 C11.2101,-0.0345 11.5899,-0.0345 11.8245,0.1995 C12.0585,0.4341 12.0585,0.8139 11.8245,1.0479 L6.0123,6.8601 Z"
+                  id="ic-dropdown"
+                ></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </button>
+      <ul class="dropdown-menu type-selector__dropdown-menu">
+        <li
+          *ngFor="let option of dropdownOptions"
+          class="list-label"
+          (click)="selectType(option)"
+        >
+          <a>{{ option }}</a>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div
