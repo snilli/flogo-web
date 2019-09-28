@@ -3,13 +3,13 @@
 .form-input {
   width: 100%;
   display: flex;
+  height: 40px;
 }
 
 .form-input__name {
+  flex: 1.5;
   border-radius: 4px;
   border: solid 1px @link-water;
-  width: 236px;
-  height: 45px;
   padding: 6px 12px;
   font-size: 14px;
   font-weight: 400;
@@ -38,22 +38,25 @@
 }
 
 .type-selector {
+  flex: 1;
   width: 100%;
   margin-right: 25px;
   margin-left: 20px;
 }
 
 .type-selector__label {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
+  height: 100%;
   text-align: left;
-  height: 45px;
   position: relative;
 }
 
 .type-selector__caret {
-  position: absolute;
-  top: 22px;
-  right: 22px;
+  color: #79b8dc;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .type-selector__dropdown-menu {
