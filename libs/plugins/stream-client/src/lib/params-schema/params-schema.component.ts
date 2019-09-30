@@ -18,7 +18,7 @@ export class ParamsSchemaComponent implements OnInit {
   selectTypes: ValueType[] = [];
   displayInputParams: boolean;
   groupBy: string;
-
+  data: { action: string; metadata: StreamMetadata };
   constructor(
     private resourceInterfaceBuilderService: ResourceInterfaceBuilderService,
     public control: ModalControl<any>
@@ -41,6 +41,11 @@ export class ParamsSchemaComponent implements OnInit {
 
   showInputParams() {
     this.displayInputParams = true;
+  }
+
+  cancelInputSchemaModel() {
+    this.data = { action: 'cancel', metadata: null };
+    this.closeInputSchemaModel(this.data);
   }
 
   closeInputSchemaModel(data) {
@@ -68,7 +73,8 @@ export class ParamsSchemaComponent implements OnInit {
     const input = mapParamsToStream(updatedParams.input);
     const output = mapParamsToStream(updatedParams.output);
     const metadata = this.normalizeMetadata(input, output, this.groupBy);
-    this.closeInputSchemaModel({ action: 'save', metadata: metadata });
+    this.data = { action: 'save', metadata: metadata };
+    this.closeInputSchemaModel(this.data);
   }
 
   normalizeMetadata(input, output, groupBy) {

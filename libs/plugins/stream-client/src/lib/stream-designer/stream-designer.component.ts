@@ -111,7 +111,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     this.modalService
       .openModal<StreamMetadata>(ParamsSchemaComponent, this.streamState.metadata)
       .result.subscribe((paramsSchemaData?) => {
-        if (paramsSchemaData) {
+        if (paramsSchemaData && paramsSchemaData.action === 'save') {
           this.store.dispatch(new UpdateMetadata(paramsSchemaData.metadata));
         }
       });
