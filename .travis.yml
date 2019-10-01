@@ -36,13 +36,11 @@ jobs:
       services:
         - docker
       install: skip
-      script: RELEASE_VERSION=latest ./make-web.sh --build-ml
+      script: RELEASE_VERSION=latest ./make-web.sh
       after_success: |
         if [ "${TRAVIS_BRANCH}" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
           echo 'Master banch build detected, pushing to docker hub'
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker tag flogo/flogo-web:latest flogo/flogo-web:unstable
           docker push flogo/flogo-web:unstable
-          docker tag flogo/flogo-web:latest-ml flogo/flogo-web:unstable-ml
-          docker push flogo/flogo-web:unstable-ml
         fi
