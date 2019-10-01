@@ -194,7 +194,6 @@ export class ContribInstallController extends EventEmitter {
 
   private updateInstallState(state: INSTALLATION_STATE) {
     const prevState = this._installState;
-    this.updateInstallState(state);
     this.emit(InstallEvents.StateChange, { state: this._installState, prevState });
   }
 
