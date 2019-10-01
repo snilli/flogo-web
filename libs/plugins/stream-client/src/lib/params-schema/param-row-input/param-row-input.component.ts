@@ -23,7 +23,8 @@ export class ParamRowInputComponent implements OnChanges {
   @Input() inputIndex;
   @Input() groupBy;
   @Output() removeParam: EventEmitter<number> = new EventEmitter<number>();
-  @Output() updateGroupBy: EventEmitter<string> = new EventEmitter<string>();
+  @Output() selectGroupBy: EventEmitter<string> = new EventEmitter<string>();
+  @Output() unselectGroupBy: EventEmitter<void> = new EventEmitter();
   showGroupByBtn = true;
   selectedAsGroupBy = false;
 
@@ -64,14 +65,18 @@ export class ParamRowInputComponent implements OnChanges {
 
   updateGroupByParam() {
     if (this.selectedAsGroupBy) {
-      this.selectGroupBy();
+      this.updateGroupBy();
     }
   }
 
-  selectGroupBy() {
-    if (this.paramGroup.get('name').value && this.paramGroup.get('name').valid) {
-      const param = this.paramGroup.get('name');
-      this.updateGroupBy.emit(param.value);
+  updateGroupBy() {
+    const param = this.paramGroup.get('name');
+    if (param.value && param.valid) {
+      if (this.groupBy === param.value) {
+        this.unselectGroupBy.emit();
+      } else {
+        this.selectGroupBy.emit(param.value);
+      }
     }
   }
 }

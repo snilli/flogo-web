@@ -90,7 +90,8 @@
               <div [formGroupName]="i" class="stream-input-params-pane__new-field">
                 <flogo-stream-params-schema-input-param-row
                   (removeParam)="removeParam(i, 'input')"
-                  (updateGroupBy)="updateGroupBy($event)"
+                  (selectGroupBy)="updateGroupBy($event)"
+                  (unselectGroupBy)="updateGroupBy(null)"
                   [dropdownOptions]="selectTypes"
                   [paramGroup]="inputParam"
                   [inputIndex]="i"
