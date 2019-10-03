@@ -4,9 +4,10 @@ import { SharedModule } from '@flogo-web/lib-client/common';
 import { ParamsSchemaComponent } from './params-schema.component';
 import { ButtonComponent } from './button/button.component';
 import { ParamRowComponent } from './param-row/param-row.component';
+import { ModalModule } from '@flogo-web/lib-client/modal';
 
 @NgModule({
-  imports: [SharedModule],
+  imports: [SharedModule, ModalModule],
   declarations: [
     ParamsSchemaComponent,
     ButtonComponent,

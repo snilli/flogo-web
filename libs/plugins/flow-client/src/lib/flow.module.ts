@@ -33,9 +33,13 @@ import { DebugPanelModule } from './debug-panel';
 import { TaskAddModule } from './task-add';
 import { ResourceInterfaceBuilderModule } from '@flogo-web/lib-client/resource-interface-builder';
 import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
+import { ModalModule } from '@flogo-web/lib-client/modal';
+import { ParamsSchemaComponent } from './params-schema/params-schema.component';
+
 @NgModule({
   imports: [
     CommonModule,
+    ModalModule,
     ScrollingModule,
     StoreModule.forFeature('flow', featureReducer),
     EffectsModule.forFeature([SaveEffects, TriggerMappingsEffects]),
@@ -65,5 +69,6 @@ import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
   ],
   providers: [FlowDataResolver],
   bootstrap: [FlowComponent],
+  entryComponents: [ParamsSchemaComponent],
 })
 export class FlowModule {}

@@ -32,6 +32,7 @@ import { ParamsSchemaComponent } from './params-schema';
 import { of } from 'rxjs';
 import { ContribInstallerService } from '@flogo-web/lib-client/contrib-installer';
 import { Store, select } from '@ngrx/store';
+import { ModalService } from '@flogo-web/lib-client/modal';
 
 interface TaskContext {
   isTrigger: boolean;
@@ -58,8 +59,6 @@ export class FlowComponent implements OnInit, OnDestroy {
   isOpen: boolean;
   SELECTOR_FOR_CURRENT_ELEMENT = 'flogo-diagram-tile-task.is-selected';
   @HostBinding('@initialAnimation') initialAnimation = true;
-  @ViewChild('inputSchemaModal', { static: true })
-  defineInputSchema: ParamsSchemaComponent;
   flowState: FlowState;
   runnableInfo: {
     disabled: boolean;
@@ -91,7 +90,8 @@ export class FlowComponent implements OnInit, OnDestroy {
     private testRunner: TestRunnerService,
     private notifications: NotificationsService,
     private contribInstallerService: ContribInstallerService,
-    private store: Store<FlowState>
+    private store: Store<FlowState>,
+    private modalService: ModalService
   ) {
     this._isDiagramEdited = false;
     this.app = null;
@@ -396,7 +396,13 @@ export class FlowComponent implements OnInit, OnDestroy {
   }
 
   public openInputSchemaModal() {
-    this.defineInputSchema.openInputSchemaModel();
+    this.modalService
+      .openModal<any>(ParamsSchemaComponent, this.flowState.metadata)
+      .result.subscribe((paramsSchemaData?: FlowMetadata) => {
+        if (paramsSchemaData) {
+          this._flowService.currentFlowDetails.updateMetadata(paramsSchemaData);
+        }
+      });
   }
 
   onRunFlow(modifiedInputs: MetadataAttribute[]) {
@@ -433,9 +439,5 @@ export class FlowComponent implements OnInit, OnDestroy {
     }
     // todo: throw error?
     return null;
-  }
-
-  public onFlowSchemaSave(newMetadata: FlowMetadata) {
-    this._flowService.currentFlowDetails.updateMetadata(newMetadata);
   }
 }
