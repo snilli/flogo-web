@@ -398,9 +398,9 @@ export class FlowComponent implements OnInit, OnDestroy {
   public openInputSchemaModal() {
     this.modalService
       .openModal<any>(ParamsSchemaComponent, this.flowState.metadata)
-      .result.subscribe((paramsSchemaData?: FlowMetadata) => {
-        if (paramsSchemaData) {
-          this._flowService.currentFlowDetails.updateMetadata(paramsSchemaData);
+      .result.subscribe((paramsSchemaData?) => {
+        if (paramsSchemaData && paramsSchemaData.action === 'save') {
+          this._flowService.currentFlowDetails.updateMetadata(paramsSchemaData.metadata);
         }
       });
   }

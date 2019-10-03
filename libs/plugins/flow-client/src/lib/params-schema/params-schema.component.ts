@@ -16,7 +16,7 @@ export class ParamsSchemaComponent implements OnInit {
   metadata: FlowMetadata;
   selectTypes: ValueType[] = [];
   displayInputParams: boolean;
-
+  data: { action: string; metadata: FlowMetadata };
   constructor(
     private resourceInterfaceBuilderService: ResourceInterfaceBuilderService,
     public control: ModalControl<FlowMetadata>
@@ -35,6 +35,11 @@ export class ParamsSchemaComponent implements OnInit {
 
   showInputParams() {
     this.displayInputParams = true;
+  }
+
+  cancelInputSchemaModel() {
+    this.data = { action: 'cancel', metadata: null };
+    this.closeInputSchemaModel(this.data);
   }
 
   closeInputSchemaModel(data) {
@@ -61,7 +66,8 @@ export class ParamsSchemaComponent implements OnInit {
     const updatedParams = this.paramsForm.value;
     const input = mapParamsToFlow(updatedParams.input);
     const output = mapParamsToFlow(updatedParams.output);
-    this.closeInputSchemaModel({ input, output });
+    this.data = { action: 'save', metadata: { input, output } };
+    this.closeInputSchemaModel(this.data);
   }
 
   removeParam(index: number, fromParams: string) {
