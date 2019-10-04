@@ -1,13 +1,12 @@
 <div [formGroup]="paramGroup" class="form-input">
-  <div>
-    <input
-      class="form-input__name"
-      type="text"
-      formControlName="name"
-      placeholder="parameter name"
-      [ngClass]="{ '--invalid': !paramGroup.get('name').valid }"
-    />
-  </div>
+  <input
+    class="form-input__name"
+    type="text"
+    formControlName="name"
+    placeholder="parameter name"
+    [ngClass]="{ '--invalid': !paramGroup.get('name').valid }"
+  />
+
   <div class="dropdown form-input__type type-selector">
     <button
       class="btn btn-default dropdown-toggle type-selector__label"
@@ -18,7 +17,7 @@
     >
       <span>{{ paramGroup.get('type').value | lowercase }}</span>
       <input type="hidden" formControlName="type" />
-      <span class="caret list-caret type-selector__caret"></span>
+      <i class="flogo-icon-dropdown type-selector__caret"></i>
     </button>
     <ul class="dropdown-menu type-selector__dropdown-menu">
       <li
