@@ -1,5 +1,13 @@
 @import '~@flogo-web/assets/styles/_variables';
 
+flogo-modal-header {
+  display: block;
+  padding-right: 24px;
+  .flow-input-params-header {
+    margin-bottom: 0;
+  }
+}
+
 .flow-input-params-field {
   display: flex;
   margin-bottom: 16px;
@@ -26,8 +34,10 @@
 
 .flow-input-params-header__title {
   position: relative;
-  font-size: 20px;
-  color: @pale-gray;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #262626;
   flex: 1;
 }
 
@@ -55,7 +65,6 @@
 
 .flow-input-params-container {
   display: flex;
-  border: 1px solid @primary-blue;
   height: 422px;
 }
 

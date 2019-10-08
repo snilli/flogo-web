@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-
-import { BsModalComponent } from 'ng2-bs3-modal';
-
 import { ValueType } from '@flogo-web/core';
 import { ResourceInterfaceBuilderService } from '@flogo-web/lib-client/resource-interface-builder';
+import { ModalControl } from '@flogo-web/lib-client/modal';
+import { FlowMetadata } from '../core/interfaces/flow/flow-metadata';
 
 @Component({
   selector: 'flogo-flow-params-schema',
@@ -12,20 +11,21 @@ import { ResourceInterfaceBuilderService } from '@flogo-web/lib-client/resource-
   styleUrls: ['params-schema.component.less'],
 })
 export class ParamsSchemaComponent implements OnInit {
-  @ViewChild('modal', { static: true })
-  modal: BsModalComponent;
   paramsForm: FormGroup;
-  @Input() flow: any;
-  @Output() save = new EventEmitter<{ input: any[]; output: any[] }>();
+  metadata: FlowMetadata;
   selectTypes: ValueType[] = [];
   displayInputParams: boolean;
-
-  constructor(private resourceInterfaceBuilderService: ResourceInterfaceBuilderService) {
+  data: { action: string; metadata: FlowMetadata };
+  constructor(
+    private resourceInterfaceBuilderService: ResourceInterfaceBuilderService,
+    public control: ModalControl<FlowMetadata>
+  ) {
     this.selectTypes = Array.from(ValueType.allTypes);
+    this.metadata = this.control.data;
   }
 
   ngOnInit() {
-    this.paramsForm = this.resourceInterfaceBuilderService.createForm();
+    this.configureForm();
   }
 
   showOutputParams() {
@@ -36,18 +36,14 @@ export class ParamsSchemaComponent implements OnInit {
     this.displayInputParams = true;
   }
 
-  openInputSchemaModel() {
-    this.displayInputParams = true;
-    this.paramsForm = this.resourceInterfaceBuilderService.createForm(
-      this.flow.metadata.input,
-      this.flow.metadata.output
-    );
-    this.modal.open();
+  cancelInputSchemaModel() {
+    this.data = { action: 'cancel', metadata: null };
+    this.closeInputSchemaModel(this.data);
   }
 
-  closeInputSchemaModel() {
+  closeInputSchemaModel(data) {
     this.displayInputParams = false;
-    this.modal.close();
+    this.control.close(data);
   }
 
   addParams(fromParams: string) {
@@ -69,12 +65,19 @@ export class ParamsSchemaComponent implements OnInit {
     const updatedParams = this.paramsForm.value;
     const input = mapParamsToFlow(updatedParams.input);
     const output = mapParamsToFlow(updatedParams.output);
-    this.save.next({ input, output });
-    this.closeInputSchemaModel();
+    this.data = { action: 'save', metadata: { input, output } };
+    this.closeInputSchemaModel(this.data);
   }
 
   removeParam(index: number, fromParams: string) {
     const control = <FormArray>this.paramsForm.controls[fromParams];
     control.removeAt(index);
+  }
+  private configureForm() {
+    this.displayInputParams = true;
+    this.paramsForm = this.resourceInterfaceBuilderService.createForm(
+      this.metadata.input,
+      this.metadata.output
+    );
   }
 }
