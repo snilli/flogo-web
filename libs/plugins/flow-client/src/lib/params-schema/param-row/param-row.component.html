@@ -19,7 +19,6 @@
       <span>{{ paramGroup.get('type').value | lowercase }}</span>
       <input type="hidden" formControlName="type" />
       <i class="flogo-icon-dropdown type-selector__caret"></i>
-      <!-- <span class="caret list-caret type-selector__caret"></span> -->
     </button>
     <ul class="dropdown-menu type-selector__dropdown-menu">
       <li
@@ -31,15 +30,7 @@
       </li>
     </ul>
   </div>
-  <!-- <div class="flow-params-delete" *ngIf="totalCount !== inputIndex+1"> -->
-  <div class="form-input__delete">
+  <button class="form-input__delete">
     <i class="flogo-icon-delete delete-icon" (click)="onRemoveParam()"></i>
-  </div>
-  <!-- <div> -->
-  <!-- <button class="flow-input-params-add" -->
-  <!-- (click)="addParams()" type="button" *ngIf="totalCount === inputIndex+1" -->
-  <!-- [disabled]="!paramGroup.controls.name.valid"> -->
-  <!-- {{ 'INPUT-PARAMS:ADD' | translate }} -->
-  <!-- </button> -->
-  <!-- </div> -->
+  </button>
 </div>

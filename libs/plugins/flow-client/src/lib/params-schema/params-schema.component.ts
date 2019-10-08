@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { ValueType } from '@flogo-web/core';
 import { ResourceInterfaceBuilderService } from '@flogo-web/lib-client/resource-interface-builder';
@@ -11,7 +11,6 @@ import { FlowMetadata } from '../core/interfaces/flow/flow-metadata';
   styleUrls: ['params-schema.component.less'],
 })
 export class ParamsSchemaComponent implements OnInit {
-  @ViewChild('modal', { static: true })
   paramsForm: FormGroup;
   metadata: FlowMetadata;
   selectTypes: ValueType[] = [];
