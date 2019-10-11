@@ -5,6 +5,7 @@ import {
   InternalStage,
   StreamActionSettings,
   StreamResourceModel,
+  uniqueStageName,
 } from '@flogo-web/plugins/stream-core';
 import { ResourceImportContext, ValidationError } from '@flogo-web/lib-server/core';
 
@@ -61,8 +62,14 @@ function extractStages(
   const rawStages = (resource.data && resource.data.stages) || [];
   return rawStages.map((stage, index) => {
     stage.ref = getStageReference(stage.ref);
+    stage.name = stage.name || generateStageName(stage, rawStages, context.contributions);
     return formatStage(stage, index);
   });
+}
+
+function generateStageName(stage, stages, contribSchemas) {
+  const { title } = contribSchemas.get(stage.ref);
+  return uniqueStageName(title, stages);
 }
 
 function getOriginalId(source: Map<string, string>, newId: string): string {

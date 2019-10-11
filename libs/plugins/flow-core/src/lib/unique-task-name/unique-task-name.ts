@@ -1,13 +1,13 @@
 import { reduce, toInteger } from 'lodash';
-import { normalizeTaskName } from '@flogo-web/lib-client/common';
-import { ItemTask } from '../interfaces/flow';
 import { FLOGO_TASK_TYPE } from '../constants';
+import { BaseItem } from '../base-item';
+import { normalizeActivityName } from '@flogo-web/core';
 
 const isBranchTask = task => task.type === FLOGO_TASK_TYPE.TASK_BRANCH;
 
 export function uniqueTaskName(taskName: string, ...taskDictionaries) {
   // TODO for performance pre-normalize and store task names?
-  const newNormalizedName = normalizeTaskName(taskName);
+  const newNormalizedName = normalizeActivityName(taskName);
 
   const allTasks = Object.assign({}, ...taskDictionaries);
 
@@ -15,7 +15,7 @@ export function uniqueTaskName(taskName: string, ...taskDictionaries) {
   const greatestIndex = reduce(
     allTasks,
     (greatest: number, task: any) => {
-      const currentNormalized = normalizeTaskName(task.name);
+      const currentNormalized = normalizeActivityName(task.name);
       let repeatIndex = 0;
       if (newNormalizedName === currentNormalized) {
         repeatIndex = 1;
@@ -39,6 +39,6 @@ export function hasTaskWithSameName(taskName, ...taskDictionaries): boolean {
   return !!Object.values(allTasks).find(
     task =>
       !isBranchTask(task) &&
-      (task as ItemTask).name.toLowerCase() === taskName.toLowerCase()
+      (task as BaseItem).name.toLowerCase() === taskName.toLowerCase()
   );
 }

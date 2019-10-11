@@ -1,14 +1,11 @@
 import { Dictionary } from '@flogo-web/lib-client/core';
+import { BaseItem } from '@flogo-web/plugins/flow-core';
+
 import { FLOGO_TASK_TYPE } from '../../constants';
 import { AttributeMapping } from './attribute-mapping';
 
 export type ItemTask = ItemActivityTask | ItemSubflow;
 export type Item = ItemTask | ItemBranch;
-
-export interface BaseItem {
-  id: string;
-  type: FLOGO_TASK_TYPE;
-}
 
 export interface BaseItemSettings {
   iterate?: string;

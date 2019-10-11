@@ -1,11 +1,11 @@
 import { reduce, toInteger } from 'lodash';
-import { normalizeTaskName } from '@flogo-web/lib-client/common';
+import { normalizeActivityName } from '@flogo-web/core';
 
-import { Item } from '../interfaces';
+import { BaseItem } from '../interfaces';
 
 export function uniqueStageName(stageName: string, ...stageDictionaries) {
   // TODO for performance pre-normalize and store task names?
-  const newNormalizedName = normalizeTaskName(stageName);
+  const newNormalizedName = normalizeActivityName(stageName);
 
   const allStages = Object.assign({}, ...stageDictionaries);
 
@@ -13,7 +13,7 @@ export function uniqueStageName(stageName: string, ...stageDictionaries) {
   const greatestIndex = reduce(
     allStages,
     (greatest: number, stage: any) => {
-      const currentNormalized = normalizeTaskName(stage.name);
+      const currentNormalized = normalizeActivityName(stage.name);
       let repeatIndex = 0;
       if (newNormalizedName === currentNormalized) {
         repeatIndex = 1;
@@ -35,6 +35,6 @@ export function uniqueStageName(stageName: string, ...stageDictionaries) {
 export function hasStageWithSameName(stageName, ...stageDictionaries): boolean {
   const allStages = Object.assign({}, ...stageDictionaries);
   return !!Object.values(allStages).find(
-    stage => (stage as Item).name.toLowerCase() === stageName.toLowerCase()
+    stage => (stage as BaseItem).name.toLowerCase() === stageName.toLowerCase()
   );
 }

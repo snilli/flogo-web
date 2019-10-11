@@ -67,7 +67,7 @@ export class TaskConverter {
     const inputMappings = this.prepareInputMappings();
     return {
       id,
-      name: name || id,
+      name: name,
       description: description || '',
       type,
       activityRef,
