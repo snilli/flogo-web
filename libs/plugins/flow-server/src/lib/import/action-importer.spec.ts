@@ -230,7 +230,7 @@ function getExpectedImport() {
         tasks: [
           {
             id: 'log_6',
-            name: 'log_6',
+            name: 'Log Message',
             description: '',
             type: 1,
             activityRef: 'some_path_to_repo/activity/log',
