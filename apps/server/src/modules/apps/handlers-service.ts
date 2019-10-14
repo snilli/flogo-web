@@ -156,7 +156,6 @@ function removeHandlerWhereResourceId(
     const handlerToRemoveIndex = trigger.handlers.findIndex(isHandlerToRemove);
     if (handlerToRemoveIndex > -1) {
       trigger.handlers.splice(handlerToRemoveIndex, 1);
-      break;
     }
   }
   return app;

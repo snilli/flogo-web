@@ -169,7 +169,7 @@ export class FlowComponent implements OnInit, OnDestroy {
       .subscribe(app => {
         const triggerDetails = this.getTriggerCurrentFlow(app, this.flowState.id);
         this._flowService
-          .deleteFlow(this.flowId, triggerDetails ? triggerDetails.id : null)
+          .deleteFlow(this.flowId)
           .then(() => this.navigateToApp())
           .then(() =>
             this.notifications.success({
