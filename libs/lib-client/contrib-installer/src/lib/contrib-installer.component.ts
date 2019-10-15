@@ -31,7 +31,7 @@ export class FlogoInstallerComponent {
   query = '';
 
   _status = FLOGO_INSTALLER_STATUS_IDLE;
-
+  status: string;
   constructor(
     private contributionsAPIs: ContributionsService,
     private contribInstallerService: ContribInstallerService,
@@ -51,7 +51,13 @@ export class FlogoInstallerComponent {
 
   closeModal() {
     console.log('Close Modal.');
-    this.control.close();
+    this.status = 'cancel';
+    this.control.close(this.status);
+  }
+
+  updateInstalledTriggers() {
+    this.status = 'success';
+    this.control.close(this.status);
   }
 
   onInstallAction(url: string) {

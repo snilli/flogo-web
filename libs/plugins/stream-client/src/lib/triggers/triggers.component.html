@@ -31,12 +31,5 @@
   <div class="trigger trigger--add" title="Add Trigger" (click)="openAddTriggerModal()">
     <div class="trigger-content"><i class="flogo-icon-add"></i></div>
   </div>
-  <flogo-stream-select-trigger
-    [(isAddTriggerActivated)]="showAddTrigger"
-    [appId]="appId"
-    (addTriggerToAction)="addTriggerToAction($event)"
-    (installDialog)="openInstallTriggerWindow()"
-  >
-  </flogo-stream-select-trigger>
   <flogo-stream-triggers-configuration></flogo-stream-triggers-configuration>
 </div>

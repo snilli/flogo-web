@@ -18,7 +18,6 @@ import {
   StreamSaveEffects,
   TriggerMappingsEffects,
   featureReducer,
-  FlogoProfileService,
   MicroServiceModelConverter,
 } from './core';
 import { StreamDesignerComponent } from './stream-designer';
@@ -60,12 +59,7 @@ import { ParamsSchemaComponent } from './params-schema/params-schema.component';
     SimulatorModule,
     RunStreamModule,
   ],
-  providers: [
-    StreamService,
-    StreamDataResolver,
-    FlogoProfileService,
-    MicroServiceModelConverter,
-  ],
+  providers: [StreamService, StreamDataResolver, MicroServiceModelConverter],
   declarations: [StreamDesignerComponent, StreamDiagramComponent],
   entryComponents: [ParamsSchemaComponent],
 })

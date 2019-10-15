@@ -48,6 +48,9 @@
         "libs/lib-client/resource-interface-builder/src/index.ts"
       ],
       "@flogo-web/lib-client/search": ["libs/lib-client/search/src/index.ts"],
+      "@flogo-web/lib-client/trigger-selector": [
+        "libs/lib-client/trigger-selector/src/index.ts"
+      ],
       "@flogo-web/plugins/flow-core": ["libs/plugins/flow-core/src/index.ts"],
       "@flogo-web/plugins/flow-server": ["libs/plugins/flow-server/src/index.ts"],
       "@flogo-web/plugins/flow-client": ["libs/plugins/flow-client/src/index.ts"],

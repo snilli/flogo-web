@@ -1,0 +1,86 @@
+<flogo-modal (close)="closeTriggerSelector()">
+  <flogo-modal-header>
+    <span class="trigger-selector__logo"> <i class="flogo-icon-trigger"></i></span>
+    <span class="trigger-selector__title">Select a trigger</span></flogo-modal-header
+  >
+  <flogo-modal-body>
+    <div class="trigger-menu">
+      <div
+        class="trigger-menu-item"
+        (click)="displayExistingTriggers()"
+        [ngClass]="{ selected: showExistingTriggers, hide: !showExistingTriggersTab }"
+      >
+        Existing triggers
+      </div>
+      <div
+        class="trigger-menu-item"
+        (click)="displayInstalledTriggers()"
+        [ngClass]="{ selected: !showExistingTriggers }"
+      >
+        Create new
+      </div>
+    </div>
+    <div class="triggers-container">
+      <div *ngIf="showExistingTriggers; else newTriggerContent" class="existing-triggers">
+        <div>
+          My existing triggers
+        </div>
+        <div class="triggers-list">
+          <div *ngFor="let trigger of existingTriggers">
+            <div
+              class="existing-trigger"
+              (click)="addExistingTriggerToApp(trigger, 'existing')"
+            >
+              <div class="trigger-details">
+                <div class="trigger-banner">
+                  <i class="flogo-icon-trigger"> </i>
+                  <div class="trigger-title" title="{{ trigger.name }}">
+                    {{ trigger.name }}
+                  </div>
+                </div>
+                <div class="trigger-date">Created on {{ trigger.createdAt | date }}</div>
+              </div>
+              <button class="select-button">Select</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #newTriggerContent>
+        <div>
+          Select a trigger type<span
+            class="install-new"
+            (click)="openInstallTriggerWindow()"
+            >Install new</span
+          >
+        </div>
+        <div class="triggers-list">
+          <div *ngFor="let trigger of installedTriggers">
+            <div
+              class="installed-trigger"
+              (click)="addNewTriggerToApp(trigger, 'installed')"
+            >
+              <div class="installed-trigger-details">
+                <svg
+                  class="trigger-icon-background"
+                  viewBox="0 0 50 52"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <use
+                    xlink:href="/assets/svg/trigger-icon.svg#defaultTrigger"
+                    class="bg-placeholder"
+                  ></use>
+                </svg>
+                <i class="flogo-icon-trigger trigger-icon"> </i>
+                <div>
+                  <div>{{ trigger.title }}</div>
+                  <div class="trigger-ref">{{ trigger.ref }}</div>
+                </div>
+              </div>
+              <button class="select-button">Select</button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </flogo-modal-body>
+</flogo-modal>
