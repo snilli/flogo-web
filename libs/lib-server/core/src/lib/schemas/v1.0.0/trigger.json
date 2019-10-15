@@ -3,7 +3,7 @@
   "$id": "http://github.com/project-flogo/flogo-web/schemas/1.0.0/trigger.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "ref"],
+  "required": ["id", "ref", "handlers"],
   "properties": {
     "id": {
       "type": "string",
