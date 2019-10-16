@@ -22,7 +22,6 @@ import {
 import { MicroServiceModelConverter, FlogoProfileService } from '../core';
 import { featureReducer, FlowState, Init, INITIAL_STATE } from '../core/state';
 import { FlogoFlowTriggersPanelComponent } from './triggers.component';
-import { FlogoSelectTriggerComponent } from './select-trigger/select-trigger.component';
 import { TriggerBlockComponent } from './trigger-block';
 import { ConfiguratorModule as TriggersConfiguratorModule } from './configurator';
 import { ModalService } from '@flogo-web/lib-client/modal';
@@ -183,11 +182,7 @@ describe('Component: TriggersComponent', () => {
           flow: featureReducer,
         }),
       ],
-      declarations: [
-        FlogoFlowTriggersPanelComponent,
-        TriggerBlockComponent,
-        FlogoSelectTriggerComponent,
-      ],
+      declarations: [FlogoFlowTriggersPanelComponent, TriggerBlockComponent],
       providers: [
         { provide: FlogoProfileService, useClass: FlogoProfileServiceMock },
         {

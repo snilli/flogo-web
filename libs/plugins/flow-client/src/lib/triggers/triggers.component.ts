@@ -1,4 +1,4 @@
-import { pick, uniq, fromPairs, isArray } from 'lodash';
+import { uniq, fromPairs, isArray } from 'lodash';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { from } from 'rxjs';
 import { filter, takeUntil, mergeMap, reduce, switchMap } from 'rxjs/operators';
@@ -29,8 +29,11 @@ import * as TriggerActions from '../core/state/triggers/triggers.actions';
 import * as TriggerConfigureActions from '../core/state/triggers-configure/trigger-configure.actions';
 import { TriggerMenuSelectionEvent } from './trigger-block/models';
 import { RenderableTrigger } from './interfaces/renderable-trigger';
-import { ModalService } from '@flogo-web/lib-client/modal';
-import { FlogoInstallerComponent } from '@flogo-web/lib-client/contrib-installer';
+import { ModalService, ModalControl } from '@flogo-web/lib-client/modal';
+import {
+  TriggerSelectorComponent,
+  TriggerSelectorResult,
+} from '@flogo-web/lib-client/trigger-selector';
 
 function settingsToObject(
   settings: { name: string; value?: any }[],
@@ -52,7 +55,7 @@ export class FlogoFlowTriggersPanelComponent implements OnInit, OnDestroy {
   };
   triggersList: RenderableTrigger[] = [];
   currentTrigger: RenderableTrigger;
-  showAddTrigger = false;
+  control: ModalControl;
 
   private ngDestroy$ = SingleEmissionSubject.create();
 
@@ -92,25 +95,19 @@ export class FlogoFlowTriggersPanelComponent implements OnInit, OnDestroy {
     return trigger.id;
   }
 
-  openInstallTriggerWindow() {
-    this.modalService.openModal<void>(FlogoInstallerComponent).result.subscribe(() => {
-      this.openAddTriggerModal();
-    });
-    this.closeAddTriggerModal(false);
-  }
-
   openAddTriggerModal() {
-    this.showAddTrigger = true;
-  }
-
-  closeAddTriggerModal(showAddTrigger: boolean) {
-    this.showAddTrigger = showAddTrigger;
+    const data = { appId: this.appDetails.appId };
+    this.modalService
+      .openModal(TriggerSelectorComponent, data)
+      .result.subscribe((result: TriggerSelectorResult) => {
+        if (result) {
+          this.addTriggerToAction(result);
+        }
+      });
   }
 
   addTriggerToAction(data) {
-    const settings = settingsToObject(data.triggerData.handler.settings);
-    const outputs = settingsToObject(data.triggerData.outputs);
-    this.persistNewTriggerAndHandler(data, settings, outputs)
+    this.persistNewTriggerAndHandler(data)
       .then(triggerId => this.restAPITriggersService.getTrigger(triggerId))
       .then(trigger => {
         const handler = trigger.handlers.find(h => h.actionId === this.actionId);
@@ -118,21 +115,33 @@ export class FlogoFlowTriggersPanelComponent implements OnInit, OnDestroy {
       });
   }
 
-  private persistNewTriggerAndHandler(data, settings, outputs) {
+  private persistNewTriggerAndHandler(data: TriggerSelectorResult) {
     let registerTrigger;
     if (data.installType === 'installed') {
       const appId = this.appDetails.appId;
-      const triggerInfo: any = pick(data.triggerData, ['name', 'ref', 'description']);
-      triggerInfo.settings = settingsToObject(data.triggerData.settings, _ => null);
+      const { title, ref, description } = data.triggerSchema;
+      const newTrigger: Partial<Trigger> = {
+        name: title,
+        ref,
+        description,
+        // todo: why are we not using triggerSchema.settins' default values?
+        settings: settingsToObject(data.triggerSchema.settings, _ => null),
+      };
+
       registerTrigger = this.restAPITriggersService
-        .createTrigger(appId, triggerInfo)
+        .createTrigger(appId, newTrigger)
         .then(triggerResult => triggerResult.id);
     } else {
-      registerTrigger = Promise.resolve(data.triggerData.id);
+      registerTrigger = Promise.resolve(data.trigger.id);
     }
+    const triggerSchema = data.triggerSchema;
+    const handlerSettings = settingsToObject(
+      triggerSchema.handler && triggerSchema.handler.settings
+    );
+    const outputs = settingsToObject(data.triggerSchema.outputs);
     return registerTrigger.then(triggerId => {
       return this._restAPIHandlerService
-        .updateHandler(triggerId, this.actionId, { settings, outputs })
+        .updateHandler(triggerId, this.actionId, { settings: handlerSettings, outputs })
         .then(() => triggerId);
     });
   }
