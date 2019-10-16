@@ -26,12 +26,14 @@
         <div class="existing-triggers-header">
           <div>My existing triggers</div>
           <flogo-search
-            placeholder="Search"
+            placeholder="Search..."
+            iconPosition="left"
+            [query]="existingTriggersSearcher.query$ | async"
             (search)="searchExistingTriggers($event)"
           ></flogo-search>
         </div>
         <div class="triggers-list">
-          <div *ngFor="let trigger of (existingTriggers$ | async)">
+          <div *ngFor="let trigger of (existingTriggersSearcher.list$ | async)">
             <div
               class="existing-trigger"
               (click)="addExistingTriggerToApp(trigger, 'existing')"
@@ -61,12 +63,14 @@
             >
           </div>
           <flogo-search
-            placeholder="Search"
+            placeholder="Search..."
+            iconPosition="left"
+            [query]="installedTriggersSearcher.query$ | async"
             (search)="searchInstalledTriggers($event)"
           ></flogo-search>
         </div>
         <div class="triggers-list">
-          <div *ngFor="let trigger of (installedTriggers$ | async)">
+          <div *ngFor="let trigger of (installedTriggersSearcher.list$ | async)">
             <div
               class="installed-trigger"
               (click)="addNewTriggerToApp(trigger, 'installed')"

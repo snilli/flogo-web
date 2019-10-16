@@ -27,14 +27,12 @@ export interface TriggerSelectorResult {
 })
 export class TriggerSelectorComponent implements OnInit {
   showExistingTriggers = true;
-  showExistingTriggersTab:boolean;
+  showExistingTriggersTab: boolean;
+  existingTriggersSearcher: LocalSearch<Trigger>;
+  installedTriggersSearcher: LocalSearch<TriggerSchema>;
 
-  existingTriggers$: Observable<Trigger[]>;
-  installedTriggers$: Observable<TriggerSchema[]>;
   private installedTriggers: TriggerSchema[] = [];
   private appId: string;
-  private existingTriggersSearcher: LocalSearch<Trigger>;
-  private installedTriggersSearcher: LocalSearch<TriggerSchema>;
 
   constructor(
     private control: ModalControl<TriggerMetaData>,
@@ -45,10 +43,8 @@ export class TriggerSelectorComponent implements OnInit {
     this.appId = this.control.data.appId;
 
     this.existingTriggersSearcher = new LocalSearch({ matchFields: ['name'] });
-    this.existingTriggers$ = this.existingTriggersSearcher.list$;
 
     this.installedTriggersSearcher = new LocalSearch({ matchFields: ['title'] });
-    this.installedTriggers$ = this.installedTriggersSearcher.list$;
   }
 
   ngOnInit() {
@@ -92,10 +88,6 @@ export class TriggerSelectorComponent implements OnInit {
           this.ngOnInit();
         }
       });
-  }
-
-  search(query: string) {
-    this.installedTriggersSearcher.search(query);
   }
 
   searchExistingTriggers(query: string) {
