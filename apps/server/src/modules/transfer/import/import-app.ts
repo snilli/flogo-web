@@ -23,6 +23,7 @@ import { IMPORT_SYNTAX } from '../common/parse-imports';
 import { validatorFactory } from './validator';
 import { importTriggers } from './import-triggers';
 import { createFromImports, FlogoActionExtractor } from './imports';
+import { ensureUniqueResourceName } from '../../../common/utils/ensure-unique-resource';
 
 interface DefaultAppModelResource extends FlogoAppModel.Resource {
   data: {
@@ -182,10 +183,10 @@ function normalizeResources(
   const normalizedResourceIds = new Map<string, string>();
   const normalizedResources: Resource[] = [];
   (resources || []).forEach(resource => {
-    const [resourceType] = resource.id.split(':');
+    const [resourceType, resourceName] = resource.id.split(':');
     let normalizedResource: Resource = {
       id: generateId(),
-      name: resource.data.name,
+      name: resource.data && resource.data.name ? resource.data.name : resourceName,
       description: resource.data.description,
       type: pluginTypesMapping.get(resourceType),
       metadata: resource.data.metadata,
@@ -199,9 +200,16 @@ function normalizeResources(
   });
 
   return {
-    resources: normalizedResources,
+    resources: ensureResourceName(normalizedResources),
     normalizedResourceIds,
   };
+}
+
+function ensureResourceName(resources) {
+  resources.forEach((resource, resourceIndex) => {
+    resource.name = ensureUniqueResourceName(resources, resource.name, resourceIndex);
+  });
+  return resources;
 }
 
 function createValidator(

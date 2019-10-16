@@ -13,10 +13,10 @@ import { HandlersService } from '../apps/handlers-service';
 import { ResourcePluginRegistry } from '../../extension';
 import { ERROR_TYPES } from '../../common/errors';
 import { generateShortId } from '../../common/utils';
-import { findGreatestNameIndex } from '../../common/utils/collection';
 import { ResourceRepository } from './resource.repository';
 import { genericFieldsValidator, ValidatorFn } from './validation';
 import { cleanInputOnCreate, cleanInputOnUpdate } from './input-cleaner';
+import { ensureUniqueResourceName } from '../../common/utils/ensure-unique-resource';
 
 const identity = i => i;
 
@@ -49,7 +49,7 @@ export class ResourceService {
     this.validateResource(resource);
 
     resource.id = generateShortId();
-    resource.name = ensureUniqueName(app.resources, resource.name);
+    resource.name = ensureUniqueResourceName(app.resources, resource.name);
 
     const context: HookContext = this.createHookContext(resource);
     await this.resourceHooks.wrapAndRun('create', context, async hookContext => {
@@ -200,14 +200,6 @@ export class ResourceService {
 
 function mapAsync<T>(collection = [], mapFn: (e) => Promise<T>): Promise<T[]> {
   return Promise.all(collection.map(mapFn));
-}
-
-function ensureUniqueName(resources: Resource[], name: string) {
-  const greatestIndex = findGreatestNameIndex(name, resources);
-  if (greatestIndex >= 0) {
-    name = `${name} (${greatestIndex + 1})`;
-  }
-  return name;
 }
 
 function isTriggerForResource(resourceId: string) {
