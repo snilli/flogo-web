@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LocalSearch, makeLocalSearchProvider } from '@flogo-web/lib-client/search';
+import { LocalSearch, makeLocalSearchFactory } from '@flogo-web/lib-client/search';
 import { Person } from './person';
 
 @Component({
   selector: 'demo-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.less'],
-  providers: [makeLocalSearchProvider({ matchFields: ['name', 'country'] })],
+  providers: [
+    {
+      provide: LocalSearch,
+      useFactory: makeLocalSearchFactory({ matchFields: ['name', 'country'] }),
+    },
+  ],
 })
 export class SearchComponent implements OnInit {
   people: Person[];
   filteredPeopleList$: Observable<Person[]>;
   emitOnKey = true;
   lastQuery: string;
+  customValue = 'customValue';
+  lastCustomQuery: string;
 
   constructor(private searchService: LocalSearch<Person>) {}
 
@@ -30,6 +37,15 @@ export class SearchComponent implements OnInit {
 
   setEmitOnKey(emitOnKey: boolean) {
     this.emitOnKey = emitOnKey;
+  }
+
+  setCustomValue(customValue: string) {
+    this.customValue = customValue;
+  }
+
+  customQueryChanged(newValue) {
+    this.lastCustomQuery = newValue;
+    this.customValue = newValue;
   }
 
   private initList() {
