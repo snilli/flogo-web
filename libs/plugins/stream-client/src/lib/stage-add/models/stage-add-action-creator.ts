@@ -4,11 +4,12 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { NodeType, GraphNode } from '@flogo-web/lib-client/core';
+import { uniqueStageName } from '@flogo-web/plugins/stream-core';
 
 import { FlogoStreamState, StreamActions, StreamSelectors } from '../../core/state';
 import { activitySchemaToStage } from './stage-factories';
 import { stageIdGenerator } from './profile';
-import { InsertTaskSelection, uniqueStageName, makeNode } from '../../core/models';
+import { InsertTaskSelection, makeNode } from '../../core/models';
 import { Item } from '../../core/interfaces';
 
 interface StreamAddData {

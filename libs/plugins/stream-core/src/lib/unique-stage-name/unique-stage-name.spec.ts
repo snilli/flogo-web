@@ -8,9 +8,6 @@ describe('stream.core.models.unique-stage-name-validator', () => {
         type: 1,
         name: 'task 1',
       },
-      branch_1: {
-        type: 3,
-      },
       task_2: {
         type: 1,
         name: 'new stage',

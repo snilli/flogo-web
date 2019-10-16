@@ -11,6 +11,7 @@ import {
   isMapperActivity,
   isAcceptableIterateValue,
   isIterableTask,
+  hasTaskWithSameName,
 } from '@flogo-web/plugins/flow-core';
 import { NotificationsService } from '@flogo-web/lib-client/notifications';
 
@@ -40,7 +41,6 @@ import {
 import { SubFlowConfig } from './subflow-config';
 import { AppState } from '../core/state/app.state';
 import { mergeItemWithSchema } from '../core/models';
-import { hasTaskWithSameName } from '../core/models/unique-task-name';
 import { isSubflowTask } from '../core/models/flow/is-subflow-task';
 import {
   getFlowMetadata,

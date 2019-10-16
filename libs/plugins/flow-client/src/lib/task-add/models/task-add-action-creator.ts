@@ -5,9 +5,9 @@ import { map, take } from 'rxjs/operators';
 
 import { CONTRIB_REFS } from '@flogo-web/core';
 import { NodeType } from '@flogo-web/lib-client/core';
+import { uniqueTaskName } from '@flogo-web/plugins/flow-core';
 
 import { HandlerType, InsertTaskSelection } from '../../core/models';
-import { uniqueTaskName } from '../../core/models/unique-task-name';
 import { FlowState, FlowActions, FlowSelectors } from '../../core/state';
 import { PayloadOf } from '../../core/state/utils';
 import { makeNode } from '../../core/models/graph-and-items/graph-creator';

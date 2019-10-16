@@ -8,6 +8,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 import { ActivitySchema } from '@flogo-web/core';
 import { Dictionary, SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { hasStageWithSameName } from '@flogo-web/plugins/stream-core';
 
 import {
   FlogoStreamState,
@@ -15,7 +16,6 @@ import {
   selectStageConfigure,
   getInstalledFunctions,
   InstalledFunctionSchema,
-  hasStageWithSameName,
   CancelStageConfiguration,
   Item,
   CommitStageConfiguration,

@@ -16,6 +16,7 @@ import {
   actionHasSubflowTasks,
   forEachSubflowTaskInAction,
   Task,
+  uniqueTaskName,
 } from '@flogo-web/plugins/flow-core';
 
 import { TaskConverter } from './task-converter';
@@ -64,12 +65,15 @@ export class ActionImporter {
   ): Resource<FlowData> {
     const resourceData: any = resource.data || {};
     const errorHandler = this.getErrorHandler(resourceData, importsRefAgent);
+    const links = this.mapLinks(resourceData.links);
+    let tasks = this.mapTasks(resourceData.tasks, importsRefAgent);
+    tasks = ensureTaskName(tasks, this.activitySchemasByRef);
     return {
       ...resource,
       metadata: this.extractMetadata(resource),
       data: {
-        tasks: this.mapTasks(resourceData.tasks, importsRefAgent),
-        links: this.mapLinks(resourceData.links),
+        tasks,
+        links,
         errorHandler,
       },
     };
@@ -80,9 +84,12 @@ export class ActionImporter {
     if (isEmpty(errorHandler) || isEmpty(errorHandler.tasks)) {
       return undefined;
     }
+    const links = this.mapLinks(errorHandler.links);
+    let tasks = this.mapTasks(errorHandler.tasks, importsRefAgent);
+    tasks = ensureTaskName(tasks, this.activitySchemasByRef);
     return {
-      tasks: this.mapTasks(errorHandler.tasks, importsRefAgent),
-      links: this.mapLinks(errorHandler.links),
+      tasks,
+      links,
     };
   }
 
@@ -113,6 +120,18 @@ export class ActionImporter {
     const activitySchema = this.activitySchemasByRef.get(resourceTask.activity.ref);
     return this.taskConverterFactory(resourceTask, activitySchema).convert();
   }
+}
+
+function ensureTaskName(tasks, contribSchemas) {
+  return tasks.map(task => {
+    task.name = task.name || generateTaskName(task, tasks, contribSchemas);
+    return task;
+  });
+}
+
+function generateTaskName(task, tasks, contribSchemas) {
+  const { title } = contribSchemas.get(task.activityRef);
+  return uniqueTaskName(title, tasks);
 }
 
 function makeValidator(installedRefs: string[], importsRefAgent: ImportsRefAgent) {
