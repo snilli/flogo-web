@@ -19,7 +19,7 @@ import {
   ContribInstallerModule,
   ContribInstallerService,
 } from '@flogo-web/lib-client/contrib-installer';
-import { MicroServiceModelConverter, FlogoProfileService } from '../core';
+import { MicroServiceModelConverter } from '../core';
 import { featureReducer, FlowState, Init, INITIAL_STATE } from '../core/state';
 import { FlogoFlowTriggersPanelComponent } from './triggers.component';
 import { TriggerBlockComponent } from './trigger-block';
@@ -184,7 +184,6 @@ describe('Component: TriggersComponent', () => {
       ],
       declarations: [FlogoFlowTriggersPanelComponent, TriggerBlockComponent],
       providers: [
-        { provide: FlogoProfileService, useClass: FlogoProfileServiceMock },
         {
           provide: ContributionsService,
           useClass: MockActivityContribService,
