@@ -6,27 +6,32 @@
   <flogo-modal-body>
     <div class="trigger-menu">
       <div
-        class="trigger-menu-item"
+        *ngIf="showExistingTriggersTab"
+        class="trigger-menu-item qa-existing-trigger-tab"
         (click)="displayExistingTriggers()"
-        [ngClass]="{ selected: showExistingTriggers, hide: !showExistingTriggersTab }"
+        [class.selected]="showExistingTriggers"
       >
         Existing triggers
       </div>
       <div
         class="trigger-menu-item"
         (click)="displayInstalledTriggers()"
-        [ngClass]="{ selected: !showExistingTriggers }"
+        [class.selected]="!showExistingTriggers"
       >
         Create new
       </div>
     </div>
     <div class="triggers-container">
       <div *ngIf="showExistingTriggers; else newTriggerContent" class="existing-triggers">
-        <div>
-          My existing triggers
+        <div class="existing-triggers-header">
+          <div>My existing triggers</div>
+          <flogo-search
+            placeholder="Search"
+            (search)="searchExistingTriggers($event)"
+          ></flogo-search>
         </div>
         <div class="triggers-list">
-          <div *ngFor="let trigger of existingTriggers">
+          <div *ngFor="let trigger of (existingTriggers$ | async)">
             <div
               class="existing-trigger"
               (click)="addExistingTriggerToApp(trigger, 'existing')"
@@ -46,15 +51,22 @@
         </div>
       </div>
       <ng-template #newTriggerContent>
-        <div>
-          Select a trigger type<span
-            class="install-new"
-            (click)="openInstallTriggerWindow()"
-            >Install new</span
-          >
+        <div class="installed-triggers"></div>
+        <div class="installed-triggers-header">
+          <div>
+            Select a trigger type<span
+              class="install-new"
+              (click)="openInstallTriggerWindow()"
+              >Install new</span
+            >
+          </div>
+          <flogo-search
+            placeholder="Search"
+            (search)="searchInstalledTriggers($event)"
+          ></flogo-search>
         </div>
         <div class="triggers-list">
-          <div *ngFor="let trigger of installedTriggers">
+          <div *ngFor="let trigger of (installedTriggers$ | async)">
             <div
               class="installed-trigger"
               (click)="addNewTriggerToApp(trigger, 'installed')"

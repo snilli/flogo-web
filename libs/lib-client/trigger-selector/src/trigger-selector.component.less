@@ -34,9 +34,6 @@ flogo-modal-body {
                 color: #062e79;
                 background-color: #f0f4ff;
             }
-            &.hide {
-                display: none;
-            }
         }
     }
     .triggers-container {
@@ -48,6 +45,10 @@ flogo-modal-body {
         .existing-triggers {
             height: 100%;
         }
+      .installed-triggers-header, .existing-triggers-header {
+        display: flex;
+        justify-content: space-between;
+      }
         .triggers-list {
             display: flex;
             flex-direction: column;
@@ -148,5 +149,8 @@ flogo-modal-body {
         color: #0081cb;
         margin-left: 8px;
         cursor: pointer;
+    }
+    flogo-search {
+      min-width: 264px;
     }
 }

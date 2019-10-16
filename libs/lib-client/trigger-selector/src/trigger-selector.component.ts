@@ -8,6 +8,8 @@ import {
   FLOGO_CONTRIB_TYPE,
 } from '@flogo-web/lib-client/core';
 import { TriggerSchema } from '@flogo-web/core';
+import { LocalSearch } from '@flogo-web/lib-client/search';
+import { Observable } from 'rxjs';
 export interface TriggerMetaData {
   appId: string;
 }
@@ -25,11 +27,14 @@ export interface TriggerSelectorResult {
 })
 export class TriggerSelectorComponent implements OnInit {
   showExistingTriggers = true;
-  showExistingTriggersTab = true;
-  existingTriggerData: any;
-  existingTriggers: Trigger[] = [];
-  installedTriggers: TriggerSchema[] = [];
-  appId: string;
+  showExistingTriggersTab:boolean;
+
+  existingTriggers$: Observable<Trigger[]>;
+  installedTriggers$: Observable<TriggerSchema[]>;
+  private installedTriggers: TriggerSchema[] = [];
+  private appId: string;
+  private existingTriggersSearcher: LocalSearch<Trigger>;
+  private installedTriggersSearcher: LocalSearch<TriggerSchema>;
 
   constructor(
     private control: ModalControl<TriggerMetaData>,
@@ -38,6 +43,12 @@ export class TriggerSelectorComponent implements OnInit {
     private contribService: ContributionsService
   ) {
     this.appId = this.control.data.appId;
+
+    this.existingTriggersSearcher = new LocalSearch({ matchFields: ['name'] });
+    this.existingTriggers$ = this.existingTriggersSearcher.list$;
+
+    this.installedTriggersSearcher = new LocalSearch({ matchFields: ['title'] });
+    this.installedTriggers$ = this.installedTriggersSearcher.list$;
   }
 
   ngOnInit() {
@@ -83,19 +94,32 @@ export class TriggerSelectorComponent implements OnInit {
       });
   }
 
+  search(query: string) {
+    this.installedTriggersSearcher.search(query);
+  }
+
+  searchExistingTriggers(query: string) {
+    this.existingTriggersSearcher.search(query);
+  }
+
+  searchInstalledTriggers(query: string) {
+    this.installedTriggersSearcher.search(query);
+  }
+
   private getInstalledTriggers() {
     this.contribService.listContribs(FLOGO_CONTRIB_TYPE.TRIGGER).then(triggers => {
       this.installedTriggers = triggers as TriggerSchema[];
+      this.installedTriggersSearcher.setSourceList(triggers as TriggerSchema[]);
     });
   }
 
   private getExistingTriggers() {
-    this.triggerService.listTriggersForApp(this.appId).then(triggers => {
-      this.existingTriggers = triggers;
-      if (!this.existingTriggers.length) {
-        this.showExistingTriggersTab = false;
-        this.showExistingTriggers = false;
-      }
+    this.triggerService.listTriggersForApp(this.appId).then(existingTriggers => {
+      const hasExistingTriggers = existingTriggers.length > 0;
+      this.showExistingTriggersTab = hasExistingTriggers;
+      this.showExistingTriggers = hasExistingTriggers;
+
+      this.existingTriggersSearcher.setSourceList(existingTriggers);
     });
   }
 }
