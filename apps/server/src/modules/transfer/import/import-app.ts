@@ -206,7 +206,7 @@ function normalizeResources(
 }
 
 function ensureResourceName(resources) {
-  resources.map((resource, resourceIndex) => {
+  resources.forEach((resource, resourceIndex) => {
     resource.name = ensureUniqueResourceName(resources, resource.name, resourceIndex);
   });
   return resources;
