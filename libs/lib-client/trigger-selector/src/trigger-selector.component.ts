@@ -9,7 +9,6 @@ import {
 } from '@flogo-web/lib-client/core';
 import { TriggerSchema } from '@flogo-web/core';
 import { LocalSearch } from '@flogo-web/lib-client/search';
-import { Observable } from 'rxjs';
 export interface TriggerMetaData {
   appId: string;
 }
@@ -85,7 +84,7 @@ export class TriggerSelectorComponent implements OnInit {
       .result.subscribe(status => {
         if (status === 'success') {
           this.showExistingTriggers = false;
-          this.ngOnInit();
+          this.getInstalledTriggers();
         }
       });
   }

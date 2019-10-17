@@ -1,7 +1,10 @@
 <flogo-modal (close)="closeTriggerSelector()">
   <flogo-modal-header>
     <span class="trigger-selector__logo"> <i class="flogo-icon-trigger"></i></span>
-    <span class="trigger-selector__title">Select a trigger</span></flogo-modal-header
+
+    <span class="trigger-selector__title">{{
+      'TRIGGER-SELECTOR:SELECT-TRIGGER-TO-START' | translate
+    }}</span></flogo-modal-header
   >
   <flogo-modal-body>
     <div class="trigger-menu">
@@ -11,20 +14,20 @@
         (click)="displayExistingTriggers()"
         [class.selected]="showExistingTriggers"
       >
-        Existing triggers
+        {{ 'TRIGGER-SELECTOR:EXISTING-TRIGGERS' | translate }}
       </div>
       <div
         class="trigger-menu-item"
         (click)="displayInstalledTriggers()"
         [class.selected]="!showExistingTriggers"
       >
-        Create new
+        {{ 'TRIGGER-SELECTOR:CREATE-NEW' | translate }}
       </div>
     </div>
     <div class="triggers-container">
       <div *ngIf="showExistingTriggers; else newTriggerContent" class="existing-triggers">
         <div class="existing-triggers-header">
-          <div>My existing triggers</div>
+          <div>{{ 'TRIGGER-SELECTOR:MY-EXISTING-TRIGGERS' | translate }}</div>
           <flogo-search
             placeholder="Search..."
             iconPosition="left"
@@ -56,11 +59,10 @@
         <div class="installed-triggers"></div>
         <div class="installed-triggers-header">
           <div>
-            Select a trigger type<span
-              class="install-new"
-              (click)="openInstallTriggerWindow()"
-              >Install new</span
-            >
+            {{ 'TRIGGER-SELECTOR:SELECT-TRIGGER-TYPE' | translate
+            }}<span class="install-new" (click)="openInstallTriggerWindow()"
+              >{{ 'TRIGGER-SELECTOR:INSTALL-NEW' | translate }}
+            </span>
           </div>
           <flogo-search
             placeholder="Search..."

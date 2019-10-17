@@ -124,7 +124,7 @@ export class FlogoFlowTriggersPanelComponent implements OnInit, OnDestroy {
         name: title,
         ref,
         description,
-        // todo: why are we not using triggerSchema.settins' default values?
+        // todo: why are we not using triggerSchema.settings' default values?
         settings: settingsToObject(data.triggerSchema.settings, _ => null),
       };
 

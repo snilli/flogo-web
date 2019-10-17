@@ -1,4 +1,4 @@
-import { pick, fromPairs, isArray, uniq } from 'lodash';
+import { fromPairs, isArray, uniq } from 'lodash';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   HandlersService,
@@ -17,7 +17,6 @@ import {
 } from '../core';
 import { filter, mergeMap, reduce, switchMap, takeUntil } from 'rxjs/operators';
 import { getTriggersState } from '../core/state/triggers/triggers.selectors';
-import { FlogoInstallerComponent } from '@flogo-web/lib-client/contrib-installer';
 import { ModalService, ModalControl } from '@flogo-web/lib-client/modal';
 import {
   ConfirmationModalService,
@@ -49,9 +48,6 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
   appId: string;
   actionId: string;
   triggersList: RenderableTrigger[] = [];
-  /* streams-plugin-todo: enable it */
-  //currentTrigger: RenderableTrigger;
-  /* showAddTrigger = true; */
   control: ModalControl;
   private ngDestroy$ = SingleEmissionSubject.create();
   constructor(
