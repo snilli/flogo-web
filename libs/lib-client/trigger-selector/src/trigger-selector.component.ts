@@ -19,6 +19,12 @@ export interface TriggerSelectorResult {
   trigger?: Trigger;
 }
 
+function sortByProperty<T>(property: keyof T) {
+  return function(a, b) {
+    return a[property].localeCompare(b[property]);
+  };
+}
+
 @Component({
   selector: 'flogo-trigger-selector',
   templateUrl: './trigger-selector.component.html',
@@ -100,6 +106,7 @@ export class TriggerSelectorComponent implements OnInit {
   private getInstalledTriggers() {
     this.contribService.listContribs(FLOGO_CONTRIB_TYPE.TRIGGER).then(triggers => {
       this.installedTriggers = triggers as TriggerSchema[];
+      triggers = triggers.sort(sortByProperty<TriggerSchema>('title'));
       this.installedTriggersSearcher.setSourceList(triggers as TriggerSchema[]);
     });
   }
@@ -109,7 +116,7 @@ export class TriggerSelectorComponent implements OnInit {
       const hasExistingTriggers = existingTriggers.length > 0;
       this.showExistingTriggersTab = hasExistingTriggers;
       this.showExistingTriggers = hasExistingTriggers;
-
+      existingTriggers = existingTriggers.sort(sortByProperty('name'));
       this.existingTriggersSearcher.setSourceList(existingTriggers);
     });
   }
