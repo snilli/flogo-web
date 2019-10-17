@@ -1,4 +1,4 @@
-import { pick, fromPairs, isArray, uniq } from 'lodash';
+import { fromPairs, isArray, uniq } from 'lodash';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   HandlersService,
@@ -17,8 +17,7 @@ import {
 } from '../core';
 import { filter, mergeMap, reduce, switchMap, takeUntil } from 'rxjs/operators';
 import { getTriggersState } from '../core/state/triggers/triggers.selectors';
-import { FlogoInstallerComponent } from '@flogo-web/lib-client/contrib-installer';
-import { ModalService } from '@flogo-web/lib-client/modal';
+import { ModalService, ModalControl } from '@flogo-web/lib-client/modal';
 import {
   ConfirmationModalService,
   ConfirmationResult,
@@ -28,6 +27,10 @@ import { TriggerMenuSelectionEvent } from './trigger-block/models';
 import { from } from 'rxjs';
 import { TriggerSchema } from '@flogo-web/core';
 import { TriggerConfigureActions } from '../core/state/triggers-configure';
+import {
+  TriggerSelectorComponent,
+  TriggerSelectorResult,
+} from '@flogo-web/lib-client/trigger-selector';
 
 function settingsToObject(
   settings: { name: string; value?: any }[],
@@ -45,9 +48,7 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
   appId: string;
   actionId: string;
   triggersList: RenderableTrigger[] = [];
-  /* streams-plugin-todo: enable it */
-  //currentTrigger: RenderableTrigger;
-  showAddTrigger = false;
+  control: ModalControl;
   private ngDestroy$ = SingleEmissionSubject.create();
   constructor(
     private store: Store<AppState>,
@@ -81,25 +82,19 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
     return trigger.id;
   }
 
-  openInstallTriggerWindow() {
-    this.modalService.openModal<void>(FlogoInstallerComponent).result.subscribe(() => {
-      this.openAddTriggerModal();
-    });
-    this.closeAddTriggerModal(false);
-  }
-
   openAddTriggerModal() {
-    this.showAddTrigger = true;
+    const data = { appId: this.appId };
+    this.modalService
+      .openModal(TriggerSelectorComponent, data)
+      .result.subscribe((result: TriggerSelectorResult) => {
+        if (result) {
+          this.addTriggerToAction(result);
+        }
+      });
   }
 
-  closeAddTriggerModal(showAddTrigger: boolean) {
-    this.showAddTrigger = showAddTrigger;
-  }
-
-  addTriggerToAction(data) {
-    const settings = settingsToObject(data.triggerData.handler.settings);
-    const outputs = settingsToObject(data.triggerData.outputs);
-    this.persistNewTriggerAndHandler(data, settings, outputs)
+  addTriggerToAction(data: TriggerSelectorResult) {
+    this.persistNewTriggerAndHandler(data)
       .then(triggerId => this.restAPITriggersService.getTrigger(triggerId))
       .then(trigger => {
         const handler = trigger.handlers.find(h => h.actionId === this.actionId);
@@ -107,21 +102,34 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
       });
   }
 
-  private persistNewTriggerAndHandler(data, settings, outputs) {
+  private persistNewTriggerAndHandler(data: TriggerSelectorResult) {
     let registerTrigger;
     if (data.installType === 'installed') {
       const appId = this.appId;
-      const triggerInfo: any = pick(data.triggerData, ['name', 'ref', 'description']);
-      triggerInfo.settings = settingsToObject(data.triggerData.settings, _ => null);
+      const { title, ref, description } = data.triggerSchema;
+      const newTrigger: Partial<Trigger> = {
+        name: title,
+        ref,
+        description,
+        // todo: why are we not using triggerSchema.settins' default values?
+        settings: settingsToObject(data.triggerSchema.settings, _ => null),
+      };
       registerTrigger = this.restAPITriggersService
-        .createTrigger(appId, triggerInfo)
+        .createTrigger(appId, newTrigger)
         .then(triggerResult => triggerResult.id);
     } else {
-      registerTrigger = Promise.resolve(data.triggerData.id);
+      registerTrigger = Promise.resolve(data.trigger.id);
     }
+
+    const triggerSchema = data.triggerSchema;
+    const handlerSettings = settingsToObject(
+      triggerSchema.handler && triggerSchema.handler.settings
+    );
+    const outputs = settingsToObject(data.triggerSchema.outputs);
+
     return registerTrigger.then(triggerId => {
       return this._restAPIHandlerService
-        .updateHandler(triggerId, this.actionId, { settings, outputs })
+        .updateHandler(triggerId, this.actionId, { settings: handlerSettings, outputs })
         .then(() => triggerId);
     });
   }

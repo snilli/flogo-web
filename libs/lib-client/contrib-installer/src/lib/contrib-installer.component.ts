@@ -31,7 +31,6 @@ export class FlogoInstallerComponent {
   query = '';
 
   _status = FLOGO_INSTALLER_STATUS_IDLE;
-
   constructor(
     private contributionsAPIs: ContributionsService,
     private contribInstallerService: ContribInstallerService,
@@ -45,19 +44,18 @@ export class FlogoInstallerComponent {
   }
 
   openModal(event?: any) {
-    console.log('Open Modal.');
     this._status = FLOGO_INSTALLER_STATUS_STANDBY;
   }
 
   closeModal() {
-    console.log('Close Modal.');
-    this.control.close();
+    this.control.close('cancel');
+  }
+
+  updateInstalledTriggers() {
+    this.control.close('success');
   }
 
   onInstallAction(url: string) {
-    console.group(`[FlogoInstallerComponent] onInstallAction`);
-    console.log(`Source URL: ${url} `);
-
     const self = this;
 
     self._status = FLOGO_INSTALLER_STATUS_INSTALLING;
@@ -69,16 +67,13 @@ export class FlogoInstallerComponent {
       .toPromise()
       .then(result => {
         self._status = FLOGO_INSTALLER_STATUS_INSTALL_SUCCESS;
-        console.groupEnd();
         return this.contributionsAPIs.getContributionDetails(result.ref);
       })
       .then(contribDetails => {
         this.contribInstallerService.afterContribInstalled(contribDetails);
       })
       .catch(err => {
-        console.error(err);
         self._status = FLOGO_INSTALLER_STATUS_INSTALL_FAILED;
-        console.groupEnd();
       });
   }
 }
