@@ -5,6 +5,7 @@ import { ModalControl, ModalModule, ModalService } from '@flogo-web/lib-client/m
 import { SearchModule } from '@flogo-web/lib-client/search';
 import { ContributionsService, TriggersService } from '@flogo-web/lib-client/core';
 import { TriggerSelectorComponent } from './trigger-selector.component';
+import { FakeTranslatePipe } from '@flogo-web/lib-client/language/testing';
 
 describe('TriggerSelectorComponent', () => {
   let component: TriggerSelectorComponent;
@@ -14,7 +15,7 @@ describe('TriggerSelectorComponent', () => {
   beforeEach(async(() => {
     existingTriggers = [];
     TestBed.configureTestingModule({
-      declarations: [TriggerSelectorComponent],
+      declarations: [TriggerSelectorComponent, FakeTranslatePipe],
       imports: [ModalModule, SearchModule],
       providers: [
         {
