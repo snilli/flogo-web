@@ -17,6 +17,7 @@ export class ActionStatusComponent {
   readonly statuses = StreamProcessStatus;
   @Input() status: StreamProcessStatus;
   @Input() disabled = false;
+  @Input() disableRunStream: boolean;
   @Output() run = new EventEmitter<void>();
   @Output() pause = new EventEmitter<void>();
   @Output() resume = new EventEmitter<void>();

@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import {
   animateChild,
   transition,
@@ -7,6 +7,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
 import { ModalService } from '@flogo-web/lib-client/modal';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { ContribInstallerService } from '@flogo-web/lib-client/contrib-installer';
@@ -34,7 +35,6 @@ import { ParamsSchemaComponent } from '../params-schema';
 })
 export class StreamDesignerComponent implements OnInit, OnDestroy {
   @HostBinding('@initialAnimation') initialAnimation = true;
-  defineInputSchema: ParamsSchemaComponent;
 
   streamState: FlogoStreamState;
   isStreamMenuOpen = false;
@@ -46,6 +46,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   currentSimulationStage$: Observable<string | number>;
   // todo: add type
   selectedStageInfo$: Observable<any>;
+  disableRunStream: boolean;
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(
@@ -79,6 +80,15 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     this.selectedStageInfo$ = this.store.pipe(
       select(StreamSelectors.getSelectedStageInfo)
     );
+
+    this.store
+      .pipe(
+        select(StreamSelectors.selectItems),
+        takeUntil(this.ngOnDestroy$)
+      )
+      .subscribe(items => {
+        this.disableRunStream = isEmpty(items);
+      });
   }
 
   changePanelState(isSimulatorOpen: boolean) {

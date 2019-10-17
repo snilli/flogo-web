@@ -1,4 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import { Observable } from 'rxjs';
 import { StreamProcessStatus } from '@flogo-web/core';
 import { RestApiService, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { SimulatorService } from '../../simulator';
@@ -8,12 +18,13 @@ import { SimulatorService } from '../../simulator';
   templateUrl: 'run-stream-button.component.html',
   styleUrls: [],
 })
-export class RunStreamButtonComponent implements OnInit, OnDestroy {
+export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
   @Input() resourceId: string;
+  @Input() disableRunStream: boolean;
   @Output() openSimulationPanel: EventEmitter<void> = new EventEmitter<void>();
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
-  simulatorStatus: StreamProcessStatus;
+  simulatorStatus$: Observable<StreamProcessStatus>;
 
   showFileInput = false;
   isSimulatorRunning = false;
@@ -28,9 +39,13 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.simulatorService.status$.subscribe(status => {
-      this.simulatorStatus = status;
-    });
+    this.simulatorStatus$ = this.simulatorService.status$;
+  }
+
+  ngOnChanges({ disableRunStream }: SimpleChanges): void {
+    if (!disableRunStream.firstChange && disableRunStream.currentValue) {
+      this.showFileInput = false;
+    }
   }
 
   runStream() {
@@ -71,13 +86,11 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy {
   }
 
   pauseSimulation() {
-    this.simulatorStatus = StreamProcessStatus.Paused;
     this.simulatorService.pause();
     this.isSimulatorPaused = true;
   }
 
   resumeSimulation() {
-    this.simulatorStatus = StreamProcessStatus.Running;
     this.simulatorService.resume();
     this.isSimulatorPaused = false;
   }
