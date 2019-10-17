@@ -210,6 +210,20 @@ export class AppTriggersService {
     }
     return false;
   }
+
+  async purgeTriggersByAppId(appId: string) {
+    const [app] = this.appsDb
+      .chain()
+      .find(<LokiQuery<any>>{ id: appId }, true)
+      .data();
+    if (!app) {
+      return false;
+    }
+
+    app.triggers = app.triggers.filter(trigger => trigger.handlers.length > 0);
+    this.appsDb.update(app);
+    return true;
+  }
 }
 
 function validateNameUnique(name: string, app: App, triggerId: string) {
