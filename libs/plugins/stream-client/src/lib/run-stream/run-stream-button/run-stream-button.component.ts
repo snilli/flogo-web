@@ -9,7 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StreamProcessStatus } from '@flogo-web/core';
+import { StreamSimulation } from '@flogo-web/core';
 import { RestApiService, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { SimulatorService } from '../../simulator';
 
@@ -24,7 +24,7 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
   @Output() openSimulationPanel: EventEmitter<void> = new EventEmitter<void>();
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
-  simulatorStatus$: Observable<StreamProcessStatus>;
+  simulatorStatus$: Observable<StreamSimulation.ProcessStatus>;
 
   showFileInput = false;
   isSimulatorRunning = false;

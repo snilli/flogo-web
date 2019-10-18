@@ -3,7 +3,7 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { injectable, inject } from 'inversify';
 
-import { SimulationInputMapping } from '@flogo-web/core';
+import { StreamSimulation } from '@flogo-web/core';
 
 import { Engine } from '../engine';
 import { TOKENS } from '../../core';
@@ -16,7 +16,7 @@ import { SimulationConfiguration } from './simulation-config';
 export interface PrepareOptions {
   pipelineId: string;
   simulationDataFile: string;
-  mappingsType: SimulationInputMapping;
+  mappingsType: StreamSimulation.InputMappingType;
   events: {
     onData: (data) => any;
     onStatusChange: (status) => any;

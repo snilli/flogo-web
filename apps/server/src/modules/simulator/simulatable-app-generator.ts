@@ -1,7 +1,8 @@
 import { injectable } from 'inversify';
 import { cloneDeep, isArray } from 'lodash';
 
-import { SimulationInputMapping, MetadataAttribute } from '@flogo-web/core';
+import { StreamSimulation, MetadataAttribute } from '@flogo-web/core';
+import InputMappingType = StreamSimulation.InputMappingType;
 
 import { AppExporter } from '../apps';
 import { ResourceService } from '../resources';
@@ -33,7 +34,7 @@ export class SimulatableAppGenerator {
       filePath: string;
       port: string;
       repeatInterval?: string;
-      mappingsType?: SimulationInputMapping;
+      mappingsType?: InputMappingType;
     }
   ) {
     const repeatInterval = options.repeatInterval || 500;
@@ -48,15 +49,7 @@ export class SimulatableAppGenerator {
     app.resources.push(resource);
     app.triggers.push(generateTrigger({ ...opts, resourceId, resourceInputs }));
     const transformedApp = await this.appExporter.export(app);
-    transformedApp.imports.push(
-      'github.com/project-flogo/stream/service/telemetry',
-      'github.com/project-flogo/catalystml-flogo/action',
-      'github.com/project-flogo/catalystml-flogo/activity/inference',
-      'github.com/project-flogo/catalystml-flogo/operations/cleaning',
-      'github.com/project-flogo/catalystml-flogo/operations/math',
-      'github.com/project-flogo/catalystml-flogo/operations/categorical',
-      'github.com/project-flogo/catalystml-flogo/operations/retyping'
-    );
+    transformedApp.imports.push('github.com/project-flogo/stream/service/telemetry');
     return transformedApp;
   }
 }
@@ -78,11 +71,6 @@ function generateHandler(options) {
   const actionMappings = {
     input: prepareInputMappings(mappingsType, resourceInputs),
   };
-  /*const actionMappings = {
-    input: {
-      input: '=$.data',
-    },
-  };*/
   return {
     ...handler,
     settings: {
@@ -96,7 +84,7 @@ function generateHandler(options) {
 }
 
 function prepareInputMappings(
-  mappingsType: SimulationInputMapping,
+  mappingsType: InputMappingType,
   inputs: MetadataAttribute[]
 ) {
   if (!inputs || !isArray(inputs) || inputs.length < 1) {
@@ -104,8 +92,8 @@ function prepareInputMappings(
   }
 
   switch (mappingsType) {
-    case SimulationInputMapping.Complex:
-    case SimulationInputMapping.Separate:
+    case InputMappingType.Custom:
+    case InputMappingType.SeparateByColumn:
       return inputs.reduce((mappings, attr) => {
         mappings[attr.name] = `=$.data.${attr.name}`;
         return mappings;

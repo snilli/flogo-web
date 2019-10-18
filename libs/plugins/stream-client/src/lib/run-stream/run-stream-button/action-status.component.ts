@@ -5,7 +5,7 @@ import {
   Output,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { StreamProcessStatus } from '@flogo-web/core';
+import { StreamSimulation } from '@flogo-web/core';
 
 @Component({
   selector: 'flogo-stream-run-action-status',
@@ -14,8 +14,8 @@ import { StreamProcessStatus } from '@flogo-web/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionStatusComponent {
-  readonly statuses = StreamProcessStatus;
-  @Input() status: StreamProcessStatus;
+  readonly statuses = StreamSimulation.ProcessStatus;
+  @Input() status: StreamSimulation.ProcessStatus;
   @Input() disabled = false;
   @Input() disableRunStream: boolean;
   @Output() run = new EventEmitter<void>();
