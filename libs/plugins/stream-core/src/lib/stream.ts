@@ -1,6 +1,8 @@
-export interface StreamData {
+import { StreamSimulation } from '@flogo-web/core';
+
+export type StreamData = {
   stages: InternalStage[];
-}
+} & StreamSimulation.ResourceConfig;
 
 export interface InternalStage {
   id: string;

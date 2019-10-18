@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { cloneDeep, isArray } from 'lodash';
 
-import { StreamSimulation, MetadataAttribute } from '@flogo-web/core';
+import { StreamSimulation, MetadataAttribute, Resource } from '@flogo-web/core';
 import InputMappingType = StreamSimulation.InputMappingType;
 
 import { AppExporter } from '../apps';
@@ -23,13 +23,10 @@ const BASE_HANDLER_SETTINGS = {
 
 @injectable()
 export class SimulatableAppGenerator {
-  constructor(
-    private resourceService: ResourceService,
-    private appExporter: AppExporter
-  ) {}
+  constructor(private appExporter: AppExporter) {}
 
   async generateFor(
-    resourceId: string,
+    resource: Resource,
     options: {
       filePath: string;
       port: string;
@@ -44,10 +41,11 @@ export class SimulatableAppGenerator {
     };
     // return getMock(options.filePath, options.port, repeatInterval);
     const app = cloneDeep(BASE_APP);
-    const resource = await this.resourceService.getResource(resourceId);
     const { input: resourceInputs } = resource && resource.metadata;
     app.resources.push(resource);
-    app.triggers.push(generateTrigger({ ...opts, resourceId, resourceInputs }));
+    app.triggers.push(
+      generateTrigger({ ...opts, resourceId: resource.id, resourceInputs })
+    );
     const transformedApp = await this.appExporter.export(app);
     transformedApp.imports.push('github.com/project-flogo/stream/service/telemetry');
     return transformedApp;
