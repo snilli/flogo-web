@@ -83,13 +83,18 @@ export class StreamSimulator {
     this.currentClient.register(this);
   }
 
-  async startNewProcess({ pipelineId, simulationDataFile }) {
-    console.log('simulator: starting new process', { pipelineId, simulationDataFile });
+  async startNewProcess({ pipelineId, simulationDataFile, mappingsType }) {
+    console.log('simulator: starting new process', {
+      pipelineId,
+      simulationDataFile,
+      mappingsType,
+    });
     this.teardownRemoteProcess();
 
     this.currentProcess = await this.enginePreparer.prepare({
       pipelineId,
       simulationDataFile,
+      mappingsType,
       events: {
         onData: this.sendData.bind(this),
         onStatusChange: this.sendStatus.bind(this),
@@ -109,8 +114,8 @@ export class StreamSimulator {
     }
   }
 
-  start({ pipelineId, simulationDataFile }) {
-    this.startNewProcess({ pipelineId, simulationDataFile });
+  start({ pipelineId, simulationDataFile, mappingsType }) {
+    this.startNewProcess({ pipelineId, simulationDataFile, mappingsType });
   }
 
   pause() {

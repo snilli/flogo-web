@@ -2,6 +2,9 @@ import { URL } from 'url';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { injectable, inject } from 'inversify';
+
+import { SimulationInputMapping } from '@flogo-web/core';
+
 import { Engine } from '../engine';
 import { TOKENS } from '../../core';
 import { writeJSONFile } from '../../common/utils/file';
@@ -13,6 +16,7 @@ import { SimulationConfiguration } from './simulation-config';
 export interface PrepareOptions {
   pipelineId: string;
   simulationDataFile: string;
+  mappingsType: SimulationInputMapping;
   events: {
     onData: (data) => any;
     onStatusChange: (status) => any;
@@ -33,6 +37,7 @@ export class SimulationPreparer {
   async prepare({
     pipelineId,
     simulationDataFile,
+    mappingsType,
     events,
   }: PrepareOptions): Promise<RemoteSimulatorProcess> {
     const { restControlUrl, wsUrl } = this.config;
@@ -40,6 +45,7 @@ export class SimulationPreparer {
     const flogoJson = await this.simulatableAppGenerator.generateFor(pipelineId, {
       filePath: simulationDataFile,
       port: parsedRestUrl.port,
+      mappingsType,
     });
     console.log(TMP_PATH);
     await writeJSONFile(TMP_PATH, flogoJson);

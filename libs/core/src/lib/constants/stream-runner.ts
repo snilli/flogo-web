@@ -5,3 +5,9 @@ export enum StreamProcessStatus {
   Closed = 'closed',
   Errored = 'errored',
 }
+
+export enum SimulationInputMapping {
+  Complex = 'complex mapping',
+  Separate = 'separate inputs',
+  Single = 'single input',
+}
