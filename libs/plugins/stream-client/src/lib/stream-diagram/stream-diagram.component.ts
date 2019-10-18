@@ -3,11 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import {
-  DiagramGraph,
-  SingleEmissionSubject,
-  NodeType,
-} from '@flogo-web/lib-client/core';
+import { DiagramGraph, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import {
   DiagramAction,
   DiagramActionType,
@@ -39,8 +35,6 @@ export class StreamDiagramComponent implements OnDestroy {
   tiles: Tile[];
   // by default should be the root tile
   insertTile: InsertTile;
-  tileTypes = TileType;
-  nodeTypes = NodeType;
   trackTileBy = trackTileByFn;
   availableSlots: number;
   placeholders = [];

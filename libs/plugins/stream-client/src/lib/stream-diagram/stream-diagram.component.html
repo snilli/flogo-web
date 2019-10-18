@@ -12,10 +12,11 @@
   <flogo-diagram-tile-insert
     fgAddStage
     *ngIf="availableSlots > 0"
-    class="add-button tile__separator visible-on-hover"
+    class="add-button tile__separator"
     [tile]="insertTile"
     [currentSelection]="currentSelection"
     (select)="addStage()"
+    [class.visible-on-hover]="tiles.length"
   ></flogo-diagram-tile-insert>
   <div class="tile-placeholders">
     <div class="tile-placeholder visible-on-hover" *ngFor="let i of placeholders"></div>
