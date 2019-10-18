@@ -159,7 +159,7 @@ export class StreamService {
             }).result
         ),
         filter(result => result === ConfirmationResult.Confirm),
-        switchMap(() => this.appResourceService.deleteResourceWithTrigger(stream.id))
+        switchMap(() => this.appResourceService.deleteResource(stream.id))
       )
       .subscribe(
         () => {

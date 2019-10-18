@@ -68,10 +68,8 @@ export class FlogoFlowService {
     }
   }
 
-  deleteFlow(flowId, triggerId) {
-    return this.appResourceService
-      .deleteResourceWithTrigger(flowId, triggerId)
-      .toPromise();
+  deleteFlow(flowId) {
+    return this.appResourceService.deleteResource(flowId).toPromise();
   }
 
   listFlowsByName(appId, name) {

@@ -55,8 +55,8 @@ export class AppResourceService {
       });
   }
 
-  deleteResource(flowId) {
-    return this.resourceService.deleteResource(flowId);
+  deleteResource(resourceId) {
+    return this.resourceService.deleteResource(resourceId);
   }
 
   /**

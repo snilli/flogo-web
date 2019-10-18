@@ -10,6 +10,7 @@ import {
 } from '@flogo-web/lib-server/core';
 // todo: can't import directly from 'apps' barrel, it will create a circular dependency and inversify will also complain
 import { HandlersService } from '../apps/handlers-service';
+import { AppTriggersService } from '../apps/triggers';
 import { ResourcePluginRegistry } from '../../extension';
 import { ERROR_TYPES } from '../../common/errors';
 import { generateShortId } from '../../common/utils';
@@ -31,6 +32,7 @@ export class ResourceService {
   constructor(
     private resourceRepository: ResourceRepository,
     private handlersService: HandlersService,
+    private triggerService: AppTriggersService,
     private plugins: ResourcePluginRegistry
   ) {
     this.resourceFieldsValidator = genericFieldsValidator(type =>
@@ -120,7 +122,6 @@ export class ResourceService {
     await this.resourceHooks.wrapAndRun('list', context, hookContext => {
       const resource = hookContext.resource as any;
       resource.appId = app.id;
-      app.id = app.id;
       const triggers = app.triggers.filter(isTriggerForResource(resource.id));
       app = omit(app, ['triggers', 'resources']);
       hookContext.resource = { ...resource, app, triggers };
@@ -149,7 +150,7 @@ export class ResourceService {
   }
 
   async remove(resourceId) {
-    const resource = await this.findOne(resourceId);
+    const resource: ExtendedResource = await this.findOne(resourceId);
     if (!resource) {
       return false;
     }
@@ -159,6 +160,7 @@ export class ResourceService {
     const wasRemoved = await this.resourceRepository.remove(resourceId);
     if (wasRemoved) {
       await this.handlersService.removeByResourceId(resourceId);
+      await this.triggerService.purgeTriggersByAppId(resource.appId);
       await this.resourceHooks.runAfter('remove', context);
     }
     return wasRemoved;
