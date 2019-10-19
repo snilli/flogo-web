@@ -15,15 +15,15 @@
   padding: 8px;
   margin-top: 24px;
   width: 100%;
-  &:hover{
+  z-index: 0;
+  &:hover {
     background-color:rgba(255, 255, 255, 0.3);
-    
-  }
-  &:hover{
     .visible-on-hover{
       opacity: 1;
     }
-   
+    .add-button:before {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -44,14 +44,19 @@ flogo-diagram {
     height: 8px;
     top: 44%;
     left: -2px;
+    z-index: -1;
   }
-  &.add-button{
-    margin: 0 4px 0 48px;
-    min-width: 44px;
-    &:before {
-      width: 52px;
-      left: -48px;
-    }
+}
+.add-button{
+  margin: 0 4px 0 48px;
+  min-width: 44px;
+  &:before {
+    width: 52px;
+    left: -48px;
+    opacity: 0;
+  }
+  &.visible-on-hover:before {
+    opacity: 0.5;
   }
 }
 .tile-placeholders{
