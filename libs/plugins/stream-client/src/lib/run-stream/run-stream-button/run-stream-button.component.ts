@@ -9,10 +9,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
 import { StreamProcessStatus } from '@flogo-web/core';
-import { RestApiService, SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { SimulatorService } from '../../simulator';
 import { FileStatus } from '../../file-status';
+import { RunStreamService } from '../run-stream.service';
 
 @Component({
   selector: 'flogo-stream-run-stream-button',
@@ -36,7 +39,7 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private simulatorService: SimulatorService,
-    private restApi: RestApiService
+    private runStreamService: RunStreamService
   ) {}
 
   ngOnInit(): void {
@@ -57,25 +60,23 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   setFileUploadStatus() {
-    this.restApi
-      .get(`resources/simulateDataPath/${this.resourceId}`)
+    this.runStreamService
+      .getSimulationDataPath(this.resourceId)
+      .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe((resp: any) => {
-        const { filePath, fileName } = resp;
-        if (filePath) {
-          this.filePath = filePath;
-          this.fileName = fileName;
-          this.fileUploadStatus = FileStatus.Uploaded;
-        }
+        this.setFilePath(resp);
       });
   }
 
   setFilePath(fileDetails) {
-    if (fileDetails) {
+    if (!isEmpty(fileDetails)) {
       this.filePath = fileDetails.filePath;
       this.fileName = fileDetails.fileName;
+      this.fileUploadStatus = FileStatus.Uploaded;
     } else {
       this.filePath = '';
       this.fileName = '';
+      this.fileUploadStatus = FileStatus.Empty;
     }
   }
 

@@ -3,19 +3,21 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { RestApiService } from '@flogo-web/lib-client/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { takeUntil } from 'rxjs/operators';
+import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { FileStatus } from '../file-status';
+import { RunStreamService } from './run-stream.service';
 
 @Component({
   selector: 'flogo-stream-run-stream',
   templateUrl: 'run-stream.component.html',
   styleUrls: ['run-stream.component.less'],
 })
-export class RunStreamComponent implements OnChanges {
+export class RunStreamComponent implements OnChanges, OnDestroy {
   @Input() resourceId: string;
   @Input() fileName: string;
   @Input() fileUploadStatus: FileStatus;
@@ -23,8 +25,9 @@ export class RunStreamComponent implements OnChanges {
   @Output() startSimulation: EventEmitter<any> = new EventEmitter();
 
   disableRunStream = true;
+  private ngOnDestroy$ = SingleEmissionSubject.create();
 
-  constructor(private restApi: RestApiService, private http: HttpClient) {}
+  constructor(private runStreamService: RunStreamService) {}
 
   ngOnChanges({ fileName }: SimpleChanges): void {
     if (fileName && fileName.currentValue) {
@@ -43,24 +46,21 @@ export class RunStreamComponent implements OnChanges {
     const fileToUpload = files.item(0);
     const formData = new FormData();
     formData.append(`${this.resourceId}-${fileToUpload.name}`, fileToUpload);
-    const url = this.restApi.apiPrefix('upload/simulationData');
-    const headers = new HttpHeaders({
-      enctype: 'multipart/form-data',
-    });
     this.fileUploadStatus = FileStatus.Uploading;
-    //todo: use post of restAPi service
-    this.http.post(url, formData, { headers }).subscribe(
-      (resp: any) => {
-        this.setFilePath.emit(resp.data);
-        this.fileUploadStatus = FileStatus.Uploaded;
-        this.disableRunStream = false;
-      },
-      () => {
-        this.fileUploadStatus = FileStatus.Errored;
-        this.disableRunStream = true;
-        this.fileName = 'Error.....try again';
-      }
-    );
+    this.runStreamService
+      .uploadSimulationDataFile(formData)
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(
+        (resp: object) => {
+          this.setFilePath.emit(resp);
+          this.disableRunStream = false;
+        },
+        () => {
+          this.fileUploadStatus = FileStatus.Errored;
+          this.disableRunStream = true;
+          this.fileName = 'Error.....try again';
+        }
+      );
   }
 
   runSimulation() {
@@ -68,9 +68,15 @@ export class RunStreamComponent implements OnChanges {
   }
 
   removeFile() {
-    const url = `resources/simulateDataPath/${this.resourceId}`;
-    this.restApi.delete(url).subscribe(() => {
-      this.setFilePath.emit();
-    });
+    this.runStreamService
+      .removeSimulationDataFile(this.resourceId)
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(() => {
+        this.setFilePath.emit();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.ngOnDestroy$.emitAndComplete();
   }
 }
