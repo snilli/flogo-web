@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { RestApiService } from '@flogo-web/lib-client/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FileStatus } from '../file-status';
 
 @Component({
   selector: 'flogo-stream-run-stream',
@@ -17,8 +18,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class RunStreamComponent implements OnChanges {
   @Input() resourceId: string;
   @Input() fileName: string;
-  @Input() fileUploadStatus: string;
-  @Output() setFilePath: EventEmitter<string> = new EventEmitter<string>();
+  @Input() fileUploadStatus: FileStatus;
+  @Output() setFilePath: EventEmitter<object> = new EventEmitter<object>();
   @Output() startSimulation: EventEmitter<any> = new EventEmitter();
 
   disableRunStream = true;
@@ -46,16 +47,16 @@ export class RunStreamComponent implements OnChanges {
     const headers = new HttpHeaders({
       enctype: 'multipart/form-data',
     });
-    this.fileUploadStatus = 'uploading';
+    this.fileUploadStatus = FileStatus.Uploading;
     //todo: use post of restAPi service
     this.http.post(url, formData, { headers }).subscribe(
       (resp: any) => {
         this.setFilePath.emit(resp.data);
-        this.fileUploadStatus = 'uploaded';
+        this.fileUploadStatus = FileStatus.Uploaded;
         this.disableRunStream = false;
       },
       () => {
-        this.fileUploadStatus = 'errored';
+        this.fileUploadStatus = FileStatus.Errored;
         this.disableRunStream = true;
         this.fileName = 'Error.....try again';
       }
@@ -67,6 +68,9 @@ export class RunStreamComponent implements OnChanges {
   }
 
   removeFile() {
-    //todo: implement remove file
+    const url = `resources/simulateDataPath/${this.resourceId}`;
+    this.restApi.delete(url).subscribe(() => {
+      this.setFilePath.emit();
+    });
   }
 }

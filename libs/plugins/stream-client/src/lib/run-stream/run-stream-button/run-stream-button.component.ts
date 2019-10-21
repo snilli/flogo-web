@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { StreamProcessStatus } from '@flogo-web/core';
 import { RestApiService, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { SimulatorService } from '../../simulator';
+import { FileStatus } from '../../file-status';
 
 @Component({
   selector: 'flogo-stream-run-stream-button',
@@ -31,7 +32,7 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
   isSimulatorPaused = false;
   filePath: string;
   fileName: string;
-  fileUploadStatus = 'empty';
+  fileUploadStatus = FileStatus.Empty;
 
   constructor(
     private simulatorService: SimulatorService,
@@ -63,14 +64,19 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
         if (filePath) {
           this.filePath = filePath;
           this.fileName = fileName;
-          this.fileUploadStatus = 'uploaded';
+          this.fileUploadStatus = FileStatus.Uploaded;
         }
       });
   }
 
   setFilePath(fileDetails) {
-    this.filePath = fileDetails.filePath;
-    this.fileName = fileDetails.fileName;
+    if (fileDetails) {
+      this.filePath = fileDetails.filePath;
+      this.fileName = fileDetails.fileName;
+    } else {
+      this.filePath = '';
+      this.fileName = '';
+    }
   }
 
   startSimulation() {

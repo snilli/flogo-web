@@ -8,6 +8,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { FileStatus } from '../../file-status';
 
 @Directive({
   selector: '[fgDragDropFile]',
@@ -44,13 +45,13 @@ export class DragAndDropDirective implements OnChanges {
 
   ngOnChanges({ status }: SimpleChanges): void {
     if (status && !status.firstChange) {
-      if (status.currentValue === 'uploading') {
+      if (status.currentValue === FileStatus.Uploading) {
         this.opacity = 0.2;
       } else {
         this.opacity = 1;
       }
 
-      if (status.currentValue === 'uploaded' || 'errored') {
+      if (status.currentValue === FileStatus.Uploaded || FileStatus.Errored) {
         this.border = 'none';
       }
     }
