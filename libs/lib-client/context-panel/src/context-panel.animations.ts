@@ -36,14 +36,12 @@ export const contextPanelAnimations: {
       'open',
       style({
         transform: 'translate3d(0, 0, 0)',
-        zIndex: 3,
       })
     ),
     state(
       'closed',
       style({
         transform: `translate3d({{minimizedLeftDistance}}px, 0, 0)`,
-        zIndex: 3,
       }),
       {
         params: {

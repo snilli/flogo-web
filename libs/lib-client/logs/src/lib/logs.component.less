@@ -1,12 +1,15 @@
 @import '~@flogo-web/assets/styles/_variables';
 @logs-background-content: #414141;
 
+:host {
+  z-index: 1;
+}
+
 .flogo-logs {
   display: flex;
   flex-direction: column;
 
   .logs-window {
-    z-index: 10;
     position: fixed;
     height: 427px;
     min-height: 427px;
