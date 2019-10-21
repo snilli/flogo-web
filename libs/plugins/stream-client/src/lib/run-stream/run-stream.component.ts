@@ -53,6 +53,7 @@ export class RunStreamComponent implements OnChanges, OnDestroy {
       .subscribe(
         (resp: object) => {
           this.setFilePath.emit(resp);
+          this.fileUploadStatus = FileStatus.Uploaded;
           this.disableRunStream = false;
         },
         () => {
