@@ -8,11 +8,13 @@ import { getFileNames } from './get-file-names-in-dir';
 export async function removeSimulateData(ctx) {
   const uploadsDir = config.uploadsPath;
   const resourceId = ctx.params && ctx.params.resourceId;
-  await getFileNames(uploadsDir).then(async files => {
-    const fileName = files.find(file => file.substr(0, file.indexOf('-')) === resourceId);
-    const filePath = path.join(uploadsDir, fileName);
-    await promisify(fs.unlink)(filePath).then(() => {
-      ctx.status = 204;
-    });
-  });
+  const files = await getFileNames(uploadsDir);
+  const fileName = files.find(file => file.substr(0, file.indexOf('-')) === resourceId);
+  const filePath = path.join(uploadsDir, fileName);
+  await deleteFile(filePath);
+  ctx.status = 204;
+}
+
+function deleteFile(filePath) {
+  return promisify(fs.unlink)(filePath);
 }
