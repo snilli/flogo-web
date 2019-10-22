@@ -2,7 +2,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BsModalModule } from 'ng2-bs3-modal';
 import { ModalModule } from '@flogo-web/lib-client/modal';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
@@ -17,7 +16,6 @@ import { ImportErrorsComponent } from './import-errors/import-errors.component';
   imports: [
     CommonModule,
     FormsModule,
-    BsModalModule,
     FlogoSharedModule,
     HomeRoutingModule,
     ModalModule,
