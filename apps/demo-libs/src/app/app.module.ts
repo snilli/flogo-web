@@ -10,12 +10,14 @@ import { NotificationsModule } from '@flogo-web/lib-client/notifications';
 import { ModalModule } from '@flogo-web/lib-client/modal';
 import { ContextPanelModule } from '@flogo-web/lib-client/context-panel';
 import { SearchModule } from '@flogo-web/lib-client/search';
+import { SelectModule } from '@flogo-web/lib-client/select';
 
 import { AppComponent, HomeComponent } from './app.component';
 import { NotificationsComponent } from './notifications';
 import { ModalParentComponent, ModalDemoModule } from './modal';
 import { ContextPanelComponent } from './context-panel/context-panel.component';
 import { SearchComponent, PeopleComponent } from './search';
+import { FormDemoComponent } from './form-demo/form-demo.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { SearchComponent, PeopleComponent } from './search';
     ContextPanelComponent,
     SearchComponent,
     PeopleComponent,
+    FormDemoComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +40,7 @@ import { SearchComponent, PeopleComponent } from './search';
     ModalModule,
     ContextPanelModule,
     SearchModule,
+    SelectModule,
 
     RouterModule.forRoot(
       [
@@ -44,6 +48,7 @@ import { SearchComponent, PeopleComponent } from './search';
         { path: 'modals', component: ModalParentComponent },
         { path: 'context-panel', component: ContextPanelComponent },
         { path: 'search', component: SearchComponent },
+        { path: 'forms', component: FormDemoComponent },
         { path: '', component: HomeComponent },
         { path: '**', redirectTo: '' },
       ],
