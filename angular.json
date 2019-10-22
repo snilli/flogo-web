@@ -186,8 +186,6 @@
               "apps/client/src/styles.less"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/monaco-editor/min/vs/loader.js"
             ],
             "customWebpackConfig": {
@@ -254,8 +252,6 @@
               "apps/client/src/styles.less"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
             "assets": [
               "apps/client/src/favicon.ico",
@@ -339,8 +335,6 @@
             "tsConfig": "libs/lib-client/tsconfig.spec.json",
             "karmaConfig": "libs/lib-client/karma.conf.js",
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           }
         },
@@ -439,10 +433,7 @@
             "main": "libs/plugins/flow-client/src/test.ts",
             "tsConfig": "libs/plugins/flow-client/tsconfig.spec.json",
             "karmaConfig": "libs/plugins/flow-client/karma.conf.js",
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ],
+            "scripts": [],
             "assets": [
               {
                 "input": "libs/assets/assets",

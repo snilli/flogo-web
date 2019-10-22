@@ -7,7 +7,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BsModalModule } from 'ng2-bs3-modal';
 
 import {
   CoreModule as FlogoLibCore,
@@ -45,8 +44,6 @@ import { resourcePlugins } from '../plugins';
     BrowserAnimationsModule,
     FlogoLibCore,
     CoreModule,
-    // todo: should be in common?
-    BsModalModule,
 
     FlogoSharedModule,
     FlogoLogsModule,
