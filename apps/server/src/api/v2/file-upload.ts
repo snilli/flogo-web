@@ -12,26 +12,32 @@ async function handleFileUpload(ctx) {
   const file = ctx.request.files;
   const fileName = Object.keys(file)[0];
   const filePath = file[fileName].path;
-  await delPrevFilesIfAny(fileName);
-  ctx.response.status = 200;
-  ctx.body = {
-    data: {
-      filePath,
-      fileName,
-    },
-  };
+  try {
+    await delPrevFilesIfAny(fileName);
+    ctx.response.status = 200;
+    ctx.body = {
+      data: {
+        filePath,
+        fileName,
+      },
+    };
+  } catch (error) {
+    ctx.response.status = 500;
+  }
 }
 
-function delPrevFilesIfAny(currentFileName) {
+async function delPrevFilesIfAny(currentFileName) {
   const uploadsDir = config.uploadsPath;
-  return getFileNames(uploadsDir).then(files => {
-    const resourceId = currentFileName.split('-')[0];
-    const filesToDel = files.filter(
-      file => file.substr(0, file.indexOf('-')) === resourceId && file !== currentFileName
-    );
-    filesToDel.map(async fileToDel => {
+  const files = await getFileNames(uploadsDir);
+  const resourceId = currentFileName.split('-')[0];
+  const filesToDel = files.filter(
+    file => file.substr(0, file.indexOf('-')) === resourceId && file !== currentFileName
+  );
+  const deleteFile = promisify(fs.unlink);
+  return Promise.all(
+    filesToDel.map(fileToDel => {
       const filePathToDel = path.join(uploadsDir, fileToDel);
-      await promisify(fs.unlink)(filePathToDel);
-    });
-  });
+      return deleteFile(filePathToDel);
+    })
+  );
 }
