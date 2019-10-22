@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FileStatus } from './file-status';
 
 @Component({
   selector: 'flogo-stream-file-status',
@@ -6,15 +7,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./file-status.component.less'],
 })
 export class FileStatusComponent implements OnInit {
-  //todo: create enum for below statuses
-  @Input() status: 'empty' | 'uploading' | 'uploaded' | 'errored' | 'dragging';
+  @Input() status: FileStatus;
   @Output() remove: EventEmitter<void> = new EventEmitter();
   constructor() {}
 
   ngOnInit() {}
   removeFile() {
-    if (this.status === 'uploaded') {
-      this.status = 'empty';
+    if (this.status === FileStatus.Uploaded) {
+      this.status = FileStatus.Empty;
       this.remove.emit();
     }
   }

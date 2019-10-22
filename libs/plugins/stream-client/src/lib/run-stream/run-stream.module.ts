@@ -7,6 +7,7 @@ import { RunStreamButtonComponent } from './run-stream-button/run-stream-button.
 import { DragAndDropDirective } from './drag-and-drop.directive/drag-and-drop.directive';
 import { FileStatusComponent } from '../file-status/file-status.component';
 import { ActionStatusComponent } from './run-stream-button/action-status.component';
+import { RunStreamService } from './run-stream.service';
 
 @NgModule({
   imports: [FlogoSharedModule],
@@ -17,6 +18,7 @@ import { ActionStatusComponent } from './run-stream-button/action-status.compone
     FileStatusComponent,
     ActionStatusComponent,
   ],
+  providers: [RunStreamService],
   exports: [RunStreamButtonComponent],
 })
 export class RunStreamModule {}

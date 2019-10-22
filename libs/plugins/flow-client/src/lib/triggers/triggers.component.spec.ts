@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { BsModalModule } from 'ng2-bs3-modal';
 
 import { App } from '@flogo-web/core';
 import {
@@ -175,7 +174,6 @@ describe('Component: TriggersComponent', () => {
       imports: [
         FakeRootLanguageModule,
         ContribInstallerModule,
-        BsModalModule,
         TriggersConfiguratorModule,
         OverlayModule,
         StoreModule.forRoot({

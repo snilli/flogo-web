@@ -102,6 +102,7 @@ describe('JSONSchema: App', () => {
     const trigger = {
       id: 'trigger1',
       ref: 'some_path_to_repo/trigger/cli',
+      handlers: [],
     };
     const resource = { id: 'flow:test', data: {} };
     const action = { id: 'action_1', ref: 'some_path_to_repo/stream', settings: {} };
