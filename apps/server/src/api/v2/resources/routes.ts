@@ -11,6 +11,7 @@ import { getResource } from './get-resource';
 import { updateResource } from './update-resource';
 import { deleteResource } from './delete-resource';
 import { getSimulateDataPath } from './get-simulation-data-path';
+import { removeSimulateData } from './remove-simulation-data';
 
 export function mountResourceRoutes(router: Router, container: Container) {
   const resourceServiceMiddleware = createResourceMiddleware(container);
@@ -22,6 +23,7 @@ export function mountResourceRoutes(router: Router, container: Container) {
   resourceRouter
     .get('/recent', listRecent)
     .get('/simulateDataPath/:resourceId', getSimulateDataPath)
+    .del('/simulateDataPath/:resourceId', removeSimulateData)
     .get('/:resourceId', getResource)
     .patch('/:resourceId', updateResource)
     .del('/:resourceId', deleteResource);
