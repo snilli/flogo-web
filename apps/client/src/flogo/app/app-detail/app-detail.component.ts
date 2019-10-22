@@ -63,6 +63,7 @@ import {
 } from '../missing-trigger-confirmation';
 import { ResourceViewType, DeleteEvent } from '../resource-views';
 import { BUILD_OPTIONS } from './build-options';
+import { resourcePlugins } from '../../../plugins';
 
 const MAX_SECONDS_TO_ASK_APP_NAME = 5;
 
@@ -148,6 +149,7 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
       .subscribe(() => {
         this.focusNameFieldIfNewApp();
       });
+    this.showActionEventNotifications();
   }
 
   ngOnDestroy() {
@@ -435,5 +437,30 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
     );
     const isNewApp = secondsSinceCreation <= MAX_SECONDS_TO_ASK_APP_NAME;
     this.nameUiState = { inEditMode: isNewApp, value: this.application.name };
+  }
+
+  private showActionEventNotifications() {
+    this.appDetailService.actionEvent$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(actionEvent => {
+        if (actionEvent.type === 'action-creation') {
+          const action = resourcePlugins.filter(resource => {
+            return resource.type === actionEvent.action.type;
+          })[0];
+          if (action.type === actionEvent.action.type) {
+            this.notificationsService.success({
+              key: 'APP-DETAIL:SUCCESS-MESSAGE-ACTION-CREATED',
+              params: {
+                actionType: action.label,
+              },
+            });
+          }
+        } else if (actionEvent.type === 'action-error') {
+          this.notificationsService.error({
+            key: 'APP-DETAIL:CREATE-ACTION-ERROR',
+            params: actionEvent.error,
+          });
+        }
+      });
   }
 }

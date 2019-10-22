@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, of, throwError, Observable, combineLatest } from 'rxjs';
+import {
+  BehaviorSubject,
+  from,
+  of,
+  throwError,
+  Observable,
+  combineLatest,
+  Subject,
+} from 'rxjs';
 import {
   tap,
   shareReplay,
@@ -32,10 +40,22 @@ interface NewResource {
   description?: string;
 }
 
+interface ActionCreationEvent {
+  type: 'action-creation';
+  action: NewResource;
+}
+
+interface ActionErrorEvent {
+  type: 'action-error';
+  error: Error;
+}
+
+type ActionEvents = ActionCreationEvent | ActionErrorEvent;
+
 @Injectable()
 export class AppDetailService {
   private appSource = new BehaviorSubject<App>(undefined);
-
+  private actionEventsSource = new Subject<ActionEvents>();
   public readonly groupsByTrigger$: Observable<FlowGroup[]>;
   public readonly groupsByResource$: Observable<TriggerGroup[]>;
   public readonly isEmpty$: Observable<boolean>;
@@ -44,6 +64,8 @@ export class AppDetailService {
     filter<App>(Boolean),
     shareReplay(1)
   );
+
+  public actionEvent$ = this.actionEventsSource.asObservable();
 
   constructor(
     private resourcesState: AppResourcesStateService,
@@ -127,9 +149,7 @@ export class AppDetailService {
       )
     ).pipe(
       tap(() => {
-        this.notificationsService.success({
-          key: 'FLOWS:SUCCESS-MESSAGE-FLOW-CREATED',
-        });
+        this.actionEventsSource.next({ type: 'action-creation', action: newResource });
       }),
       shareReplay(1)
     );
@@ -140,10 +160,7 @@ export class AppDetailService {
       },
       err => {
         console.error(err);
-        this.notificationsService.error({
-          key: 'FLOWS:CREATE_FLOW_ERROR',
-          params: err,
-        });
+        this.actionEventsSource.next({ type: 'action-error', error: err });
       }
     );
 
