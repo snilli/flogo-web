@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+import { StreamSimulation } from '@flogo-web/core';
+
 import { FileStatus } from '../file-status';
 import { RunStreamService } from './run-stream.service';
 
@@ -21,6 +23,7 @@ export class RunStreamComponent implements OnChanges, OnDestroy {
   @Input() resourceId: string;
   @Input() fileName: string;
   @Input() fileUploadStatus: FileStatus;
+  @Input() mappingType: StreamSimulation.InputMappingType;
   @Output() setFilePath: EventEmitter<object> = new EventEmitter<object>();
   @Output() startSimulation: EventEmitter<any> = new EventEmitter();
 
@@ -65,7 +68,9 @@ export class RunStreamComponent implements OnChanges, OnDestroy {
   }
 
   runSimulation() {
-    this.startSimulation.emit();
+    this.startSimulation.emit(
+      this.mappingType || StreamSimulation.InputMappingType.SingleInput
+    );
   }
 
   removeFile() {

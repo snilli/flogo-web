@@ -1,5 +1,3 @@
-import { StreamSimulation } from '@flogo-web/core';
-
 export enum ProcessStatus {
   New = 'new',
   Running = 'running',
@@ -15,7 +13,9 @@ export enum InputMappingType {
 }
 
 export interface ResourceConfig {
-  simulation?: {
-    inputMappingType?: StreamSimulation.InputMappingType;
-  };
+  simulation?: SimulationConfig;
+}
+
+export interface SimulationConfig {
+  inputMappingType?: InputMappingType;
 }

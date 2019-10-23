@@ -124,11 +124,15 @@ export class SimulatorService implements OnDestroy {
     this.socket.disconnect();
   }
 
-  start(pipelineId: string, simulationDataFile: string) {
+  start(
+    pipelineId: string,
+    simulationDataFile: string,
+    mappingsType: StreamSimulation.InputMappingType
+  ) {
     this.emitAction('start', {
       pipelineId,
       simulationDataFile,
-      mappingsType: StreamSimulation.InputMappingType.SingleInput,
+      mappingsType,
     });
     this.start$.next();
   }

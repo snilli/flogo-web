@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { ContributionSchema } from '@flogo-web/core';
+import { ContributionSchema, StreamSimulation } from '@flogo-web/core';
 import { StreamMetadata } from '@flogo-web/plugins/stream-core';
 import { GraphNode } from '@flogo-web/lib-client/core';
 
@@ -25,6 +25,7 @@ export enum StreamActionType {
   CommitStageConfiguration = '[Stream] Commit stage configuration',
   ContributionInstalled = '[Stream] Contribution installed',
   SimulatorPanelStatusChange = '[Stream][Simulator panel] Simulator panel status change',
+  SimulatorConfigurationChange = '[Stream][Simulator] Simulator configuration change',
 }
 
 interface BaseStreamAction extends Action {
@@ -119,6 +120,11 @@ export class SimulatorPanelStatusChange implements BaseStreamAction {
   constructor(public payload: { isSimulatorOpen: boolean }) {}
 }
 
+export class SimulatorConfigurationChange implements BaseStreamAction {
+  readonly type = StreamActionType.SimulatorConfigurationChange;
+  constructor(public payload: StreamSimulation.SimulationConfig) {}
+}
+
 export type StreamActionsUnion =
   | Init
   | ChangeName
@@ -136,4 +142,5 @@ export type StreamActionsUnion =
   | CancelStageConfiguration
   | CommitStageConfiguration
   | ContributionInstalled
-  | SimulatorPanelStatusChange;
+  | SimulatorPanelStatusChange
+  | SimulatorConfigurationChange;

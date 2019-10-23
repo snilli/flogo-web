@@ -201,3 +201,8 @@ export const selectStageConfigure = createSelector(
   selectStreamState,
   (state: FlogoStreamState) => state.stageConfigure
 );
+
+export const getSimulatorConfig = createSelector(
+  selectStreamState,
+  (state: FlogoStreamState) => state.simulation
+);

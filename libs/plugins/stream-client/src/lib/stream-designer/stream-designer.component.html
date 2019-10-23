@@ -10,7 +10,8 @@
     <div header-role="resource-logo" class="stream-logo"></div>
     <flogo-stream-run-stream-button
       [resourceId]="streamState.id"
-      (openSimulationPanel)="changePanelState(true)"
+      [simulationConfig]="simulationConfig$ | async"
+      (startSimulationWithConfig)="startSimulation($event)"
       [disableRunStream]="disableRunStream"
       header-role="right-block"
     ></flogo-stream-run-stream-button>

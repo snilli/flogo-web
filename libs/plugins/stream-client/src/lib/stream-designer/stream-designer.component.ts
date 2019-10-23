@@ -24,6 +24,7 @@ import {
   StreamStoreState as AppState,
 } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
+import { StreamSimulation } from '@flogo-web/core';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -44,6 +45,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   };
   simulationId: 0;
   currentSimulationStage$: Observable<string | number>;
+  simulationConfig$: Observable<StreamSimulation.SimulationConfig>;
   // todo: add type
   selectedStageInfo$: Observable<any>;
   disableRunStream: boolean;
@@ -68,6 +70,8 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       select(StreamSelectors.getCurrentSimulationStage)
     );
 
+    this.simulationConfig$ = this.store.pipe(select(StreamSelectors.getSimulatorConfig));
+
     this.contribInstallerService.contribInstalled$
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(contribDetails =>
@@ -89,6 +93,11 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
       .subscribe(items => {
         this.disableRunStream = isEmpty(items);
       });
+  }
+
+  startSimulation(config: StreamSimulation.SimulationConfig) {
+    this.changePanelState(true);
+    this.store.dispatch(new StreamActions.SimulatorConfigurationChange(config));
   }
 
   changePanelState(isSimulatorOpen: boolean) {

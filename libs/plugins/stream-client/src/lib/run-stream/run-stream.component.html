@@ -25,6 +25,13 @@
         <input type="file" #fileInput hidden (change)="uploadFile($event.target.files)" />
       </span>
     </div>
+    <div>
+      <!-- Todo: Remove this select element -->
+      <select [(ngModel)]="mappingType">
+        <option value="single-input">Single</option>
+        <option value="separate-by-column">Seperate By Column</option>
+      </select>
+    </div>
   </div>
   <div>
     <button
