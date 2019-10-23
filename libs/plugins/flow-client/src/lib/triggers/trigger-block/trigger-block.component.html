@@ -16,12 +16,7 @@
       </li>
     </ul>
   </div>
-  <div
-    class="trigger"
-    [class.--lambda]="isLambda"
-    title="{{ trigger.name }}"
-    (click)="handleTriggerSelection()"
-  >
+  <div class="trigger" title="{{ trigger.name }}" (click)="handleTriggerSelection()">
     <svg
       class="trigger-icon-background"
       viewBox="0 0 50 52"

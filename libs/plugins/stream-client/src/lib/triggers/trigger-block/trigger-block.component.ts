@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CONTRIB_REFS } from '@flogo-web/core';
 import { TRIGGER_MENU_OPERATION } from '../../core';
 import { TriggerMenuSelectionEvent } from './models';
 import { Trigger } from '@flogo-web/lib-client/core';
@@ -26,10 +25,6 @@ export class TriggerBlockComponent {
 
   isShowingMenu = false;
   MENU_OPTIONS: typeof TRIGGER_MENU_OPERATION = TRIGGER_MENU_OPERATION;
-
-  get isLambda(): boolean {
-    return this.trigger && this.trigger.ref === CONTRIB_REFS.LAMBDA;
-  }
 
   handleTriggerSelection() {
     this.menuItemSelected.emit({

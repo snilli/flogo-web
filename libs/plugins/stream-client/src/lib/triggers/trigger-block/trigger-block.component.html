@@ -16,12 +16,7 @@
       </li>
     </ul>
   </div>
-  <div
-    class="trigger"
-    [class.--lambda]="isLambda"
-    title="{{ trigger.name }}"
-    (click)="handleTriggerSelection()"
-  >
+  <div class="trigger" title="{{ trigger.name }}" (click)="handleTriggerSelection()">
     <div class="trigger-content">
       <i class="flogo-icon-trigger"></i>
     </div>
