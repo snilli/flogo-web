@@ -18,20 +18,13 @@
     fill: @color-trigger-bg-color;
   }
 
-  .lambda-icon {
-    display: none;
-    color: #1b4874;
-    height: 20px;
-  }
-
   .flogo-icon-trigger {
     display: block;
     color: #1b4874;
     font-size: 28px;
   }
 
-  .flogo-icon-trigger,
-  .lambda-icon {
+  .flogo-icon-trigger {
     margin: (18px - @trigger-icon-clickable-padding)
       (18px - @trigger-icon-clickable-padding);
   }
@@ -43,10 +36,6 @@
 
     .flogo-icon-trigger {
       display: none;
-    }
-
-    .lambda-icon {
-      display: block;
     }
   }
 }
@@ -72,8 +61,7 @@
   position: relative;
 
   &:hover {
-    .flogo-icon-trigger,
-    .lambda-icon {
+    .flogo-icon-trigger {
       color: #fff;
       &:hover {
         color: @pumpkin-orange;
@@ -130,10 +118,6 @@
 .trigger_block--selected {
   .trigger {
     .flogo-icon-trigger {
-      color: #fff;
-    }
-
-    .lambda-icon {
       color: #fff;
     }
   }
