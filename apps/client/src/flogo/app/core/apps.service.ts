@@ -27,7 +27,6 @@ import {
   AppResourceService,
   ContributionsService,
 } from '@flogo-web/lib-client/core';
-import { NotificationsService } from '@flogo-web/lib-client/notifications';
 import { AppResourcesStateService } from './app-resources-state.service';
 import { FlowGroup } from './flow-group.interface';
 import { TriggerGroup } from './trigger-group.interface';
@@ -72,7 +71,6 @@ export class AppDetailService {
     private appsApiService: AppsService,
     private resourceService: ResourceService,
     private triggersService: TriggersService,
-    private notificationsService: NotificationsService,
     private errorService: ErrorService,
     private appResourceApiService: AppResourceService,
     private contributionService: ContributionsService
