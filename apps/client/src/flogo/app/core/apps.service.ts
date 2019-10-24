@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, of, throwError, Observable, combineLatest } from 'rxjs';
+import {
+  BehaviorSubject,
+  from,
+  of,
+  throwError,
+  Observable,
+  combineLatest,
+  Subject,
+} from 'rxjs';
 import {
   tap,
   shareReplay,
@@ -19,7 +27,6 @@ import {
   AppResourceService,
   ContributionsService,
 } from '@flogo-web/lib-client/core';
-import { NotificationsService } from '@flogo-web/lib-client/notifications';
 import { AppResourcesStateService } from './app-resources-state.service';
 import { FlowGroup } from './flow-group.interface';
 import { TriggerGroup } from './trigger-group.interface';
@@ -32,10 +39,22 @@ interface NewResource {
   description?: string;
 }
 
+interface ActionCreationEvent {
+  type: 'action-creation';
+  action: NewResource;
+}
+
+interface ActionErrorEvent {
+  type: 'action-error';
+  error: Error;
+}
+
+type ActionEvents = ActionCreationEvent | ActionErrorEvent;
+
 @Injectable()
 export class AppDetailService {
   private appSource = new BehaviorSubject<App>(undefined);
-
+  private actionEventsSource = new Subject<ActionEvents>();
   public readonly groupsByTrigger$: Observable<FlowGroup[]>;
   public readonly groupsByResource$: Observable<TriggerGroup[]>;
   public readonly isEmpty$: Observable<boolean>;
@@ -45,12 +64,13 @@ export class AppDetailService {
     shareReplay(1)
   );
 
+  public actionEvent$ = this.actionEventsSource.asObservable();
+
   constructor(
     private resourcesState: AppResourcesStateService,
     private appsApiService: AppsService,
     private resourceService: ResourceService,
     private triggersService: TriggersService,
-    private notificationsService: NotificationsService,
     private errorService: ErrorService,
     private appResourceApiService: AppResourceService,
     private contributionService: ContributionsService
@@ -127,9 +147,7 @@ export class AppDetailService {
       )
     ).pipe(
       tap(() => {
-        this.notificationsService.success({
-          key: 'FLOWS:SUCCESS-MESSAGE-FLOW-CREATED',
-        });
+        this.actionEventsSource.next({ type: 'action-creation', action: newResource });
       }),
       shareReplay(1)
     );
@@ -140,10 +158,7 @@ export class AppDetailService {
       },
       err => {
         console.error(err);
-        this.notificationsService.error({
-          key: 'FLOWS:CREATE_FLOW_ERROR',
-          params: err,
-        });
+        this.actionEventsSource.next({ type: 'action-error', error: err });
       }
     );
 
