@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { App } from '@flogo-web/core';
 import { HttpUtilsService, AppsService } from '@flogo-web/lib-client/core';
 
-const UNTITLED_APP = 'Untitled App';
+const UNTITLED_APP = 'Untitled app';
 
 @Injectable()
 export class AppsApiServiceMock extends AppsService {

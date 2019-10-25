@@ -32,7 +32,6 @@ describe('AppsService', () => {
       null,
       null,
       null,
-      null,
       appResourceService,
       null
     );

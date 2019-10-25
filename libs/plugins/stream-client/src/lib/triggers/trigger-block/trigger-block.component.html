@@ -16,17 +16,9 @@
       </li>
     </ul>
   </div>
-  <div
-    class="trigger"
-    [class.--lambda]="isLambda"
-    title="{{ trigger.name }}"
-    (click)="handleTriggerSelection()"
-  >
+  <div class="trigger" title="{{ trigger.name }}" (click)="handleTriggerSelection()">
     <div class="trigger-content">
       <i class="flogo-icon-trigger"></i>
-      <svg class="lambda-icon" viewBox="0 0 200 278" xmlns="http://www.w3.org/2000/svg">
-        <use xlink:href="/assets/svg/lambda-icon.svg#layer1"></use>
-      </svg>
     </div>
   </div>
 </div>

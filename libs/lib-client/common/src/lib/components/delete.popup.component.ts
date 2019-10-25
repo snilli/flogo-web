@@ -27,13 +27,13 @@ const POPOVER_WIDTH = 344 + 10;
         <span>{{ i18nMessage | translate }}</span>
       </p>
       <button class="flogo-button--secondary" (click)="cancelDelete($event)">
-        {{ 'APP-LIST-POPUP:DELETE-CANCEL' | translate | uppercase }}
+        {{ 'APP-LIST-POPUP:DELETE-CANCEL' | translate }}
       </button>
       <button
         class="popup-btn-confirm flogo-button--default"
         (click)="confirmDelete($event)"
       >
-        {{ 'APP-LIST-POPUP:DELETE-CONFIRM' | translate | uppercase }}
+        {{ 'APP-LIST-POPUP:DELETE-CONFIRM' | translate }}
       </button>
     </div>
   `,

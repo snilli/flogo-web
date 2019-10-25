@@ -8,7 +8,7 @@ import { FileDownloaderService } from '../../file-downloader.service';
 import { HttpUtilsService } from '../http-utils.service';
 import { RestApiService } from '../rest-api.service';
 
-const UNTITLED_APP = 'Untitled App';
+const UNTITLED_APP = 'Untitled app';
 
 @Injectable()
 export class AppsService {

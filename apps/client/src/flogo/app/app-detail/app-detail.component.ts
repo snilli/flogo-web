@@ -10,6 +10,7 @@ import {
   OnChanges,
   SimpleChanges,
   OnInit,
+  Inject,
 } from '@angular/core';
 import { Observable, of as observableOf } from 'rxjs';
 import {
@@ -30,6 +31,7 @@ import {
   SanitizeService,
   ShimTriggerBuildService,
   SingleEmissionSubject,
+  ResourcePluginManifest,
 } from '@flogo-web/lib-client/core';
 import { LanguageService } from '@flogo-web/lib-client/language';
 import { ModalService } from '@flogo-web/lib-client/modal';
@@ -63,6 +65,7 @@ import {
 } from '../missing-trigger-confirmation';
 import { ResourceViewType, DeleteEvent } from '../resource-views';
 import { BUILD_OPTIONS } from './build-options';
+import { RESOURCE_PLUGINS_CONFIG } from '../../core';
 
 const MAX_SECONDS_TO_ASK_APP_NAME = 5;
 
@@ -107,6 +110,7 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
   private destroyed$ = SingleEmissionSubject.create();
 
   constructor(
+    @Inject(RESOURCE_PLUGINS_CONFIG) private resourcePlugins: ResourcePluginManifest[],
     public appDetailService: AppDetailService,
     private translate: LanguageService,
     private confirmationModalService: ConfirmationModalService,
@@ -148,6 +152,7 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
       .subscribe(() => {
         this.focusNameFieldIfNewApp();
       });
+    this.showActionEventNotifications();
   }
 
   ngOnDestroy() {
@@ -435,5 +440,30 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
     );
     const isNewApp = secondsSinceCreation <= MAX_SECONDS_TO_ASK_APP_NAME;
     this.nameUiState = { inEditMode: isNewApp, value: this.application.name };
+  }
+
+  private showActionEventNotifications() {
+    this.appDetailService.actionEvent$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(actionEvent => {
+        if (actionEvent.type === 'action-creation') {
+          const action = this.resourcePlugins.find(resource => {
+            return resource.type === actionEvent.action.type;
+          });
+          if (action) {
+            this.notificationsService.success({
+              key: 'APP-DETAIL:SUCCESS-MESSAGE-ACTION-CREATED',
+              params: {
+                actionType: action.label,
+              },
+            });
+          }
+        } else if (actionEvent.type === 'action-error') {
+          this.notificationsService.error({
+            key: 'APP-DETAIL:CREATE-ACTION-ERROR',
+            params: actionEvent.error,
+          });
+        }
+      });
   }
 }
