@@ -12,26 +12,22 @@ async function handleFileUpload(ctx) {
   const file = ctx.request.files;
   const fileName = Object.keys(file)[0];
   const filePath = file[fileName].path;
-  try {
-    await delPrevFilesIfAny(fileName);
-    ctx.response.status = 200;
-    ctx.body = {
-      data: {
-        filePath,
-        fileName,
-      },
-    };
-  } catch (error) {
-    ctx.response.status = 500;
-  }
+  const resourceId = ctx.request.body && ctx.request.body.resourceId;
+  await delPrevFilesIfAny(fileName, resourceId);
+  ctx.response.status = 200;
+  ctx.body = {
+    data: {
+      filePath,
+      fileName,
+    },
+  };
 }
 
-async function delPrevFilesIfAny(currentFileName) {
+async function delPrevFilesIfAny(currentFileName, resourceId) {
   const uploadsDir = config.uploadsPath;
   const files = await getFileNames(uploadsDir);
-  const resourceId = currentFileName.split('-')[0];
   const filesToDel = files.filter(
-    file => file.substr(0, file.indexOf('-')) === resourceId && file !== currentFileName
+    file => file.includes(resourceId) && file !== currentFileName
   );
   const deleteFile = promisify(fs.unlink);
   return Promise.all(

@@ -9,7 +9,7 @@ export async function removeSimulateData(ctx) {
   const uploadsDir = config.uploadsPath;
   const resourceId = ctx.params && ctx.params.resourceId;
   const files = await getFileNames(uploadsDir);
-  const fileName = files.find(file => file.substr(0, file.indexOf('-')) === resourceId);
+  const fileName = files.find(file => file.includes(resourceId));
   const filePath = path.join(uploadsDir, fileName);
   await deleteFile(filePath);
   ctx.status = 204;
