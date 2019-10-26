@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
+import { SelectModule } from '@flogo-web/lib-client/select';
 
 import { RunStreamComponent } from './run-stream.component';
 import { RunStreamButtonComponent } from './run-stream-button/run-stream-button.component';
@@ -10,7 +11,7 @@ import { ActionStatusComponent } from './run-stream-button/action-status.compone
 import { RunStreamService } from './run-stream.service';
 
 @NgModule({
-  imports: [FlogoSharedModule],
+  imports: [FlogoSharedModule, SelectModule],
   declarations: [
     RunStreamButtonComponent,
     RunStreamComponent,

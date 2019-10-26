@@ -26,11 +26,20 @@
       </span>
     </div>
     <div>
-      <!-- Todo: Remove this select element -->
-      <select [(ngModel)]="mappingType">
-        <option value="single-input">Single</option>
-        <option value="separate-by-column">Seperate By Column</option>
-      </select>
+      <flogo-select
+        [value]="mappingTypeSelection"
+        label="{{ 'STREAMS.SIMULATOR:MAPPING-LABEL' | translate }}"
+        (select)="onChangeMappingType($event)"
+      >
+        <flogo-select-option
+          [value]="InputMappingType.SingleInput"
+          label="{{ 'STREAMS.SIMULATOR:MAPPING-OPTION-SINGLE' | translate }}"
+        ></flogo-select-option>
+        <flogo-select-option
+          [value]="InputMappingType.SeparateByColumn"
+          label="{{ 'STREAMS.SIMULATOR:MAPPING-OPTION-SEPARATE' | translate }}"
+        ></flogo-select-option>
+      </flogo-select>
     </div>
   </div>
   <div>
@@ -39,7 +48,7 @@
       (click)="runSimulation()"
       class="flogo-button--default run-stream"
     >
-      Run stream
+      {{ 'STREAMS.SIMULATOR:RUN-STREAM' | translate }}
     </button>
   </div>
 </div>

@@ -11,8 +11,8 @@
     <flogo-stream-run-stream-button
       [resourceId]="streamState.id"
       [simulationConfig]="simulationConfig$ | async"
-      (startSimulationWithConfig)="startSimulation($event)"
       [disableRunStream]="disableRunStream"
+      (startSimulationWithConfig)="startSimulation($event)"
       header-role="right-block"
     ></flogo-stream-run-stream-button>
     <flogo-logs header-role="right-block"></flogo-logs>
