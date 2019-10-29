@@ -307,9 +307,10 @@ export const getInstalledActivities = createSelector(
         ref: schema.ref,
       }))
       .sort((activity1, activity2) => {
-        const isSubflow = activity1.ref === CONTRIB_REFS.SUBFLOW;
-        if (isSubflow) {
+        if (activity1.ref === CONTRIB_REFS.SUBFLOW) {
           return -1;
+        } else if (activity2.ref === CONTRIB_REFS.SUBFLOW) {
+          return 1;
         }
         return ('' + activity1.title).localeCompare(activity2.title);
       });
