@@ -6,7 +6,6 @@
   flex: 1;
   display: flex;
   align-items: flex-start;
-  z-index: 0;
   --diagram-secondary: #96a7f8;
   --add-button-width: 48px;
 }
@@ -16,15 +15,15 @@
   padding: 8px;
   margin-top: 24px;
   width: 100%;
-  &:hover{
+  z-index: 0;
+  &:hover {
     background-color:rgba(255, 255, 255, 0.3);
-    
-  }
-  &:hover{
     .visible-on-hover{
       opacity: 1;
     }
-   
+    .add-button:before {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -43,17 +42,21 @@ flogo-diagram {
     opacity: 0.5;
     width: 18px;
     height: 8px;
-    z-index: -1;
     top: 44%;
     left: -2px;
+    z-index: -1;
   }
-  &.add-button{
-    margin: 0 4px 0 48px;
-    min-width: 44px;
-    &:before {
-      width: 52px;
-      left: -48px;
-    }
+}
+.add-button{
+  margin: 0 4px 0 48px;
+  min-width: 44px;
+  &:before {
+    width: 52px;
+    left: -48px;
+    opacity: 0;
+  }
+  &.visible-on-hover:before {
+    opacity: 0.5;
   }
 }
 .tile-placeholders{
@@ -81,7 +84,6 @@ flogo-diagram {
     opacity: 0.5;
     width: 88px;
     height: 8px;
-    z-index: 0;
     top: 42%;
     right: 84px;
   }
