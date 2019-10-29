@@ -46,6 +46,7 @@ export class RunStreamComponent implements OnChanges, OnDestroy {
     const fileToUpload = files.item(0);
     const formData = new FormData();
     formData.append(`${this.resourceId}-${fileToUpload.name}`, fileToUpload);
+    formData.append('resourceId', this.resourceId);
     this.fileUploadStatus = FileStatus.Uploading;
     this.runStreamService
       .uploadSimulationDataFile(formData)
