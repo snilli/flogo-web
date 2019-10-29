@@ -17,6 +17,7 @@ export function generateStateFromResource(
     originalTriggers
   );
   const stages = (resource && resource.data && resource.data.stages) || [];
+  const simulation = resource && resource.data && resource.data.simulation;
   const items = makeStageItems(stages, schemaDefs);
   const graph = makeGraphNodes(stages);
   const metadata = resource.metadata;
@@ -28,6 +29,7 @@ export function generateStateFromResource(
     triggers,
     handlers,
     metadata,
+    simulation,
     schemas: schemaDefs,
     mainGraph: graph,
     mainItems: items,

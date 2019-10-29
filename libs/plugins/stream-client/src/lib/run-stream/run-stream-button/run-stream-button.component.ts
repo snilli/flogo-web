@@ -11,8 +11,10 @@ import {
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
-import { StreamProcessStatus } from '@flogo-web/core';
+
+import { StreamSimulation } from '@flogo-web/core';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
+
 import { SimulatorService } from '../../simulator';
 import { FileStatus } from '../../file-status';
 import { RunStreamService } from '../run-stream.service';
@@ -25,10 +27,13 @@ import { RunStreamService } from '../run-stream.service';
 export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
   @Input() resourceId: string;
   @Input() disableRunStream: boolean;
-  @Output() openSimulationPanel: EventEmitter<void> = new EventEmitter<void>();
+  @Input() simulationConfig: StreamSimulation.SimulationConfig;
+  @Output() startSimulationWithConfig: EventEmitter<
+    StreamSimulation.SimulationConfig
+  > = new EventEmitter();
 
   private ngOnDestroy$ = SingleEmissionSubject.create();
-  simulatorStatus$: Observable<StreamProcessStatus>;
+  simulatorStatus$: Observable<StreamSimulation.ProcessStatus>;
 
   showFileInput = false;
   isSimulatorRunning = false;
@@ -47,7 +52,11 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges({ disableRunStream }: SimpleChanges): void {
-    if (!disableRunStream.firstChange && disableRunStream.currentValue) {
+    if (
+      disableRunStream &&
+      !disableRunStream.firstChange &&
+      disableRunStream.currentValue
+    ) {
       this.showFileInput = false;
     }
   }
@@ -80,11 +89,13 @@ export class RunStreamButtonComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  startSimulation() {
-    this.simulatorService.start(this.resourceId, this.filePath);
+  startSimulation(inputMappingType) {
+    this.simulatorService.start(this.resourceId, this.filePath, inputMappingType);
     this.isSimulatorRunning = true;
     this.showFileInput = false;
-    this.openSimulationPanel.emit();
+    this.startSimulationWithConfig.emit({
+      inputMappingType,
+    });
   }
 
   stopSimulation() {

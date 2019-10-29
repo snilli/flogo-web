@@ -17,6 +17,15 @@
     "data": {
       "type": "object",
       "properties": {
+        "simulation": {
+          "type": "object",
+          "properties": {
+            "inputMappingType": {
+              "type": "string"
+            }
+          },
+          "default": {}
+        },
         "stages": {
           "type": "array",
           "items": {

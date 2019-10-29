@@ -1,3 +1,4 @@
+import { StreamSimulation } from '@flogo-web/core';
 import {
   BaseResourceState,
   Dictionary,
@@ -18,6 +19,7 @@ export interface FlogoStreamState extends BaseResourceState<Item> {
   currentSelection: null | CurrentSelection;
   triggerConfigure: TriggerConfigureState;
   stageConfigure: string | null;
+  simulation: StreamSimulation.SimulationConfig | null;
   isSimulatorPanelOpen: boolean;
 }
 
@@ -35,5 +37,6 @@ export const INITIAL_STREAM_STATE: FlogoStreamState = {
   triggerConfigure: null,
   metadata: null,
   stageConfigure: null,
+  simulation: null,
   isSimulatorPanelOpen: false,
 };

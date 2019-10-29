@@ -309,6 +309,10 @@
     "STAGE-CONFIGURATOR:STAGE-INPUTS": "Stage Inputs",
     "STAGE-CONFIGURATOR:STAGE-OUTPUTS": "Stage Outputs",
     "STAGE-CONFIGURATOR:AVAILABLE-DATA": "Available Data",
-    "STAGE-CONFIGURATOR:NAME-EXISTS": "This stage name has been used. Please try other name."
+    "STAGE-CONFIGURATOR:NAME-EXISTS": "This stage name has been used. Please try other name.",
+    "SIMULATOR:RUN-STREAM": "Run stream",
+    "SIMULATOR:MAPPING-LABEL": "Input format (from the first row of your csv)",
+    "SIMULATOR:MAPPING-OPTION-SINGLE": "Auto-generate one single input",
+    "SIMULATOR:MAPPING-OPTION-SEPARATE": "Separate inputs by columns"
   }
 }

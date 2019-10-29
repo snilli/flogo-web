@@ -1,13 +1,15 @@
 import got from 'got';
 import Websocket from 'ws';
-import { StreamProcessStatus } from '@flogo-web/core';
 import { StreamRunnerProcess } from '../engine/process/stream-runner-process';
+
+import { StreamSimulation } from '@flogo-web/core';
+import ProcessStatus = StreamSimulation.ProcessStatus;
 
 type ListenerFn = (data) => any;
 const NO_OP: ListenerFn = () => {};
 
 export class RemoteSimulatorProcess {
-  private _status: StreamProcessStatus = StreamProcessStatus.New;
+  private _status: ProcessStatus = ProcessStatus.New;
   private dataSubscription: (data) => any = NO_OP;
   private statusSubscription: (data) => any = NO_OP;
   private subprocess: StreamRunnerProcess;
@@ -29,35 +31,31 @@ export class RemoteSimulatorProcess {
   }
 
   async start() {
-    return this.callRestControl('start', StreamProcessStatus.Running);
+    return this.callRestControl('start', ProcessStatus.Running);
   }
 
   async restart() {
-    return this.callRestControl('restart', StreamProcessStatus.Running);
+    return this.callRestControl('restart', ProcessStatus.Running);
   }
 
   async pause() {
-    return this.callRestControl('pause', StreamProcessStatus.Paused);
+    return this.callRestControl('pause', ProcessStatus.Paused);
   }
 
   async resume() {
-    return this.callRestControl('resume', StreamProcessStatus.Running);
+    return this.callRestControl('resume', ProcessStatus.Running);
   }
 
   setup(subprocess: StreamRunnerProcess) {
     this.subprocess = subprocess;
     this.updateStatus(
-      this.subprocess.isRunning()
-        ? StreamProcessStatus.Running
-        : StreamProcessStatus.Closed
+      this.subprocess.isRunning() ? ProcessStatus.Running : ProcessStatus.Closed
     );
     let isSubprocessClosed = false;
     let retries = 0;
     this.subprocess.getCurrentChildProcess().whenClosed.then(exitCode => {
       isSubprocessClosed = true;
-      this.updateStatus(
-        exitCode === 0 ? StreamProcessStatus.Closed : StreamProcessStatus.Errored
-      );
+      this.updateStatus(exitCode === 0 ? ProcessStatus.Closed : ProcessStatus.Errored);
     });
     const wsConnect = () => {
       if (isSubprocessClosed || this.subprocess !== subprocess) {
@@ -90,7 +88,7 @@ export class RemoteSimulatorProcess {
     if (this.subprocess && this.subprocess.isRunning()) {
       this.subprocess.stop();
     }
-    this.updateStatus(StreamProcessStatus.Closed);
+    this.updateStatus(ProcessStatus.Closed);
 
     if (this.ws && [Websocket.OPEN, Websocket.CONNECTING].includes(this.ws.readyState)) {
       try {
@@ -112,14 +110,14 @@ export class RemoteSimulatorProcess {
     this.statusSubscription = fn;
   }
 
-  private updateStatus(newStatus: StreamProcessStatus) {
+  private updateStatus(newStatus: ProcessStatus) {
     this._status = newStatus;
     if (this.statusSubscription) {
       this.statusSubscription(this._status);
     }
   }
 
-  private callRestControl(action: string, statusIfSuccess: StreamProcessStatus) {
+  private callRestControl(action: string, statusIfSuccess: ProcessStatus) {
     this.throwIfProcessUnavailable(action);
     return got.post(`${this.config.restControlUrl}/${action}`).then(r => {
       this.updateStatus(statusIfSuccess);

@@ -12,6 +12,7 @@ export class AppComponent {
     { label: 'Modals', path: ['/modals'] },
     { label: 'Context Panel', path: ['/context-panel'] },
     { label: 'Search', path: ['/search'] },
+    { label: 'Forms', path: ['/forms'] },
   ];
 }
 

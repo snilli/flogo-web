@@ -99,6 +99,11 @@ export function streamReducer(
         ...state,
         isSimulatorPanelOpen: action.payload.isSimulatorOpen,
       };
+    case StreamActionType.SimulatorConfigurationChange:
+      return {
+        ...state,
+        simulation: action.payload,
+      };
   }
   return state;
 }

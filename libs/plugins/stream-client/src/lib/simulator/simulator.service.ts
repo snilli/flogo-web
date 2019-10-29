@@ -23,7 +23,7 @@ import {
 import { isObject, isArray, get, isEmpty } from 'lodash';
 
 import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { StreamProcessStatus } from '@flogo-web/core';
+import { StreamSimulation } from '@flogo-web/core';
 import { HOSTNAME, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 
 export type SimulationActionType = 'start' | 'restart' | 'resume' | 'pause' | 'stop';
@@ -78,7 +78,7 @@ export enum PipelineEventType {
 export class SimulatorService implements OnDestroy {
   private readonly socket: SocketIOClient.Socket;
   public readonly rawEvents$: Observable<PipelineEvent>;
-  public readonly status$: Observable<StreamProcessStatus>;
+  public readonly status$: Observable<StreamSimulation.ProcessStatus>;
   public readonly dataEvents$: Observable<PipelineEvent>;
   public readonly start$ = new Subject<void>();
   private readonly currentCacheSrc = new BehaviorSubject<DataCache>({});
@@ -124,8 +124,16 @@ export class SimulatorService implements OnDestroy {
     this.socket.disconnect();
   }
 
-  start(pipelineId: string, simulationDataFile: string) {
-    this.emitAction('start', { pipelineId, simulationDataFile });
+  start(
+    pipelineId: string,
+    simulationDataFile: string,
+    mappingsType: StreamSimulation.InputMappingType
+  ) {
+    this.emitAction('start', {
+      pipelineId,
+      simulationDataFile,
+      mappingsType,
+    });
     this.start$.next();
   }
 

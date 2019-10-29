@@ -12,6 +12,7 @@
   [resourceId]="resourceId"
   [fileName]="fileName"
   [fileUploadStatus]="fileUploadStatus"
+  [mappingType]="simulationConfig?.inputMappingType"
   (setFilePath)="setFilePath($event)"
-  (startSimulation)="startSimulation()"
+  (startSimulation)="startSimulation($event)"
 ></flogo-stream-run-stream>
