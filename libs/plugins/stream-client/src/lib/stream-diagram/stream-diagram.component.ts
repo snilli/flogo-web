@@ -99,15 +99,9 @@ export class StreamDiagramComponent implements OnDestroy {
   }
   private updateAvailableSlots(streamTiles) {
     this.availableSlots = MAX_TILES - streamTiles.length;
-    // substract the slot for the add button
-    const visiblePlaceholdersCount = this.availableSlots - 1;
-    if (
-      visiblePlaceholdersCount > 0 &&
-      this.placeholders.length !== visiblePlaceholdersCount
-    ) {
+    if (this.availableSlots) {
+      const visiblePlaceholdersCount = this.availableSlots - 1;
       this.placeholders = new Array(visiblePlaceholdersCount);
-    } else {
-      this.placeholders = [];
     }
   }
 }
