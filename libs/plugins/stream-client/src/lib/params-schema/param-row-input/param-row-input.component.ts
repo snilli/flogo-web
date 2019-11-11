@@ -27,6 +27,7 @@ export class ParamRowInputComponent implements OnChanges {
   @Output() unselectGroupBy: EventEmitter<void> = new EventEmitter();
   showGroupByBtn = true;
   selectedAsGroupBy = false;
+  isOpen: boolean;
 
   constructor() {}
 
@@ -61,6 +62,7 @@ export class ParamRowInputComponent implements OnChanges {
 
   selectType(type) {
     this.paramGroup.patchValue({ type });
+    this.isOpen = false;
   }
 
   updateGroupByParam() {
@@ -78,5 +80,13 @@ export class ParamRowInputComponent implements OnChanges {
         this.selectGroupBy.emit(param.value);
       }
     }
+  }
+
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
   }
 }

@@ -15,6 +15,7 @@ export class ParamRowComponent {
   @Input() dropdownOptions;
   @Input() inputIndex;
   @Output() removeParam: EventEmitter<number> = new EventEmitter<number>();
+  isOpen: boolean;
 
   onRemoveParam() {
     this.removeParam.emit(this.inputIndex);
@@ -22,5 +23,14 @@ export class ParamRowComponent {
 
   selectType(type) {
     this.paramGroup.patchValue({ type });
+    this.isOpen = false;
+  }
+
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
   }
 }

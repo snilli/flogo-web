@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -15,12 +15,21 @@ export class ParamRowOutputComponent {
   @Input() dropdownOptions;
   @Input() inputIndex;
   @Output() removeParam: EventEmitter<number> = new EventEmitter<number>();
-
+  isOpen: boolean;
   onRemoveParam() {
     this.removeParam.emit(this.inputIndex);
   }
 
   selectType(type) {
     this.paramGroup.patchValue({ type });
+    this.isOpen = false;
+  }
+
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
   }
 }
