@@ -26,10 +26,10 @@ ENV FLOGO_LIB_VERSION ${CORE_VERSION}
 ENV BUILD_DIR /tmp/build
 ENV FLOGO_WEB_LOCALDIR ${BUILD_DIR}/dist/local
 ENV GO111MODULE on
-RUN go get -u github.com/project-flogo/cli/cmd/flogo@${CLI_VERSION} \
-    && mkdir -p $GOPATH/src/github.com/project-flogo \
-    && cd $GOPATH/src/github.com/project-flogo \
-    && git clone https://github.com/project-flogo/cli.git \
+RUN GO111MODULE=off go get -u -v github.com/project-flogo/cli/... \
+#    && mkdir -p $GOPATH/src/github.com/project-flogo \
+#    && cd $GOPATH/src/github.com/project-flogo \
+#    && git clone https://github.com/project-flogo/cli.git \
     && flogo --version
 COPY / ${BUILD_DIR}/
 WORKDIR ${BUILD_DIR}
