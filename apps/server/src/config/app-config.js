@@ -47,6 +47,9 @@ const config = {
   defaultFlogoDescriptorPath:
     process.env.FLOGO_WEB_DEFAULT_DESCRIPTOR ||
     path.join(rootPath, 'config', 'default-flogo.json'),
+  defaultFlogoEngineConfigPath:
+    process.env.FLOGO_WEB_DEFAULT_ENGINE_CONFIG ||
+    path.join(rootPath, 'config', 'test-engine.config.json'),
   libVersion,
   app: {
     basePath: '/v1/api',

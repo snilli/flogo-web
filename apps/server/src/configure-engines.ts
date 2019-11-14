@@ -6,7 +6,12 @@ import { AppsService } from './modules/apps';
 import { initDb, flushAndCloseDb } from './common/db';
 
 initDb({ autosave: false })
-  .then(() => getInitializedEngine(config.defaultEngine.path, { forceCreate: false }))
+  .then(() =>
+    getInitializedEngine(config.defaultEngine.path, {
+      forceCreate: false,
+      bundleEngineConfig: true,
+    })
+  )
   .then(engine => syncTasks(engine))
   .then(() => {
     console.log('[log] init test engine done');
