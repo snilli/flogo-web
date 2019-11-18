@@ -1,12 +1,9 @@
 import * as path from 'path';
 
-import { FlogoError } from '@flogo-web/lib-server/core';
-
-import { createFolder as ensureDir, copyFile, fileExists } from '../../common/utils/file';
+import { createFolder as ensureDir } from '../../common/utils/file';
 
 import { copyBinaryToDestination, removeDir } from './file-utils';
 import { processHost } from '../../common/utils/process';
-import { ERROR_TYPES } from '../../common/errors';
 import { buildAndCopyBinary } from './build/binary';
 import { buildPlugin } from './build/plugin';
 
@@ -18,7 +15,6 @@ import { TYPE_BUILD, TYPE_TEST, BuildOptions, Options } from './options';
 
 const DIR_TEST_BIN = 'bin-test';
 const DIR_BUILD_BIN = 'bin-build';
-const FILE_ENGINE_CONFIG = 'engine.json';
 
 export interface EngineProjectDetails {
   projectName: string;
@@ -81,15 +77,6 @@ class Engine {
         console.timeEnd('engine:create');
         return result;
       });
-  }
-
-  updateEngineConfig(configPath) {
-    if (!fileExists(configPath)) {
-      throw new FlogoError('Config file not found', {
-        type: ERROR_TYPES.COMMON.NOT_FOUND,
-      });
-    }
-    return copyFile(configPath, path.join(this.path, FILE_ENGINE_CONFIG));
   }
 
   remove() {
