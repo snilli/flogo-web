@@ -1,6 +1,0 @@
-{
-  "type": "flogo:engine",
-  "imports": [
-    "github.com/project-flogo/stream/service/telemetry"
-  ]
-}

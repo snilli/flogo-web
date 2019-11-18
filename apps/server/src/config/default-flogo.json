@@ -3,7 +3,9 @@
   "type": "flogo:app",
   "version": "0.0.1",
   "description": "Empty flogo app",
-  "imports": [],
+  "imports": [
+    "github.com/project-flogo/stream/service/telemetry"
+  ],
   "triggers": [],
   "resources": []
 }
