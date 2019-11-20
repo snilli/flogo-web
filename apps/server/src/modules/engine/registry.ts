@@ -84,7 +84,24 @@ export function getContribInstallationController(
   });
 }
 
-async function createEngine(engine, opts) {
+/**
+ * Create engine in the local engines folder with the application json provided through defaultFlogoDescriptorPath
+ *
+ * @param engine {Engine} the engine details
+ * @param opts {object} options required while creating the engine
+ * @param opts.defaultFlogoDescriptorPath {string} Path to the application descriptor
+ * @param opts.useContribBundle {boolean} Whether to install the default contributions
+ * @param opts.useEngineConfig {boolean} Whether to copy default engine configuration file to the engine's root folder
+ * @returns {boolean | Error}
+ */
+async function createEngine(
+  engine,
+  opts: {
+    defaultFlogoDescriptorPath: string;
+    useContribBundle: boolean;
+    useEngineConfig: boolean;
+  }
+) {
   logger.warn('Engine does not exist. Creating...');
   const { defaultFlogoDescriptorPath, useContribBundle, useEngineConfig } = opts;
   try {
