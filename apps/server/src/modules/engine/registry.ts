@@ -5,16 +5,21 @@ import { config } from '../../config/app-config';
 import { ContribInstallController } from '../contrib-install-controller';
 import { installResourceTypes } from './install-resource-types';
 import { EngineProcess } from './process/engine-process';
-import { tempInstallSimulatorDeps } from './temp-install-simulator-deps';
 
 const CONTRIB_INSTALLER = 'contribInstaller';
 const engineRegistry: { [key: string]: any } = {};
 let defaultResourceTypes: string[] = [];
 
 export function setDefaultResourceTypes(resourceTypes: string[]) {
-  defaultResourceTypes = [...resourceTypes].filter(
-    ref => ref !== __DEV_RESOURCE_REF_PLACEHOLDER
-  );
+  defaultResourceTypes = [...resourceTypes]
+    .filter(ref => ref !== __DEV_RESOURCE_REF_PLACEHOLDER)
+    .map(ref => {
+      // todo: Remove the following temporary fix for broken `flogo build` command caused by stream v0.2.0
+      if (ref === 'github.com/project-flogo/stream') {
+        return 'github.com/project-flogo/stream@master';
+      }
+      return ref;
+    });
 }
 
 /**
@@ -85,7 +90,6 @@ async function createEngine(engine, defaultFlogoDescriptorPath, skipBundleInstal
     logger.info(`Will install contrib bundle at ${contribBundlePath}`);
     await installResourceTypes(engine, defaultResourceTypes);
     await engine.installContribBundle(contribBundlePath);
-    await tempInstallSimulatorDeps(engine.getProjectDetails());
   } catch (e) {
     logger.error('Found error while initializing engine:');
     logger.error(e);
