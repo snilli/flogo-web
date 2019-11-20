@@ -9,7 +9,7 @@ initDb({ autosave: false })
   .then(() =>
     getInitializedEngine(config.defaultEngine.path, {
       forceCreate: false,
-      bundleEngineConfig: true,
+      useEngineConfig: true,
     })
   )
   .then(engine => syncTasks(engine))

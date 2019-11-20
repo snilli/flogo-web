@@ -35,7 +35,7 @@ export async function getInitializedEngine(
     forceCreate?: boolean;
     noLib?: boolean;
     libVersion?: string;
-    bundleEngineConfig?: boolean;
+    useEngineConfig?: boolean;
   } = {}
 ): Promise<Engine> {
   if (engineRegistry[enginePath] && !opts.forceCreate) {
@@ -86,17 +86,16 @@ export function getContribInstallationController(
 
 async function createEngine(engine, opts) {
   logger.warn('Engine does not exist. Creating...');
-  const { defaultFlogoDescriptorPath, skipBundleInstall, bundleEngineConfig } = opts;
+  const { defaultFlogoDescriptorPath, useContribBundle, useEngineConfig } = opts;
   try {
     await engine.create(defaultFlogoDescriptorPath);
-    if (skipBundleInstall) {
-      return true;
+    if (useContribBundle) {
+      const contribBundlePath = config.defaultEngine.defaultContribBundle;
+      logger.info(`Will install contrib bundle at ${contribBundlePath}`);
+      await installResourceTypes(engine, defaultResourceTypes);
+      await engine.installContribBundle(contribBundlePath);
     }
-    const contribBundlePath = config.defaultEngine.defaultContribBundle;
-    logger.info(`Will install contrib bundle at ${contribBundlePath}`);
-    await installResourceTypes(engine, defaultResourceTypes);
-    await engine.installContribBundle(contribBundlePath);
-    if (bundleEngineConfig) {
+    if (useEngineConfig) {
       await engine.updateEngineConfig(config.defaultFlogoEngineConfigPath);
     }
   } catch (e) {
@@ -115,7 +114,7 @@ async function createEngine(engine, opts) {
  * @param options.forceCreate {boolean} whether to create an engine irrespective of it's existence
  * @param options.defaultFlogoDescriptorPath {string} path to the default flogo application JSON
  * @param options.skipContribLoad {boolean} whether to refresh the list of contributions installed in the engine
- * @param options.bundleEngineConfig {boolean} whether to copy the engine configuration file to the flogo application folder
+ * @param options.useEngineConfig {boolean} whether to copy the engine configuration file to the flogo application folder
  * @returns {*}
  */
 export function initEngine(engine, options) {
@@ -124,7 +123,7 @@ export function initEngine(engine, options) {
     (options && options.defaultFlogoDescriptorPath) || config.defaultFlogoDescriptorPath;
   const skipContribLoad = options && options.skipContribLoad;
   const skipBundleInstall = options && options.skipBundleInstall;
-  const bundleEngineConfig = options && options.bundleEngineConfig;
+  const useEngineConfig = options && options.useEngineConfig;
 
   return engine
     .exists()
@@ -138,8 +137,8 @@ export function initEngine(engine, options) {
       if (shouldCreateNewEngine) {
         return createEngine(engine, {
           defaultFlogoDescriptorPath,
-          skipBundleInstall,
-          bundleEngineConfig,
+          useContribBundle: !skipBundleInstall,
+          useEngineConfig,
         });
       }
       return true;
