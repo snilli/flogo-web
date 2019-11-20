@@ -31,7 +31,12 @@ export function setDefaultResourceTypes(resourceTypes: string[]) {
  */
 export async function getInitializedEngine(
   enginePath,
-  opts: { forceCreate?: boolean; noLib?: boolean; libVersion?: string } = {}
+  opts: {
+    forceCreate?: boolean;
+    noLib?: boolean;
+    libVersion?: string;
+    useEngineConfig?: boolean;
+  } = {}
 ): Promise<Engine> {
   if (engineRegistry[enginePath] && !opts.forceCreate) {
     return engineRegistry[enginePath];
@@ -79,17 +84,37 @@ export function getContribInstallationController(
   });
 }
 
-async function createEngine(engine, defaultFlogoDescriptorPath, skipBundleInstall) {
+/**
+ * Create engine in the local engines folder with the application json provided through defaultFlogoDescriptorPath
+ *
+ * @param engine {Engine} the engine details
+ * @param opts {object} options required while creating the engine
+ * @param opts.defaultFlogoDescriptorPath {string} Path to the application descriptor
+ * @param opts.useContribBundle {boolean} Whether to install the default contributions
+ * @param opts.useEngineConfig {boolean} Whether to copy default engine configuration file to the engine's root folder
+ * @returns {boolean | Error}
+ */
+async function createEngine(
+  engine,
+  opts: {
+    defaultFlogoDescriptorPath: string;
+    useContribBundle: boolean;
+    useEngineConfig: boolean;
+  }
+) {
   logger.warn('Engine does not exist. Creating...');
+  const { defaultFlogoDescriptorPath, useContribBundle, useEngineConfig } = opts;
   try {
     await engine.create(defaultFlogoDescriptorPath);
-    if (skipBundleInstall) {
-      return true;
+    if (useContribBundle) {
+      const contribBundlePath = config.defaultEngine.defaultContribBundle;
+      logger.info(`Will install contrib bundle at ${contribBundlePath}`);
+      await installResourceTypes(engine, defaultResourceTypes);
+      await engine.installContribBundle(contribBundlePath);
     }
-    const contribBundlePath = config.defaultEngine.defaultContribBundle;
-    logger.info(`Will install contrib bundle at ${contribBundlePath}`);
-    await installResourceTypes(engine, defaultResourceTypes);
-    await engine.installContribBundle(contribBundlePath);
+    if (useEngineConfig) {
+      await engine.updateEngineConfig(config.defaultFlogoEngineConfigPath);
+    }
   } catch (e) {
     logger.error('Found error while initializing engine:');
     logger.error(e);
@@ -106,6 +131,7 @@ async function createEngine(engine, defaultFlogoDescriptorPath, skipBundleInstal
  * @param options.forceCreate {boolean} whether to create an engine irrespective of it's existence
  * @param options.defaultFlogoDescriptorPath {string} path to the default flogo application JSON
  * @param options.skipContribLoad {boolean} whether to refresh the list of contributions installed in the engine
+ * @param options.useEngineConfig {boolean} whether to copy the engine configuration file to the flogo application folder
  * @returns {*}
  */
 export function initEngine(engine, options) {
@@ -114,6 +140,7 @@ export function initEngine(engine, options) {
     (options && options.defaultFlogoDescriptorPath) || config.defaultFlogoDescriptorPath;
   const skipContribLoad = options && options.skipContribLoad;
   const skipBundleInstall = options && options.skipBundleInstall;
+  const useEngineConfig = options && options.useEngineConfig;
 
   return engine
     .exists()
@@ -125,7 +152,11 @@ export function initEngine(engine, options) {
     })
     .then(shouldCreateNewEngine => {
       if (shouldCreateNewEngine) {
-        return createEngine(engine, defaultFlogoDescriptorPath, skipBundleInstall);
+        return createEngine(engine, {
+          defaultFlogoDescriptorPath,
+          useContribBundle: !skipBundleInstall,
+          useEngineConfig,
+        });
       }
       return true;
     })
