@@ -225,4 +225,18 @@ describe('parse', function() {
       expect(parse(`{ "a": 'b' }`)).not.toHaveBeenSuccessfullyParsed();
     });
   });
+
+  it('parser bracket notation property accessing', () => {
+    expect(parse(`$.flow["prop1"]`)).toHaveBeenSuccessfullyParsed();
+    expect(parse(`$.flow['prop2']`)).toHaveBeenSuccessfullyParsed();
+    expect(parse(`{
+      "prop1" : "=obj['prop1']",
+      "prop2" : "=array[7]"
+    }`)).toHaveBeenSuccessfullyParsed();
+    expect(parse(`{
+    "mapping": {
+      "@foreach($activity[xml2json_2].jsonObject.MarketArticle,i)": { "marketArea": "=$loop[i][\\"-marketArea\\"]" }
+      }
+    }`)).toHaveBeenSuccessfullyParsed();
+  })
 });

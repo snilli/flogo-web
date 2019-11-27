@@ -113,6 +113,7 @@ export class MappingParser extends Parser {
     this.OR([
       { ALT: () => this.SUBRULE(this.selector) },
       { ALT: () => this.SUBRULE(this.index) },
+      { ALT: () => this.SUBRULE(this.propAccessor) },
       { ALT: () => this.SUBRULE(this.argumentList) },
     ]);
   });
@@ -138,7 +139,11 @@ export class MappingParser extends Parser {
       GATE: () => !tokenMatcher(this.LA(2), Token.NumberLiteral),
       DEF: () => {
         this.CONSUME(Token.LSquare);
-        this.CONSUME(Token.ResolverIdentifier);
+        this.OR([
+          { ALT : () => this.CONSUME(Token.ResolverIdentifier)},
+          { ALT : () => this.CONSUME(Token.NestedDblQuoteStringLiteral)},
+          { ALT : () => this.CONSUME(Token.SingleQuoteStringLiteral)},
+        ]);
         this.CONSUME(Token.RSquare);
       },
     });
@@ -152,6 +157,12 @@ export class MappingParser extends Parser {
   protected index = this.RULE('index', () => {
     this.CONSUME(Token.LSquare);
     this.CONSUME(Token.NumberLiteral);
+    this.CONSUME(Token.RSquare);
+  });
+
+  protected propAccessor = this.RULE('propAccessor', () => {
+    this.CONSUME(Token.LSquare);
+    this.CONSUME(Token.StringLiteral);
     this.CONSUME(Token.RSquare);
   });
 
