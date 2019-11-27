@@ -117,7 +117,11 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
 
     primaryExprTail(
       ctx
-    ): ExprNodes.SelectorExpr | ExprNodes.IndexExpr | ExprNodes.PropAccessor | ExprNodes.CallExpr {
+    ):
+      | ExprNodes.SelectorExpr
+      | ExprNodes.IndexExpr
+      | ExprNodes.PropAccessor
+      | ExprNodes.CallExpr {
       if (ctx.selector) {
         return <ExprNodes.SelectorExpr>this.visit(ctx.selector);
       } else if (ctx.index) {
