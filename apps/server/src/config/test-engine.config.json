@@ -1,6 +1,22 @@
 {
   "type": "flogo:engine",
   "imports": [
+    "github.com/project-flogo/services/flow-state/store/mem",
     "github.com/project-flogo/stream/service/telemetry"
-  ]
+  ],
+  "actionSettings": {
+  "github.com/project-flogo/flow": {
+    "stepRecordingMode": "full",
+    "snapshotRecordingMode": "off",
+    "enableExternalFlows": true
+  }
+},
+  "services": [
+    {"name": "flowTester",
+      "ref": "github.com/project-flogo/flow/tester",
+      "enabled": true,
+      "settings": {
+        "port": "8080"
+      }}
+    ]
 }

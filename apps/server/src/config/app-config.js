@@ -161,7 +161,8 @@ const config = {
     protocol: 'http',
     host: FLOW_SERVICE_HOST,
     port: '9090',
-    testPath: 'ping',
+    basePath: '/v1',
+    testPath: '/v1/ping',
   },
   webServer: {
     protocol: 'http',
