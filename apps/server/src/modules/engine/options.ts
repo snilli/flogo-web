@@ -23,6 +23,10 @@ export interface CliOptions {
    * Will map to 'shim' flag of flogo cli
    */
   shimTriggerId?: string;
+  /**
+   * Build the app with sync option. defaults to false
+   */
+  syncImports?: boolean;
 }
 
 export type BuildOptions = CliOptions & {

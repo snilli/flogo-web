@@ -6,7 +6,7 @@ export async function boostrapEngine(enginePath: string, engineProcess: EnginePr
     forceCreate: !!process.env['FLOGO_WEB_ENGINE_FORCE_CREATION'],
     useEngineConfig: true,
   });
-  await engine.build();
+  await engine.build({ syncImports: true });
   // engineProcess.start(engine.getProjectDetails());
   await syncTasks(engine);
 }

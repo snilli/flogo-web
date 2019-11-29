@@ -67,6 +67,10 @@ function _translateOptsToCommandArgs(opts: BuildOptions) {
     args.push('-e');
   }
 
+  if (opts.syncImports) {
+    args.push('-s');
+  }
+
   if (opts.file) {
     args.push('-f', opts.file);
   }

@@ -113,6 +113,7 @@ class Engine {
    *
    * @param options
    * @param {boolean} options.copyFlogoDescriptor
+   * @param {boolean} options.syncImports
    * @return {Promise.<TResult>|*}
    * @deprecated
    */
