@@ -141,8 +141,7 @@ export class MappingParser extends Parser {
         this.CONSUME(Token.LSquare);
         this.OR([
           { ALT: () => this.CONSUME(Token.ResolverIdentifier) },
-          { ALT: () => this.CONSUME(Token.NestedDblQuoteStringLiteral) },
-          { ALT: () => this.CONSUME(Token.SingleQuoteStringLiteral) },
+          { ALT: () => this.CONSUME(Token.StringLiteral) },
         ]);
         this.CONSUME(Token.RSquare);
       },

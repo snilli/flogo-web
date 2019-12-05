@@ -229,6 +229,7 @@ describe('parse', function() {
   it('parser bracket notation property accessing', () => {
     expect(parse(`$.flow["prop1"]`)).toHaveBeenSuccessfullyParsed();
     expect(parse(`$.flow['prop2']`)).toHaveBeenSuccessfullyParsed();
+    expect(parse(`$activity["prop"]`)).toHaveBeenSuccessfullyParsed();
     expect(
       parse(`{
       "prop1" : "=obj['prop1']",
@@ -242,5 +243,10 @@ describe('parse', function() {
       }
     }`)
     ).toHaveBeenSuccessfullyParsed();
+  });
+
+  it('parses expressions with back quote string', () => {
+    expect(parse('$.flow[`prop2`]')).toHaveBeenSuccessfullyParsed();
+    expect(parse(`string.concat(\`a\`, 'b', "c")`)).toHaveBeenSuccessfullyParsed();
   });
 });

@@ -173,6 +173,9 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
       if (ctx.ResolverIdentifier) {
         const [selector] = ctx.ResolverIdentifier;
         resolverSelector.selector = selector;
+      } else if (ctx.StringLiteral) {
+        const [selector] = ctx.StringLiteral;
+        resolverSelector.selector = selector;
       }
       return resolverSelector;
     }
@@ -196,7 +199,7 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
     propAccessor(ctx): ExprNodes.PropAccessor {
       return {
         type: AstNodeType.PropAccessor,
-        x: null,
+        x: null, //value of x will set by the parent while creating the expression hierarchy
         value: ctx.StringLiteral[0].image,
       };
     }
