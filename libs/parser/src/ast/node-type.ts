@@ -16,4 +16,5 @@ export enum AstNodeType {
   JsonProperty = 'jsonProperty',
   JsonLiteral = 'jsonLiteral',
   StringTemplate = 'stringTemplate',
+  PropAccessor = 'propAccessor',
 }

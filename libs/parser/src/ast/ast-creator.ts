@@ -117,11 +117,17 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
 
     primaryExprTail(
       ctx
-    ): ExprNodes.SelectorExpr | ExprNodes.IndexExpr | ExprNodes.CallExpr {
+    ):
+      | ExprNodes.SelectorExpr
+      | ExprNodes.IndexExpr
+      | ExprNodes.PropAccessor
+      | ExprNodes.CallExpr {
       if (ctx.selector) {
         return <ExprNodes.SelectorExpr>this.visit(ctx.selector);
       } else if (ctx.index) {
         return <ExprNodes.IndexExpr>this.visit(ctx.index);
+      } else if (ctx.propAccessor) {
+        return <ExprNodes.PropAccessor>this.visit(ctx.propAccessor);
       } else {
         return <ExprNodes.CallExpr>this.visit(ctx.argumentList);
       }
@@ -167,6 +173,9 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
       if (ctx.ResolverIdentifier) {
         const [selector] = ctx.ResolverIdentifier;
         resolverSelector.selector = selector;
+      } else if (ctx.StringLiteral) {
+        const [selector] = ctx.StringLiteral;
+        resolverSelector.selector = selector;
       }
       return resolverSelector;
     }
@@ -184,6 +193,14 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
         type: AstNodeType.IndexExpr,
         x: null,
         index: parseInt(ctx.NumberLiteral[0].image, 10),
+      };
+    }
+
+    propAccessor(ctx): ExprNodes.PropAccessor {
+      return {
+        type: AstNodeType.PropAccessor,
+        x: null, //value of x will set by the parent while creating the expression hierarchy
+        value: ctx.StringLiteral[0].image,
       };
     }
 

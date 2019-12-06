@@ -115,6 +115,13 @@ export const NestedDblQuoteStringLiteral = createToken({
   pattern: /\\"(?:[^\\\\"]|\\\\(?:[bfnrtv"\\/]|u[0-9a-fA-F]{4}))*\\"/,
 });
 
+export const BackQuoteStringLiteral = createToken({
+  name: 'BackQuoteStringLiteral',
+  label: 'StringLiteral',
+  categories: StringLiteral,
+  pattern: /`(?:[^\\`]|\\(?:[bfnrtv`\\/]|u[0-9a-fA-F]{4}))*`/,
+});
+
 function matchStringTemplateOpen(text: string, startOffset?: number, tokens?: IToken[]) {
   if (tokens.length <= 2) {
     return null;

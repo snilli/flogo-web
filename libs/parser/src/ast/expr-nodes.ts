@@ -49,6 +49,12 @@ export interface IndexExpr extends Node {
   index: number;
 }
 
+export interface PropAccessor extends Node {
+  type: AstNodeType.PropAccessor;
+  x: Expr;
+  value: string;
+}
+
 export interface CallExpr extends Node {
   type: AstNodeType.CallExpr;
   fun: Expr;

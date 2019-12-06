@@ -28,6 +28,7 @@ export const makeLiteralNode = (
 function parseImage(tokenName: string, image: string) {
   switch (tokenName) {
     case 'SingleQuoteStringLiteral':
+    case 'BackQuoteStringLiteral':
       return image.slice(1, -1);
     case 'NestedDblQuoteStringLiteral':
       return image.slice(2, -2);
