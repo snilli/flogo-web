@@ -8,6 +8,7 @@ import {
   SimulatableAppGenerator,
   StreamSimulator,
 } from '../../modules/simulator';
+import { ResourceExporter } from '../../modules/transfer/export/resource-exporter';
 
 export const EngineModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(TOKENS.EngineProvider).toProvider<Engine>(() => {
@@ -21,4 +22,5 @@ export const EngineModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(SimulatableAppGenerator).toSelf();
   bind(SimulationPreparer).toSelf();
   bind(StreamSimulator).toSelf();
+  bind(ResourceExporter).toSelf();
 });

@@ -11,7 +11,6 @@ import {
 } from '../../modules/apps';
 import { AllContribsService } from '../../modules/all-contribs';
 import { ContributionManager } from '../../modules/contributions';
-import { ResourceExporter } from '../../modules/transfer/export/resource-exporter';
 
 export const ModelsModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(ResourceService).toSelf();
@@ -21,6 +20,5 @@ export const ModelsModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(AppTriggersService).toSelf();
   bind(HandlersService).toSelf();
   bind(AllContribsService).toSelf();
-  bind(ResourceExporter).toSelf();
   bind(TOKENS.ContributionsManager).toConstantValue(ContributionManager);
 });

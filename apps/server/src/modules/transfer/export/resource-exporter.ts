@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { RESOURCE_TYPE } from '@flogo-web/plugins/flow-server';
+import { RESOURCE_TYPE as FLOW_RESOURCE_TYPE } from '@flogo-web/plugins/flow-server';
 import {
   ExportActionAgent,
   Resource,
@@ -22,8 +22,13 @@ export class ResourceExporter {
   async export(resourceId) {
     const resource = await this.resourceService.findOne(resourceId);
     const contributions = await this.allContribsService.allByRef();
-    const resourceTypes = this.pluginRegistry.resourceTypes;
-    const resourceExporter = resourceTypes.exporter(RESOURCE_TYPE);
+    const resourceExporter = this.pluginRegistry.resourceTypes.exporter(
+      FLOW_RESOURCE_TYPE
+    );
+    /*
+     * Creating a custom context to override ref agent and nullify action agent & resourceIdReconciler
+     * as exporting a resource required for flow test runner doesn't depend on those.
+     * */
     const exportContext: ResourceExportContext = {
       contributions,
       resourceIdReconciler: new Map<string, Resource>(),
