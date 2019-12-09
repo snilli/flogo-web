@@ -35,13 +35,12 @@ export function createProcessesRouter(createRouter): Router {
 async function startProcess(ctx: Context) {
   // todo: if ! ctx.request.body
   const { flowsServer, engine } = Services;
-  const actionUri = `${flowsServer.getUrl()}/flows/${ctx.params.processId}`;
+  const flowURI = `${flowsServer.getUrl()}/flows/${ctx.params.processId}`;
   const result = await engine.client.post('/flow/start', {
     body: {
+      id: ctx.params.processId,
       ...ctx.request.body,
-      actionUri,
-      // todo: legacy. still used?
-      flowUri: actionUri,
+      flowURI,
     },
   });
   ctx.body = result.body;
