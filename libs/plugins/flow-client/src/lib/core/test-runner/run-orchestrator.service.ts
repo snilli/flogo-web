@@ -296,6 +296,7 @@ export class RunOrchestratorService {
         ) {
           const runStatus = <RunStatus>Object.assign({}, response);
           runStatus.trial = index + 1;
+          runStatus.id = processInstanceID;
           return runStatus;
         } else {
           throw this.errorService.makeOperationalError(
