@@ -12,11 +12,11 @@ import { FlowData } from '@flogo-web/plugins/flow-core';
 import { createActionImporter, importHandler } from './import';
 import { exportFlow, exportHandler } from './export';
 import { resourceHooks } from './hooks';
-import { FLOW_REF } from './constants';
+import { FLOW_REF, RESOURCE_TYPE } from './constants';
 
 const resourceType = {
-  type: 'flow',
-  resourceType: 'flow',
+  type: RESOURCE_TYPE,
+  resourceType: RESOURCE_TYPE,
   ref: FLOW_REF,
   import: {
     resource(data, context: ResourceImportContext) {
