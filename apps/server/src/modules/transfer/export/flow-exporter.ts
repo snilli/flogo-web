@@ -12,7 +12,7 @@ import { AllContribsService } from '../../all-contribs';
 import { ResourcePluginRegistry } from '../../../extension';
 
 @injectable()
-export class ResourceExporter {
+export class FlowExporter {
   constructor(
     private resourceService: ResourceService,
     private pluginRegistry: ResourcePluginRegistry,
