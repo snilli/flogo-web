@@ -1,8 +1,11 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { TOKENS } from '../../core';
-import { Engine, getInitializedEngine, EngineProcess } from '../../modules/engine';
+import {
+  Engine,
+  getInitializedEngine,
+  EngineProcessDirector,
+} from '../../modules/engine';
 import { config } from '../../config';
-import { FlowRunnerProcess } from '../../modules/engine/process/flow-runner-process';
 import {
   SimulationPreparer,
   SimulatableAppGenerator,
@@ -16,7 +19,7 @@ export const EngineModule = new ContainerModule((bind: interfaces.Bind) => {
       return getInitializedEngine(defaultEnginePath);
     };
   });
-  bind(EngineProcess).to(FlowRunnerProcess);
+  bind(EngineProcessDirector).toSelf();
 
   bind(TOKENS.StreamSimulationConfig).toDynamicValue(() => config.streamSimulation);
   bind(SimulatableAppGenerator).toSelf();

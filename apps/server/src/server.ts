@@ -4,8 +4,6 @@ import { initDb } from './common/db';
 import { logger } from './common/logging';
 import { config } from './config';
 import { init as initWebsocketApi } from './api/ws';
-
-import { EngineProcess } from './modules/engine';
 import { StreamSimulator } from './modules/simulator';
 
 process.on('unhandledRejection', (reason, p) => {
@@ -15,8 +13,8 @@ process.on('unhandledRejection', (reason, p) => {
 
 initDb()
   .then(() => {
-    const engineProcess = rootContainer.get(EngineProcess);
-    return boostrapEngine(config.defaultEngine.path, engineProcess);
+    // todo: pass function that calls EngineProcessDirector for process init?
+    return boostrapEngine(config.defaultEngine.path, () => {});
   })
   .then(() =>
     createServerApp({

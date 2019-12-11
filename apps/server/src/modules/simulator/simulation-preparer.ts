@@ -2,10 +2,11 @@ import { URL } from 'url';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { injectable, inject } from 'inversify';
+import { Logger } from 'winston';
 
 import { StreamSimulation, Resource } from '@flogo-web/core';
 
-import { Engine } from '../engine';
+import { Engine, EngineProcessDirector } from '../engine';
 import { TOKENS } from '../../core';
 import { writeJSONFile } from '../../common/utils/file';
 import { RemoteSimulatorProcess } from './remote-simulator-process';
@@ -30,10 +31,11 @@ const TMP_PATH = join(tmpdir(), 'stream-simulating-app.json');
 export class SimulationPreparer {
   constructor(
     @inject(TOKENS.EngineProvider) private engineProvider: () => Promise<Engine>,
+    private engineProcessDirector: EngineProcessDirector,
     private simulatableAppGenerator: SimulatableAppGenerator,
     private resourceService: ResourceService,
     @inject(TOKENS.StreamSimulationConfig) private config: SimulationConfiguration,
-    @inject(TOKENS.EngineLogger) private engineLogger
+    @inject(TOKENS.EngineLogger) private engineLogger: Logger
   ) {}
 
   async prepare({
@@ -51,6 +53,7 @@ export class SimulationPreparer {
       port: parsedRestUrl.port,
       mappingsType,
     });
+    console.log(flogoJson.triggers[0].handlers[0]);
     await writeJSONFile(TMP_PATH, flogoJson);
     const remoteSimulatorProcess = new RemoteSimulatorProcess({
       restControlUrl: restControlUrl,
@@ -58,7 +61,10 @@ export class SimulationPreparer {
     });
     remoteSimulatorProcess.onStatusChange(events.onStatusChange);
     remoteSimulatorProcess.onData(events.onData);
-    const engineProcess = new StreamRunnerProcess(this.engineLogger);
+    const engineProcess = new StreamRunnerProcess(
+      this.engineProcessDirector,
+      this.engineLogger
+    );
     engineProcess.setAppJsonPath(TMP_PATH);
     const engine = await this.engineProvider();
     engineProcess.start(engine.getProjectDetails());

@@ -100,7 +100,10 @@ export class StreamSimulator {
         onStatusChange: this.sendStatus.bind(this),
       },
     });
-    await this.currentProcess.start();
+    await this.currentProcess.start().catch(error => {
+      console.warn('Error starting simulator', error);
+      this.stop();
+    });
   }
 
   onClientDisconnection(client: SimulationClient) {
