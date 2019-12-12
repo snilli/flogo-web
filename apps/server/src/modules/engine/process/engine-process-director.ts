@@ -37,7 +37,7 @@ export class EngineProcessDirector {
       const engineDetails = config.engineDetails;
       const childProcess = execEngine(engineDetails.path, engineDetails.executableName, {
         binDir: engineDetails.binDir,
-        env: config.resolveEnv ? config.resolveEnv : {},
+        env: config.resolveEnv ? config.resolveEnv() : {},
       });
       this.currentProcess = new ProcessWrapper(childProcess, config);
       if (config.afterStart) {
