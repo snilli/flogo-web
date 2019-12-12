@@ -9,6 +9,10 @@ class ProcessWrapper {
     public childProcess: RunningChildProcess,
     public hooks: EngineProcessConfig
   ) {}
+
+  isClosed() {
+    return !this.childProcess || this.childProcess.closed;
+  }
 }
 
 interface EngineProcessConfig {
@@ -32,28 +36,29 @@ export class EngineProcessDirector {
     return this.isAnyProcessRunning() && this.currentProcess.childProcess === process;
   }
 
-  acquire(config: EngineProcessConfig) {
-    if (!this.currentProcess || this.currentProcess.childProcess.closed) {
-      const engineDetails = config.engineDetails;
-      const childProcess = execEngine(engineDetails.path, engineDetails.executableName, {
-        binDir: engineDetails.binDir,
-        env: config.resolveEnv ? config.resolveEnv() : {},
-      });
-      this.currentProcess = new ProcessWrapper(childProcess, config);
-      if (config.afterStart) {
-        config.afterStart(childProcess);
-      }
-      childProcess.whenClosed.then(exitCode => {
-        if (exitCode !== 0) {
-          console.warn(
-            `Warning: Engine process exited with non zero code. Exit code: ${exitCode}`
-          );
-        }
-        if (config.afterStop) {
-          config.afterStop(exitCode, childProcess);
-        }
-      });
+  async acquire(config: EngineProcessConfig) {
+    if (this.currentProcess && !this.currentProcess.isClosed()) {
+      await this.kill();
     }
+    const engineDetails = config.engineDetails;
+    const childProcess = execEngine(engineDetails.path, engineDetails.executableName, {
+      binDir: engineDetails.binDir,
+      env: config.resolveEnv ? config.resolveEnv() : {},
+    });
+    this.currentProcess = new ProcessWrapper(childProcess, config);
+    if (config.afterStart) {
+      config.afterStart(childProcess);
+    }
+    childProcess.whenClosed.then(exitCode => {
+      if (exitCode !== 0) {
+        console.warn(
+          `Warning: Engine process exited with non zero code. Exit code: ${exitCode}`
+        );
+      }
+      if (config.afterStop) {
+        config.afterStop(exitCode, childProcess);
+      }
+    });
     return this.currentProcess.childProcess;
   }
 
