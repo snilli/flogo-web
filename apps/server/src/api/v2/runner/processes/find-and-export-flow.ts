@@ -1,25 +1,20 @@
 import { Context } from 'koa';
-import { ErrorManager } from '../../../../common/errors';
+import { rootContainer } from "../../../../init";
+import { FlowExporter } from "../../../../modules/transfer/export/flow-exporter";
 
 export const findAndExportFlow = async (context: Context, next) => {
-  const action = await context.resourceService.findOne(context.request.body.actionId);
-  if (!action) {
-    return context.throw(
-      ErrorManager.createRestNotFoundError('No flow with specified id')
-    );
-  }
-  context.state.flow = await transformToProcess(action);
+  const flowExporter =  rootContainer.get(FlowExporter);
+  const { data } = await flowExporter.export(context.request.body.actionId);
+  context.state.flow = transformToProcess(data);
   return next();
 };
 
-// todo: fcastill - used for test-running flows, not supported in v0.9.0, re-enabling after
-async function transformToProcess(action) {
-  const { name, description, metadata, data } = action;
-  // } = exporter.formatAction(action);
+function transformToProcess(data) {
+  const { name, description, metadata } = data;
   return {
+    ...data,
     name: name,
     description: description || '',
     metadata: metadata || { input: [], output: [] },
-    ...data,
   };
 }
