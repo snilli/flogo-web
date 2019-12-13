@@ -22,6 +22,7 @@ import {
   RunApiService,
   StatusResponse,
   ErrorService,
+  Dictionary,
 } from '@flogo-web/lib-client/core';
 
 export const ERRORS = {
@@ -47,7 +48,7 @@ interface BaseRunOptions {
 
 export interface RunOptions extends BaseRunOptions {
   // todo: interface
-  attrsData: Array<{ name: string; type: string; value: any }> | null;
+  attrsData: Dictionary<any> | undefined;
 }
 
 export interface RerunOptions extends BaseRunOptions {

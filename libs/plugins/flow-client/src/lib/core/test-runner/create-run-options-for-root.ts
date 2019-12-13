@@ -1,4 +1,4 @@
-import { chain, cloneDeep, get, isEmpty, isNil } from 'lodash';
+import { get, isEmpty } from 'lodash';
 
 import { FlowState } from '../state';
 import { MetadataAttribute } from '../interfaces';
