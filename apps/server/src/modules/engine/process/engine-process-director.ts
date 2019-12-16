@@ -18,7 +18,6 @@ class ProcessWrapper {
 interface EngineProcessConfig {
   engineDetails: EngineProjectDetails;
   resolveEnv?: () => { [key: string]: string };
-  beforeStart?: () => any;
   afterStart?: (instance: RunningChildProcess) => any;
   afterStop?: (exitCode: number, instance: RunningChildProcess) => any;
 }
@@ -28,7 +27,7 @@ export class EngineProcessDirector {
   private currentProcess: ProcessWrapper;
 
   isAnyProcessRunning() {
-    return this.currentProcess && !this.currentProcess.childProcess.closed;
+    return this.currentProcess && !this.currentProcess.isClosed();
   }
 
   isProcessStillRunning(process: ChildProcess) {
@@ -37,7 +36,7 @@ export class EngineProcessDirector {
   }
 
   async acquire(config: EngineProcessConfig) {
-    if (this.currentProcess && !this.currentProcess.isClosed()) {
+    if (this.isAnyProcessRunning()) {
       await this.kill();
     }
     const engineDetails = config.engineDetails;
@@ -50,7 +49,7 @@ export class EngineProcessDirector {
       config.afterStart(childProcess);
     }
     childProcess.whenClosed.then(exitCode => {
-      if (exitCode !== 0) {
+      if (exitCode !== 0 || exitCode !== null) {
         console.warn(
           `Warning: Engine process exited with non zero code. Exit code: ${exitCode}`
         );
@@ -63,13 +62,11 @@ export class EngineProcessDirector {
   }
 
   kill(): Promise<number> {
-    if (!this.currentProcess) {
+    if (!this.isAnyProcessRunning()) {
       return Promise.resolve(0);
     }
     const childProcess = this.currentProcess.childProcess;
-    if (!childProcess.closed) {
-      childProcess.kill();
-    }
+    childProcess.kill();
     return childProcess.whenClosed;
   }
 }

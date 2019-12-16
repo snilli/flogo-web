@@ -5,13 +5,19 @@ import { RunningChildProcess } from './running-child-process';
 import { EngineProcessDirector } from './engine-process-director';
 
 export class StreamRunnerProcess {
+  public whenStarted: Promise<void>;
   private internalAppJsonPath: string;
+  private resolveStarted: () => any;
   private currentProcess: RunningChildProcess;
 
   constructor(
     private engineProcessDirector: EngineProcessDirector,
     private logger?: Logger
-  ) {}
+  ) {
+    this.whenStarted = new Promise(resolve => {
+      this.resolveStarted = resolve;
+    });
+  }
 
   start(engineDetails: EngineProjectDetails) {
     return this.engineProcessDirector.acquire({
@@ -59,6 +65,7 @@ export class StreamRunnerProcess {
     setupStdioRedirection(subprocess, 'stream-engine', {
       logger: this.logger,
     });
+    this.resolveStarted();
   }
 
   private resolveStreamEnv(): { [key: string]: any } {

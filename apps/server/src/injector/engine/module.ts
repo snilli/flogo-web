@@ -20,7 +20,9 @@ export const EngineModule = new ContainerModule((bind: interfaces.Bind) => {
       return getInitializedEngine(defaultEnginePath);
     };
   });
-  bind(EngineProcessDirector).toSelf();
+  bind(EngineProcessDirector)
+    .toSelf()
+    .inSingletonScope();
 
   //todo: this should me moved to the flow plugin
   bind(FlowRunnerCreator).toSelf();

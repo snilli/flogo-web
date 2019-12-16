@@ -13,8 +13,7 @@ process.on('unhandledRejection', (reason, p) => {
 
 initDb()
   .then(() => {
-    // todo: pass function that calls EngineProcessDirector for process init?
-    return boostrapEngine(config.defaultEngine.path, () => {});
+    return boostrapEngine(config.defaultEngine.path);
   })
   .then(() =>
     createServerApp({
