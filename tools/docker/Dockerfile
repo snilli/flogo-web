@@ -30,23 +30,14 @@ RUN GO111MODULE=off go get -u -v github.com/project-flogo/cli/... \
 #    && mkdir -p $GOPATH/src/github.com/project-flogo \
 #    && cd $GOPATH/src/github.com/project-flogo \
 #    && git clone https://github.com/project-flogo/cli.git \
-    && flogo --version
+    && flogo --version \
+    && GO111MODULE=off go get github.com/project-flogo/services/flow-store/...
 COPY / ${BUILD_DIR}/
 WORKDIR ${BUILD_DIR}
 RUN yarn --pure-lockfile && yarn release && \
   cd dist/apps/server && \
   yarn --pure-lockfile --production=true && \
   npx modclean -Pr -n default:safe,default:caution
-
-
-FROM base AS statebuilder
-ENV FLOGO_TAG_NAME ${CORE_VERSION}
-ENV BUILD_DIR /tmp/build
-WORKDIR ${BUILD_DIR}
-COPY /tools/docker/build-state.sh ${BUILD_DIR}/build-state.sh
-RUN chmod 755 build-state.sh && \
-    ${BUILD_DIR}/build-state.sh
-
 
 FROM base as release
 ENV NODE_ENV production
@@ -55,7 +46,6 @@ ENV FLOGO_WEB_PUBLICDIR /flogo-web/apps/client
 
 COPY --from=builder /tmp/build/dist/ /flogo-web/
 COPY --from=builder $GOPATH/ $GOPATH/
-COPY --from=statebuilder $GOPATH/bin /flogo-web/flogo-services/
 
 COPY ./tools/docker/flogo-eula /flogo-web/flogo-eula
 COPY ./tools/docker/docker-start.sh /flogo-web/docker-start.sh

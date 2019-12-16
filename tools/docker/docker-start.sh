@@ -17,5 +17,8 @@ EulaMessage
   exit 0
 fi
 
+flow-store > local/logs/flow-store 2>&1 &
+echo "started flow store service (pid: $!)"
+
 cd apps/server
 node main.js
