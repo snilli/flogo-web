@@ -3,6 +3,7 @@ import { createInstancesRouter } from './instances';
 import { createProcessesRouter } from './processes';
 import { createResourceMiddleware } from '../resources/resource-service-middleware';
 import { FlowRunnerCreator } from '../../../modules/engine/process/flow-runner-creator';
+import { FlowExporter } from '../../../modules/transfer/export/flow-exporter';
 
 const RouterConstructor = require('koa-router');
 
@@ -15,7 +16,8 @@ export function mountTestRunner(appRouter: Router, container) {
 
   const processesRouter = createProcessesRouter(
     createRouter,
-    container.resolve(FlowRunnerCreator)
+    container.resolve(FlowRunnerCreator),
+    container.resolve(FlowExporter)
   );
   runner.use(processesRouter.routes(), processesRouter.allowedMethods());
 
