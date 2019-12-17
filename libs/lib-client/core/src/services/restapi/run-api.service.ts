@@ -40,10 +40,6 @@ export interface StatusResponse {
   status: string | null;
 }
 
-export interface StepsResponse {
-  steps: Step[];
-}
-
 export interface StoredProcessResponse {
   creationDate: string;
   description: string;
@@ -63,7 +59,7 @@ export class RunApiService {
     return this.restApi.get(`runner/instances/${instanceId}/status`);
   }
 
-  getStepsByInstanceId(instanceId: string): Observable<StepsResponse> {
+  getStepsByInstanceId(instanceId: string): Observable<Step[]> {
     return this.restApi.get(`runner/instances/${instanceId}/steps`);
   }
 

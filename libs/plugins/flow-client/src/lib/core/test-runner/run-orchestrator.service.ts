@@ -351,13 +351,12 @@ export class RunOrchestratorService {
     return registered;
   }
 
-  queryForSteps(processStatusMonitor: Observable<RunStatus>) {
+  queryForSteps(processStatusMonitor: Observable<RunStatus>): Observable<Step[]> {
     const shouldQuery = status =>
       status === RunStatusCode.Active || status === RunStatusCode.Completed;
     return processStatusMonitor.pipe(
       filter(runState => runState && shouldQuery(runState.status)),
-      switchMap(runState => this.runService.getStepsByInstanceId(runState.id)),
-      map(steps => steps.steps)
+      switchMap(runState => this.runService.getStepsByInstanceId(runState.id))
     );
   }
 
@@ -375,7 +374,11 @@ export class RunOrchestratorService {
             }
             return _throw(error);
           }),
-          map(state => state.steps),
+          map(stateOrSteps =>
+            stateOrSteps && (stateOrSteps as RunProgress).steps
+              ? (stateOrSteps as RunProgress).steps
+              : stateOrSteps
+          ),
           distinctUntilChanged((prev, next) => isEqual(prev, next))
         );
       })
