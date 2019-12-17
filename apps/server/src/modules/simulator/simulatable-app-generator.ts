@@ -5,7 +5,6 @@ import { StreamSimulation, MetadataAttribute, Resource } from '@flogo-web/core';
 import InputMappingType = StreamSimulation.InputMappingType;
 
 import { AppExporter } from '../apps';
-import { ResourceService } from '../resources';
 
 const BASE_APP = {
   name: 'flogo-simulation',
@@ -30,16 +29,14 @@ export class SimulatableAppGenerator {
     options: {
       filePath: string;
       port: string;
-      repeatInterval?: string;
+      emitDelay?: number;
       mappingsType?: InputMappingType;
     }
   ) {
-    const repeatInterval = options.repeatInterval || 500;
     const opts = {
       ...options,
-      repeatInterval,
+      emitDelay: options.emitDelay || 500,
     };
-    // return getMock(options.filePath, options.port, repeatInterval);
     const app = cloneDeep(BASE_APP);
     const { input: resourceInputs } = resource && resource.metadata;
     app.resources.push(resource);
@@ -64,7 +61,7 @@ function generateTrigger(options) {
 }
 
 function generateHandler(options) {
-  const { resourceId, filePath, repeatInterval, mappingsType, resourceInputs } = options;
+  const { resourceId, filePath, emitDelay, mappingsType, resourceInputs } = options;
   const handler = cloneDeep(BASE_HANDLER_SETTINGS);
   const actionMappings = {
     input: prepareInputMappings(mappingsType, resourceInputs),
@@ -73,8 +70,10 @@ function generateHandler(options) {
     ...handler,
     settings: {
       ...handler.settings,
-      repeatInterval,
+      emitDelay,
       filePath,
+      dataAsMap: true,
+      allDataAtOnce: false,
     },
     resourceId,
     actionMappings,

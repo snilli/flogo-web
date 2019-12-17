@@ -1,14 +1,18 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { TOKENS } from '../../core';
-import { Engine, getInitializedEngine, EngineProcess } from '../../modules/engine';
+import {
+  Engine,
+  getInitializedEngine,
+  EngineProcessDirector,
+} from '../../modules/engine';
 import { config } from '../../config';
-import { FlowRunnerProcess } from '../../modules/engine/process/flow-runner-process';
 import {
   SimulationPreparer,
   SimulatableAppGenerator,
   StreamSimulator,
 } from '../../modules/simulator';
 import { FlowExporter } from '../../modules/transfer/export/flow-exporter';
+import { FlowRunnerCreator } from '../../modules/engine/process/flow-runner-creator';
 
 export const EngineModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(TOKENS.EngineProvider).toProvider<Engine>(() => {
@@ -16,8 +20,14 @@ export const EngineModule = new ContainerModule((bind: interfaces.Bind) => {
       return getInitializedEngine(defaultEnginePath);
     };
   });
-  bind(EngineProcess).to(FlowRunnerProcess);
+  bind(EngineProcessDirector)
+    .toSelf()
+    .inSingletonScope();
 
+  //todo: this should me moved to the flow plugin
+  bind(FlowRunnerCreator).toSelf();
+
+  //todo: this should me moved to the stream plugin
   bind(TOKENS.StreamSimulationConfig).toDynamicValue(() => config.streamSimulation);
   bind(SimulatableAppGenerator).toSelf();
   bind(SimulationPreparer).toSelf();

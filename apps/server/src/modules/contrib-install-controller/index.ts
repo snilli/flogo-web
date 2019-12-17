@@ -4,7 +4,7 @@ import * as path from 'path';
 import { copyFile, fileExists, rmFolder } from '../../common/utils';
 import { logger } from '../../common/logging';
 import { ERROR_TYPES, ErrorManager } from '../../common/errors';
-import { Engine, EngineProcess } from '../engine';
+import { Engine, EngineProcessDirector } from '../engine';
 import { syncTasks } from './sync-tasks';
 
 export enum InstallEvents {
@@ -28,7 +28,7 @@ const BACKUP_SRC_FOLDER = 'backupsrc';
 export class ContribInstallController extends EventEmitter {
   private engine: Engine;
   private remoteInstaller;
-  private engineProcess: EngineProcess;
+  private engineProcessDirector: EngineProcessDirector;
   private _installState: INSTALLATION_STATE;
 
   constructor() {
@@ -40,11 +40,15 @@ export class ContribInstallController extends EventEmitter {
   }
 
   // todo: all this should be injected in constructor
-  setupController(engine: Engine, remoteInstaller, engineProcess: EngineProcess) {
+  setupController(
+    engine: Engine,
+    remoteInstaller,
+    engineProcessDirector: EngineProcessDirector
+  ) {
     this.engine = engine;
     this.remoteInstaller = remoteInstaller;
     this.updateInstallState(INSTALLATION_STATE.INIT);
-    this.engineProcess = engineProcess;
+    this.engineProcessDirector = engineProcessDirector;
     return this;
   }
 
@@ -182,7 +186,7 @@ export class ContribInstallController extends EventEmitter {
   stopEngine() {
     logger.debug('Stopping enigne.');
     this.updateInstallState(INSTALLATION_STATE.STOP);
-    return this.engineProcess.stop();
+    return this.engineProcessDirector.kill();
   }
 
   startEngine() {

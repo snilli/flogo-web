@@ -4,7 +4,7 @@ import { logger, engineLogger } from '../../common/logging';
 import { config } from '../../config/app-config';
 import { ContribInstallController } from '../contrib-install-controller';
 import { installResourceTypes } from './install-resource-types';
-import { EngineProcess } from './process/engine-process';
+import { EngineProcessDirector } from './process/engine-process-director';
 
 const CONTRIB_INSTALLER = 'contribInstaller';
 const engineRegistry: { [key: string]: any } = {};
@@ -70,7 +70,7 @@ export async function getInitializedEngine(
 export function getContribInstallationController(
   enginePath,
   installContribution,
-  engineProcess: EngineProcess
+  engineProcessDirector: EngineProcessDirector
 ) {
   return getInitializedEngine(enginePath).then(engine => {
     if (!engineRegistry[CONTRIB_INSTALLER]) {
@@ -79,7 +79,7 @@ export function getContribInstallationController(
     return engineRegistry[CONTRIB_INSTALLER].setupController(
       engine,
       installContribution,
-      engineProcess
+      engineProcessDirector
     );
   });
 }

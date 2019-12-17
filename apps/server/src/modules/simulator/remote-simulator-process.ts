@@ -46,13 +46,14 @@ export class RemoteSimulatorProcess {
     return this.callRestControl('resume', ProcessStatus.Running);
   }
 
-  setup(subprocess: StreamRunnerProcess) {
+  async setup(subprocess: StreamRunnerProcess) {
     this.subprocess = subprocess;
     this.updateStatus(
       this.subprocess.isRunning() ? ProcessStatus.Running : ProcessStatus.Closed
     );
     let isSubprocessClosed = false;
     let retries = 0;
+    await subprocess.whenStarted;
     this.subprocess.getCurrentChildProcess().whenClosed.then(exitCode => {
       isSubprocessClosed = true;
       this.updateStatus(exitCode === 0 ? ProcessStatus.Closed : ProcessStatus.Errored);

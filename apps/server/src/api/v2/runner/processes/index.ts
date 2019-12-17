@@ -2,11 +2,19 @@ import { Context } from 'koa';
 import * as Router from 'koa-router';
 import { Services } from '../services';
 import { findAndExportFlow } from './find-and-export-flow';
+import { FlowRunnerCreator } from '../../../../modules/engine/process/flow-runner-creator';
+import { FlowExporter } from '../../../../modules/transfer/export/flow-exporter';
 
-export function createProcessesRouter(createRouter): Router {
+export function createProcessesRouter(
+  createRouter,
+  flowRunnerCreator: FlowRunnerCreator,
+  flowExporter: FlowExporter
+): Router {
   const processes = createRouter();
 
-  processes.post('/processes', findAndExportFlow, async (ctx: Context) => {
+  processes.post('/processes', findAndExportFlow(flowExporter), async (ctx: Context) => {
+    const runner = await flowRunnerCreator.createAndStart();
+    await runner.whenStarted;
     const response = await Services.flowsServer.client.post('/flows', {
       body: ctx.state.flow,
     });

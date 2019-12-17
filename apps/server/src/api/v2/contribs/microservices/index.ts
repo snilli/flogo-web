@@ -3,7 +3,7 @@ import { Container } from 'inversify';
 import { ContributionManager } from '../../../../modules/contributions';
 import {
   getContribInstallationController as getInstallationController,
-  EngineProcess,
+  EngineProcessDirector,
 } from '../../../../modules/engine';
 import { config } from '../../../../config';
 import { logger } from '../../../../common/logging';
@@ -17,9 +17,9 @@ const CONTRIBUTION_TYPE = new Map([
 ]);
 
 export function contribs(router, container: Container) {
-  const engineProcess = container.get(EngineProcess);
+  const engineProcessDirector = container.get(EngineProcessDirector);
   router.get(`/contributions/microservices`, listContributions);
-  router.post(`/contributions/microservices`, installContribution(engineProcess));
+  router.post(`/contributions/microservices`, installContribution(engineProcessDirector));
 }
 
 /**
@@ -62,7 +62,7 @@ async function listContributions(ctx) {
  * type {string} Type of contribution to be installed.
  *
  */
-function installContribution(engineProcess: EngineProcess) {
+function installContribution(engineProcess: EngineProcessDirector) {
   return async (ctx, next) => {
     ctx.req.setTimeout(0, null);
     const url = ctx.request.body.url;
