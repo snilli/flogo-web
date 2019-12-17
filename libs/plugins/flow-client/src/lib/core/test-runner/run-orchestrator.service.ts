@@ -374,11 +374,7 @@ export class RunOrchestratorService {
             }
             return _throw(error);
           }),
-          map(stateOrSteps =>
-            stateOrSteps && (stateOrSteps as RunProgress).steps
-              ? (stateOrSteps as RunProgress).steps
-              : stateOrSteps
-          ),
+          map(state => (state as RunProgress).steps),
           distinctUntilChanged((prev, next) => isEqual(prev, next))
         );
       })
@@ -407,7 +403,7 @@ export class RunOrchestratorService {
       map(state => {
         return {
           ...state,
-          lastIntance: { steps: state.steps },
+          lastInstance: { steps: state.steps },
         };
       })
     );
