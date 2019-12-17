@@ -401,11 +401,12 @@ export class RunOrchestratorService {
   private observeCompletion(stateStream: Observable<RunProgress>) {
     return stateStream.pipe(
       last(),
-      switchMap(state =>
-        this.runService
-          .getInstance(state.instanceId)
-          .pipe(map(lastInstance => ({ ...state, lastInstance })))
-      )
+      map(state => {
+        return {
+          ...state,
+          lastIntance: { steps: state.steps },
+        };
+      })
     );
   }
 }

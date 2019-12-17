@@ -67,11 +67,6 @@ export class RunApiService {
     return this.restApi.get(`runner/instances/${instanceId}/steps`);
   }
 
-  // todo: response interface
-  getInstance(instanceId: string) {
-    return this.restApi.get(`runner/instances/${instanceId}`);
-  }
-
   getSnapshot(instanceId: string, snapshotId: number): Observable<Snapshot> {
     return this.restApi.get(`runner/instances/${instanceId}/snapshot/${snapshotId}`);
   }
