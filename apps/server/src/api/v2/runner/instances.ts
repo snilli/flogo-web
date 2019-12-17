@@ -7,7 +7,6 @@ export function createInstancesRouter(
 ): Router {
   const instances = createRouter({ prefix: '/instances/:instanceId' });
   instances.use(queryInstanceService);
-  instances.get('/');
   instances.get('/status', subEndpoint('/status'));
   instances.get('/steps', subEndpoint('/steps'));
   instances.get(
