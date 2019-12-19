@@ -54,6 +54,8 @@ import {
 import { createRunOptionsForRoot } from './create-run-options-for-root';
 import { taskIdsOfCurrentStep } from './taskids-current-step';
 
+const ERROR_MSG_ATTRIBUTE_PATTERN = new RegExp(`^_E.`, 'g');
+
 @Injectable()
 export class TestRunnerService implements OnDestroy {
   private contextChange = new Subject<void>();
@@ -369,7 +371,6 @@ export class TestRunnerService implements OnDestroy {
     const runTasks = reduce(
       steps,
       (result: any, step: Step) => {
-        const reAttrErrMsg = new RegExp(`^_E.message`, 'g');
         const flowChanges = step && step.flowChanges;
         const mainFlowChanges = flowChanges && flowChanges[StepFlowType.MainFlow];
         if (mainFlowChanges) {
@@ -384,10 +385,10 @@ export class TestRunnerService implements OnDestroy {
             const { attrs: stepAttrs } = mainFlowChanges;
             const attrs = pickBy(
               stepAttrs,
-              (attrVal, attrKey) => !reAttrErrMsg.test(attrKey)
+              (attrVal, attrKey) => !ERROR_MSG_ATTRIBUTE_PATTERN.test(attrKey)
             );
             const errorAttrs = pickBy(stepAttrs, (attrVal, attrKey) =>
-              reAttrErrMsg.test(attrKey)
+              ERROR_MSG_ATTRIBUTE_PATTERN.test(attrKey)
             );
             Object.values(errorAttrs).forEach(errValue => {
               let errs = <any[]>get(errors, `${taskId}`);
@@ -395,7 +396,7 @@ export class TestRunnerService implements OnDestroy {
               errs = errs || [];
 
               errs.push({
-                msg: errValue,
+                msg: errValue && errValue.message,
                 time: new Date().toJSON(),
               });
 

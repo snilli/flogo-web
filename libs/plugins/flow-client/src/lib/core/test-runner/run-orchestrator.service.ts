@@ -371,7 +371,9 @@ export class RunOrchestratorService {
           catchError(error => {
             // query steps one last time if process failed or was cancelled
             if (registerInfo.instanceId && error.name === ERRORS.PROCESS_NOT_COMPLETED) {
-              return this.runService.getStepsByInstanceId(registerInfo.instanceId);
+              return this.runService
+                .getStepsByInstanceId(registerInfo.instanceId)
+                .pipe(map(steps => ({ steps })));
             }
             return _throw(error);
           }),
