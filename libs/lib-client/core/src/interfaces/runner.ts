@@ -1,24 +1,28 @@
 import { flowToJSON_Link } from './backend/legacy';
+import { RunTaskStatusCode } from '../services/restapi';
 
 export interface StepAttribute {
-  name: string;
-  // todo: limit types
-  type: string;
-  value: any;
+  [taskAttribute: string]: any;
+}
+
+export interface TaskChange {
+  status: RunTaskStatusCode;
+}
+
+export interface TaskChanges {
+  [taskId: string]: TaskChange;
 }
 
 export interface Step {
-  flow: {
-    attributes: StepAttribute[];
-    // todo: what's the difference between state and status?
-    state: number;
-    status: number;
+  flowChanges: {
+    [flowType: string]: {
+      status: number;
+      attrs: StepAttribute | null;
+      tasks: TaskChanges;
+    };
   };
-  id: string;
-  taskId: number | string;
-  taskState?: number;
-  // todo: what's this?
-  tasks: any;
+  id: number | string;
+  flowId: string;
 }
 
 export interface Snapshot {

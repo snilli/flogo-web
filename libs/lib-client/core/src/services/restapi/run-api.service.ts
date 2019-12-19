@@ -27,8 +27,19 @@ export enum RunStatusCode {
 /**
  * Possible run state
  */
-export enum RunStateCode {
+export enum RunTaskStatusCode {
+  Done = 40,
   Skipped = 50,
+  Failed = 100,
+}
+
+/**
+ * Possible flow types in Step response
+ */
+
+export enum StepFlowType {
+  MainFlow = '0',
+  SubFlow = '1',
 }
 
 export interface StatusResponse {

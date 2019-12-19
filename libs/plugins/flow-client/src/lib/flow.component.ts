@@ -8,7 +8,11 @@ import {
   animateChild,
 } from '@angular/animations';
 
-import { SingleEmissionSubject, AppsService } from '@flogo-web/lib-client/core';
+import {
+  SingleEmissionSubject,
+  AppsService,
+  StepFlowType,
+} from '@flogo-web/lib-client/core';
 import {
   ConfirmationResult,
   ConfirmationModalService,
@@ -27,12 +31,12 @@ import {
 } from './core';
 import { HandlerType, SelectionType, mergeItemWithSchema } from './core/models';
 import { FlowActions, FlowState, FlowSelectors } from './core/state';
-import { FlowMetadata } from './task-configurator/models';
 import { ParamsSchemaComponent } from './params-schema';
 import { of } from 'rxjs';
 import { ContribInstallerService } from '@flogo-web/lib-client/contrib-installer';
 import { Store, select } from '@ngrx/store';
 import { ModalService } from '@flogo-web/lib-client/modal';
+import { taskIdsOfCurrentStep } from './core/test-runner/taskids-current-step';
 
 interface TaskContext {
   isTrigger: boolean;
@@ -196,9 +200,12 @@ export class FlowComponent implements OnInit, OnDestroy {
 
   private getCurrentRunStateForTask(taskID: string) {
     const steps = this.testRunner.getCurrentRunState().steps || [];
-    // allow double equal check for legacy ids that were type number
-    /* tslint:disable-next-line:triple-equals */
-    return steps.find(step => taskID == step.taskId);
+    return steps.find(step => {
+      const mainFlowChanges = step.flowChanges[StepFlowType.MainFlow];
+      const taskIdsExecuted = taskIdsOfCurrentStep(mainFlowChanges.tasks);
+      // @ts-ignore:disable-legacy-type-interference
+      return taskIdsExecuted.find(taskID);
+    });
   }
 
   private _getCurrentTaskContext(taskId: any): TaskContext {

@@ -13,14 +13,11 @@ export function mergeFormWithOutputs(
   return form;
 }
 
-export function matchFormWithExecutionResult(
-  step: Dictionary<StepAttribute>,
-  formValues: any[]
-) {
+export function matchFormWithExecutionResult(step: StepAttribute, formValues: any[]) {
   const outputs = new Map(
-    Object.values(step).map<[string, string]>(attr => {
-      const [taskType, taskId, attribute] = attr.name.split('.');
-      return [attribute, attr.value];
+    Object.keys(step).map<[string, string]>(attr => {
+      const [taskType, taskId, attribute] = attr.split('.');
+      return [attribute, step[attr]];
     })
   );
   const newOutput = formValues.map(field => {

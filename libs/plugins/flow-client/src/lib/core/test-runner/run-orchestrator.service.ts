@@ -17,12 +17,13 @@ import { isEqual, defaults } from 'lodash';
 import {
   Interceptor,
   Step,
-  RunStateCode,
+  RunTaskStatusCode,
   RunStatusCode,
   RunApiService,
   StatusResponse,
   ErrorService,
   Dictionary,
+  StepFlowType,
 } from '@flogo-web/lib-client/core';
 
 export const ERRORS = {
@@ -30,7 +31,7 @@ export const ERRORS = {
   PROCESS_NOT_COMPLETED: 'ProcessNotCompleted',
 };
 
-export { RunStatusCode, RunStateCode, Step };
+export { RunStatusCode, RunTaskStatusCode, Step, StepFlowType };
 
 export interface RunStatus extends StatusResponse {
   /**

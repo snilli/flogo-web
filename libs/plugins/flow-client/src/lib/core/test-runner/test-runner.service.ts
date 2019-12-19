@@ -3,14 +3,13 @@ import {
   cloneDeep,
   get,
   isEmpty,
-  isNil,
-  isNull,
   isUndefined,
   map as _map,
   mapValues,
   noop,
   reduce,
   set,
+  pickBy,
 } from 'lodash';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -48,11 +47,12 @@ import {
   ERRORS as RUNNER_ERRORS,
   RunProgress,
   RunProgressStore,
-  RunStateCode as RUNNER_STATE,
   RunStatusCode as RUNNER_STATUS,
   Step,
+  StepFlowType,
 } from './run-orchestrator.service';
 import { createRunOptionsForRoot } from './create-run-options-for-root';
+import { taskIdsOfCurrentStep } from './taskids-current-step';
 
 @Injectable()
 export class TestRunnerService implements OnDestroy {
@@ -368,52 +368,45 @@ export class TestRunnerService implements OnDestroy {
     >{};
     const runTasks = reduce(
       steps,
-      (result: any, step: any) => {
-        const taskID = step.taskId;
+      (result: any, step: Step) => {
+        const reAttrErrMsg = new RegExp(`^_E.message`, 'g');
+        const flowChanges = step && step.flowChanges;
+        const mainFlowChanges = flowChanges && flowChanges[StepFlowType.MainFlow];
+        if (mainFlowChanges) {
+          const executedTasks = taskIdsOfCurrentStep(mainFlowChanges.tasks);
+          const flowInstanceStatus = mainFlowChanges.status.toString();
 
-        if (taskID !== 'root' && taskID !== 1 && !isNil(taskID)) {
-          /****
-           *  Exclude the tasks which are skipped by the engine while running the flow
-           *  but their running task information is generated and maintained
-           ****/
-          const taskState = step.taskState || 0;
-          if (taskState !== RUNNER_STATE.Skipped) {
-            runTaskIds.push(taskID);
+          if (flowInstanceStatus === RUNNER_STATUS.Completed) {
+            isFlowDone = true;
           }
-          const reAttrName = new RegExp(`^_A.${step.taskId}\\..*`, 'g');
-          const reAttrErrMsg = new RegExp(`^_E.message`, 'g');
 
-          const taskInfo = reduce(
-            get(step, 'flow.attributes', []),
-            (currentTaskInfo: any, attr: any) => {
-              if (reAttrName.test(get(attr, 'name', ''))) {
-                currentTaskInfo[attr.name] = attr;
+          executedTasks.forEach((taskId: string) => {
+            const { attrs: stepAttrs } = mainFlowChanges;
+            const attrs = pickBy(
+              stepAttrs,
+              (attrVal, attrKey) => !reAttrErrMsg.test(attrKey)
+            );
+            const errorAttrs = pickBy(stepAttrs, (attrVal, attrKey) =>
+              reAttrErrMsg.test(attrKey)
+            );
+            Object.values(errorAttrs).forEach(errValue => {
+              let errs = <any[]>get(errors, `${taskId}`);
+              const isNewEntry = isUndefined(errs);
+              errs = errs || [];
+
+              errs.push({
+                msg: errValue,
+                time: new Date().toJSON(),
+              });
+
+              if (isNewEntry) {
+                set(errors, `${taskId}`, errs);
               }
-
-              if (reAttrErrMsg.test(attr.name)) {
-                let errs = <any[]>get(errors, `${taskID}`);
-                const shouldOverride = isUndefined(errs);
-                errs = errs || [];
-
-                errs.push({
-                  msg: attr.value,
-                  time: new Date().toJSON(),
-                });
-
-                if (shouldOverride) {
-                  set(errors, `${taskID}`, errs);
-                }
-              }
-              return currentTaskInfo;
-            },
-            {}
-          );
-
-          result[taskID] = { attrs: taskInfo };
-        } else if (isNull(taskID)) {
-          isFlowDone = true;
+            });
+            runTaskIds.push(taskId);
+            result[taskId] = { attrs };
+          });
         }
-
         return result;
       },
       {}
