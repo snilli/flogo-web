@@ -140,12 +140,13 @@ export class RunApiService {
     );
 
     function updateSnapshotActionUri(snapshot, newFlowId) {
-      // replace the old flowURL with the newFlowID
+      // replace the old flowURI with the newFlowID
       const pattern = new RegExp('flows/(.+)$');
-      snapshot.actionUri = snapshot.flowUri.replace(pattern, `flows/${newFlowId}`);
-      /** @deprecated snapshot.flowUri */
-      snapshot.flowUri = snapshot.actionUri;
-      return snapshot;
+      const {flowURI} = snapshot;
+      return {
+        ...snapshot,
+        flowURI: flowURI.replace(pattern, `flows/${newFlowId}`)
+      };
     }
   }
 
