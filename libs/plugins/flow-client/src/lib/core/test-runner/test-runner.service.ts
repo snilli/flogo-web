@@ -1,16 +1,4 @@
-import {
-  assign,
-  cloneDeep,
-  get,
-  isEmpty,
-  isUndefined,
-  map as _map,
-  mapValues,
-  noop,
-  reduce,
-  set,
-  pickBy,
-} from 'lodash';
+import { get, isEmpty, isUndefined, mapValues, noop, reduce, set, pickBy } from 'lodash';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
@@ -25,7 +13,6 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { ActivitySchema } from '@flogo-web/core';
 import {
   Dictionary,
   FlowGraph,
@@ -122,7 +109,6 @@ export class TestRunnerService implements OnDestroy {
     return this.getFlowStateOnce().pipe(
       map((flowState: FlowState) => {
         const selectedTask = flowState.mainItems[taskId] as ItemActivityTask;
-        const schema = flowState.schemas[selectedTask.ref] as ActivitySchema;
         if (!flowState.lastFullExecution.processId) {
           // run from other than the trigger (root task);
           // TODO
@@ -143,7 +129,7 @@ export class TestRunnerService implements OnDestroy {
           tasks: [
             {
               id: selectedTask.id,
-              inputs: mergeInputAndSchema(schema.inputs, inputs),
+              inputs,
             },
           ],
         };
@@ -159,19 +145,6 @@ export class TestRunnerService implements OnDestroy {
       switchMap(runner => this.observeRunProgress(runner)),
       catchError(err => this.handleRunError(err))
     );
-
-    function mergeInputAndSchema(schemaInput: any, inputData: any) {
-      if (!schemaInput) {
-        return [];
-      }
-      return _map(schemaInput, (input: any) => {
-        // override the value;
-        return assign(cloneDeep(input), {
-          value: inputData[input.name],
-          type: input.type,
-        });
-      });
-    }
   }
 
   // TODO
