@@ -1,4 +1,4 @@
-import { isEmpty, isString } from 'lodash';
+import { isNil, isString } from 'lodash';
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BaseField } from '../field-base';
@@ -17,7 +17,7 @@ export class ObjectTypeComponent {
   shouldUpdateEditorValue = () => this.readonly;
 
   transformValueIn(value) {
-    return isEmpty(value) || isString(value) ? value : JSON.stringify(value, null, 2);
+    return isNil(value) || isString(value) ? value : JSON.stringify(value, null, 2);
   }
 
   transformValueOut(value: string) {
