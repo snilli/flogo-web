@@ -18,6 +18,12 @@
   fill: #062e79;
 }
 
+:host ::ng-deep {
+  .monaco-editor:not(.focused) .current-line ~ .line-numbers {
+    color: #cad3df;
+  }
+}
+
 .editor-container {
   position: relative;
 
