@@ -21,7 +21,7 @@ export interface Step {
       tasks: TaskChanges;
     };
   };
-  id: number | string;
+  id: number;
   flowId: string;
 }
 

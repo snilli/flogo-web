@@ -53,6 +53,7 @@ import {
 } from './run-orchestrator.service';
 import { createRunOptionsForRoot } from './create-run-options-for-root';
 import { taskIdsOfCurrentStep } from './taskids-current-step';
+import { generateStepIdFinder } from './stepid-finder-generator';
 
 const ERROR_MSG_ATTRIBUTE_PATTERN = new RegExp(`^_E.`, 'g');
 
@@ -184,8 +185,8 @@ export class TestRunnerService implements OnDestroy {
       'steps',
       this.runState.steps || []
     );
-    /* tslint:disable-next-line:triple-equals - allowing double equals for legacy ids that were of type number */
-    return steps.findIndex(step => step.taskId == taskId);
+    const findStepId = generateStepIdFinder(steps);
+    return findStepId(taskId);
   }
 
   // monitor the status of a process util it's done or up to the max trials
