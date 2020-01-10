@@ -37,6 +37,7 @@ import {
   RunStatusCode as RUNNER_STATUS,
   Step,
   StepFlowType,
+  RerunOptions,
 } from './run-orchestrator.service';
 import { createRunOptionsForRoot } from './create-run-options-for-root';
 import { taskIdsOfCurrentStep } from './taskids-current-step';
@@ -135,12 +136,19 @@ export class TestRunnerService implements OnDestroy {
         };
         this.runState.steps = null;
 
-        return this.orchestrator.rerun({
-          useFlowId: flowState.id,
+        const optsToRerun: RerunOptions = {
           interceptor: dataOfInterceptor,
           step: stepNumber,
           instanceId: flowState.lastFullExecution.instanceId,
-        });
+        };
+
+        if (flowState.lastFullExecution.processId) {
+          optsToRerun.useProcessId = flowState.lastFullExecution.processId;
+        } else {
+          optsToRerun.useFlowId = flowState.id;
+        }
+
+        return this.orchestrator.rerun(optsToRerun);
       }),
       switchMap(runner => this.observeRunProgress(runner)),
       catchError(err => this.handleRunError(err))
