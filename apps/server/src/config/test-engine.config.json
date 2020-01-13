@@ -34,6 +34,11 @@
       "settings": {
         "port": "9190"
       }
+    },
+    {
+      "name": "telemetry",
+      "ref": "github.com/project-flogo/stream/service/telemetry",
+      "enabled": true
     }
-    ]
+  ]
 }
