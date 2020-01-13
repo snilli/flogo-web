@@ -20,7 +20,8 @@ jobs:
 
       - name: Install
         run: |
-          yarn i
+          yarn --version
+          yarn --frozen-lockfile --non-interactive --silent
 
       - name: Run lint
         shell: bash
