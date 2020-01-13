@@ -1,29 +1,40 @@
-import { injectable } from 'inversify';
 import { Logger } from 'winston';
-import { EngineProcess } from './engine-process';
+import { EngineProjectDetails } from '../engine';
 import { setupStdioRedirection } from './logging';
 import { RunningChildProcess } from './running-child-process';
+import { EngineProcessDirector } from './engine-process-director';
 
-@injectable()
-export class StreamRunnerProcess extends EngineProcess {
+export class StreamRunnerProcess {
+  public whenStarted: Promise<void>;
   private internalAppJsonPath: string;
+  private resolveStarted: () => any;
+  private currentProcess: RunningChildProcess;
 
-  constructor(logger?: Logger) {
-    super({
-      resolveEnv: () => this.resolveStreamEnv(),
-      afterStart: ({ subprocess }: { subprocess: RunningChildProcess }) => {
-        // uncomment to log directly to console
-        // subprocess.stdout.on('data', data =>
-        //   console.log(`[stream-runner]`, data.toString())
-        // );
-        // subprocess.stderr.on('data', data =>
-        //   console.error(`[stream-runner]`, data.toString())
-        // );
-        setupStdioRedirection(subprocess, 'stream-engine', {
-          logger,
-        });
-      },
+  constructor(
+    private engineProcessDirector: EngineProcessDirector,
+    private logger?: Logger
+  ) {
+    this.whenStarted = new Promise(resolve => {
+      this.resolveStarted = resolve;
     });
+  }
+
+  start(engineDetails: EngineProjectDetails) {
+    return this.engineProcessDirector.acquire({
+      engineDetails,
+      resolveEnv: () => this.resolveStreamEnv(),
+      afterStart: (subprocess: RunningChildProcess) => this.afterStart(subprocess),
+    });
+  }
+
+  stop(): Promise<any> {
+    if (!this.currentProcess) {
+      return Promise.resolve(0);
+    }
+    if (this.engineProcessDirector.isProcessStillRunning(this.currentProcess)) {
+      this.engineProcessDirector.kill();
+    }
+    return this.currentProcess.whenClosed;
   }
 
   setAppJsonPath(appJsonPath: string) {
@@ -40,6 +51,21 @@ export class StreamRunnerProcess extends EngineProcess {
 
   getCurrentChildProcess() {
     return this.currentProcess;
+  }
+
+  afterStart(subprocess: RunningChildProcess) {
+    this.currentProcess = subprocess;
+    // uncomment to log directly to console
+    // subprocess.stdout.on('data', data =>
+    //   console.log(`[stream-runner]`, data.toString())
+    // );
+    // subprocess.stderr.on('data', data =>
+    //   console.error(`[stream-runner]`, data.toString())
+    // );
+    setupStdioRedirection(subprocess, 'stream-engine', {
+      logger: this.logger,
+    });
+    this.resolveStarted();
   }
 
   private resolveStreamEnv(): { [key: string]: any } {

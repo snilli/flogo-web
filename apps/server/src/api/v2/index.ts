@@ -25,7 +25,7 @@ export function createRouter(container: Container): Router {
   handlers(router, container);
   mountResourceRoutes(router, container);
   mountServices(router);
-  mountTestRunner(router);
+  mountTestRunner(router, container);
   fileUpload(router);
 
   router.get('/_/features', context => {

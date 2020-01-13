@@ -1,4 +1,3 @@
-import { remove } from 'lodash';
 import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import {
   ContributionType,
@@ -221,17 +220,9 @@ export const getIsRunDisabledForSelectedActivity = createSelector(
   }
 );
 
-export const isCurrentSelectionRoot = createSelector(
-  getSelectedActivity,
-  getCurrentGraph,
-  (activity, currentGraph): boolean =>
-    activity && currentGraph && currentGraph.rootId === activity.id
-);
-
 export const getIsRestartableTask = createSelector(
   getCurrentHandlerType,
-  isCurrentSelectionRoot,
-  (handlerType, isRoot) => handlerType !== HandlerType.Error && !isRoot
+  handlerType => handlerType !== HandlerType.Error
 );
 
 export const getCurrentActivityExecutionErrors = createSelector(

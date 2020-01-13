@@ -17,11 +17,13 @@ import { isEqual, defaults } from 'lodash';
 import {
   Interceptor,
   Step,
-  RunStateCode,
+  RunTaskStatusCode,
   RunStatusCode,
   RunApiService,
   StatusResponse,
   ErrorService,
+  Dictionary,
+  StepFlowType,
 } from '@flogo-web/lib-client/core';
 
 export const ERRORS = {
@@ -29,7 +31,7 @@ export const ERRORS = {
   PROCESS_NOT_COMPLETED: 'ProcessNotCompleted',
 };
 
-export { RunStatusCode, RunStateCode, Step };
+export { RunStatusCode, RunTaskStatusCode, Step, StepFlowType };
 
 export interface RunStatus extends StatusResponse {
   /**
@@ -47,7 +49,7 @@ interface BaseRunOptions {
 
 export interface RunOptions extends BaseRunOptions {
   // todo: interface
-  attrsData: Array<{ name: string; type: string; value: any }> | null;
+  attrsData: Dictionary<any> | undefined;
 }
 
 export interface RerunOptions extends BaseRunOptions {
@@ -296,6 +298,7 @@ export class RunOrchestratorService {
         ) {
           const runStatus = <RunStatus>Object.assign({}, response);
           runStatus.trial = index + 1;
+          runStatus.id = processInstanceID;
           return runStatus;
         } else {
           throw this.errorService.makeOperationalError(
@@ -349,13 +352,12 @@ export class RunOrchestratorService {
     return registered;
   }
 
-  queryForSteps(processStatusMonitor: Observable<RunStatus>) {
+  queryForSteps(processStatusMonitor: Observable<RunStatus>): Observable<Step[]> {
     const shouldQuery = status =>
       status === RunStatusCode.Active || status === RunStatusCode.Completed;
     return processStatusMonitor.pipe(
       filter(runState => runState && shouldQuery(runState.status)),
-      switchMap(runState => this.runService.getStepsByInstanceId(runState.id)),
-      map(steps => steps.steps)
+      switchMap(runState => this.runService.getStepsByInstanceId(runState.id))
     );
   }
 
@@ -369,11 +371,13 @@ export class RunOrchestratorService {
           catchError(error => {
             // query steps one last time if process failed or was cancelled
             if (registerInfo.instanceId && error.name === ERRORS.PROCESS_NOT_COMPLETED) {
-              return this.runService.getStepsByInstanceId(registerInfo.instanceId);
+              return this.runService
+                .getStepsByInstanceId(registerInfo.instanceId)
+                .pipe(map(steps => ({ steps })));
             }
             return _throw(error);
           }),
-          map(state => state.steps),
+          map(state => (state as RunProgress).steps),
           distinctUntilChanged((prev, next) => isEqual(prev, next))
         );
       })
@@ -399,11 +403,12 @@ export class RunOrchestratorService {
   private observeCompletion(stateStream: Observable<RunProgress>) {
     return stateStream.pipe(
       last(),
-      switchMap(state =>
-        this.runService
-          .getInstance(state.instanceId)
-          .pipe(map(lastInstance => ({ ...state, lastInstance })))
-      )
+      map(state => {
+        return {
+          ...state,
+          lastInstance: { steps: state.steps },
+        };
+      })
     );
   }
 }

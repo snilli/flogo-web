@@ -26,7 +26,6 @@ describe('Service: RunOrchestratorService', function(this: {
     this.runServiceMock = jasmine.createSpyObj<RunApiService>('runService', [
       'getStatusByInstanceId',
       'getStepsByInstanceId',
-      'getInstance',
       'storeProcess',
     ]);
     this.errorService = new ErrorService();
@@ -285,10 +284,11 @@ describe('Service: RunOrchestratorService', function(this: {
       const { stateSeq, registeredStream, stateStream } = setupData;
 
       const mockStepsByInstance = <jasmine.Spy>this.runServiceMock.getStepsByInstanceId;
-      mockStepsByInstance.and.returnValue(of({ steps: [1, 2, 3] }));
+      mockStepsByInstance.and.returnValue(of([1, 2, 3]));
 
       const receivedSteps = [];
       const expectedSteps = stateSeq.map(s => s.steps).concat([[1, 2, 3]]);
+      console.log(expectedSteps);
 
       const subscriber = {
         onError() {},
@@ -351,7 +351,7 @@ describe('Service: RunOrchestratorService', function(this: {
         statusSequence
       );
 
-      const stepSequence = [1, 2, 3, 4, 5].map(n => ({ steps: n }));
+      const stepSequence = [1, 2, 3, 4, 5];
       setUpResponseSequence(<Spy>this.runServiceMock.getStepsByInstanceId, stepSequence);
 
       const emittedSteps = [];
@@ -372,9 +372,6 @@ describe('Service: RunOrchestratorService', function(this: {
 
       spyOn(this.service, 'registerAndStartFlow').and.returnValue(
         of({ instanceId: '123', processId: '456' })
-      );
-      (<jasmine.Spy>this.runServiceMock.getInstance).and.returnValue(
-        of({ name: 'instance mock' })
       );
 
       this.service
@@ -415,7 +412,7 @@ describe('Service: RunOrchestratorService', function(this: {
         statusSequence
       );
 
-      const stepSequence = [1, 2, 3, 4, 5].map(n => ({ steps: n }));
+      const stepSequence = [1, 2, 3, 4, 5];
       setUpResponseSequence(<Spy>this.runServiceMock.getStepsByInstanceId, stepSequence);
 
       const emittedSteps = [];
@@ -436,9 +433,6 @@ describe('Service: RunOrchestratorService', function(this: {
 
       spyOn(this.service, 'registerAndStartFlow').and.returnValue(
         of({ instanceId: '123', processId: '456' })
-      );
-      (<jasmine.Spy>this.runServiceMock.getInstance).and.returnValue(
-        of({ name: 'instance mock' })
       );
 
       this.service
@@ -479,7 +473,7 @@ describe('Service: RunOrchestratorService', function(this: {
         statusSequence
       );
 
-      const stepSequence = [1, 2, 3, 4, 5].map(n => ({ steps: n }));
+      const stepSequence = [1, 2, 3, 4, 5];
       setUpResponseSequence(<Spy>this.runServiceMock.getStepsByInstanceId, stepSequence);
       spyOn(this.service, 'registerAndStartFlow').and.returnValue(
         of({ instanceId: '123', processId: '456' })

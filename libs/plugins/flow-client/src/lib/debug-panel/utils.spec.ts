@@ -6,16 +6,8 @@ describe('debug-panel.utils.matchFormWithExecutionResult()', function() {
     expect(
       matchFormWithExecutionResult(
         {
-          '_A.something_1.message': {
-            name: '_A.something_1.message',
-            type: 'string',
-            value: 'foo',
-          },
-          '_A.something_1.otherval': {
-            name: '_A.something_1.otherval',
-            type: 'number',
-            value: 33,
-          },
+          '_A.something_1.message': 'foo',
+          '_A.something_1.otherval': 33,
         },
         [
           { name: 'otherval', value: 'wrong' },
