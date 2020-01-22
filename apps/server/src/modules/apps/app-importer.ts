@@ -4,6 +4,7 @@ import { injectable } from 'inversify';
 import { ResourceTypes, ResourcePluginRegistry } from '../../extension';
 import { importApp, ImportersResolver } from '../transfer';
 import { AllContribsService } from '../all-contribs';
+import { ResourceType } from '@flogo-web/lib-server/core';
 
 function resourceImportResolver(porting: ResourceTypes): ImportersResolver {
   return {
@@ -16,6 +17,19 @@ function resourceImportResolver(porting: ResourceTypes): ImportersResolver {
   };
 }
 
+function extractPluginTypesMappings(resourceTypesInfo: ResourceType<unknown>[]) {
+  const typeMappings = new Map<string, string>();
+  for (const resourceTypeInfo of resourceTypesInfo) {
+    typeMappings.set(resourceTypeInfo.resourceType, resourceTypeInfo.type);
+    if (resourceTypeInfo.additionalResourceTypes) {
+      for (const additionalType of resourceTypeInfo.additionalResourceTypes) {
+        typeMappings.set(additionalType, resourceTypeInfo.type);
+      }
+    }
+  }
+  return typeMappings;
+}
+
 @injectable()
 export class AppImporter {
   constructor(
@@ -26,9 +40,9 @@ export class AppImporter {
   async import(app) {
     const contributions = await this.allContribsService.allByRef();
     const resourceTypes = this.pluginRegistry.resourceTypes;
-    const pluginTypesMapping = new Map<string, string>(
-      resourceTypes.allTypes().map(t => [t.resourceType, t.type])
-    );
+
+    const pluginTypesMapping = extractPluginTypesMappings(resourceTypes.allTypes());
+
     const { id, ...newApp } = await importApp(
       app,
       resourceImportResolver(resourceTypes),

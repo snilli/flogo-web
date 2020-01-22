@@ -21,7 +21,8 @@ export const streamPlugin: FlogoPlugin = {
     // register resource type
     server.resources.addType({
       type: RESOURCE_TYPE,
-      resourceType: 'pipeline',
+      resourceType: 'stream',
+      additionalResourceTypes: ['pipeline'],
       ref: RESOURCE_REF,
       import: {
         resource(data: Resource<StreamData>, context: ResourceImportContext) {

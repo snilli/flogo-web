@@ -3,8 +3,16 @@
   "$id": "http://github.com/project-flogo/flogo-web/schemas/1.0.0/stream/action-settings.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["pipelineURI"],
+  "anyOf": [
+    { "required": ["pipelineURI"] },
+    { "required": ["streamURI"] }
+  ],
   "properties": {
+    "streamURI": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^res:\/\/.+"
+    },
     "pipelineURI": {
       "type": "string",
       "minLength": 1,

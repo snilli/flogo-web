@@ -6,7 +6,7 @@ import {
 } from '@flogo-web/lib-server/core';
 import { Handler, FlogoAppModel } from '@flogo-web/core';
 
-import { STREAM_POINTER } from '../constants';
+import { PIPELINE_POINTER, STREAM_POINTER } from '../constants';
 import { StreamSchemas } from '../schemas';
 
 export function importHandler(handler, context: HandlerImportContext): Handler {
@@ -16,8 +16,11 @@ export function importHandler(handler, context: HandlerImportContext): Handler {
   if (errors) {
     throw new ValidationError('Stream handler validation error', errors);
   }
+  const resourcePointer =
+    actionDetails[STREAM_POINTER] || actionDetails[PIPELINE_POINTER];
+  const resourceId = parseResourceIdFromResourceUri(resourcePointer);
   return {
     ...handler,
-    resourceId: parseResourceIdFromResourceUri(actionDetails[STREAM_POINTER]),
+    resourceId,
   };
 }
