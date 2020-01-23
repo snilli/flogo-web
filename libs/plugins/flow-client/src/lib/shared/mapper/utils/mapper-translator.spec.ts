@@ -62,19 +62,27 @@ describe('MapperTranslator', function() {
     const translatedMappings = MapperTranslator.translateMappingsOut({
       simpleNumber: { expression: '1.2' },
       simpleString: { expression: '"hello"' },
+      backQuoteString: { expression: '`back quote string`' },
+      singleQuoteString: { expression: "'single quote string'" },
       resolverAssignment: { expression: '$activity[myActivity].array[0].id' },
       attrAssignment: { expression: 'myProp' },
       exprAssignment: { expression: '$activity[myActivity].attr >= 4' },
       objectTemplate: { expression: '{ "myThing": 44 }' },
     });
     it('Parses all mappings', function() {
-      expect(Object.keys(translatedMappings).length).toEqual(6);
+      expect(Object.keys(translatedMappings).length).toEqual(8);
     });
     it('translates simple numbers assignments', function() {
       expect(translatedMappings['simpleNumber']).toEqual(1.2);
     });
     it('translates string assignments', function() {
       expect(translatedMappings['simpleString']).toEqual('hello');
+    });
+    it('translates back quote string assignments', function() {
+      expect(translatedMappings['backQuoteString']).toEqual('back quote string');
+    });
+    it('translates single quote string assignments', function() {
+      expect(translatedMappings['singleQuoteString']).toEqual('single quote string');
     });
     it('translates resolver assignments', function() {
       expect(translatedMappings['resolverAssignment']).toEqual(
