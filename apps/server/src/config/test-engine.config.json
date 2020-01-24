@@ -1,9 +1,9 @@
 {
   "type": "flogo:engine",
   "imports": [
-    "github.com/project-flogo/services/flow-state/store/mem@master",
-    "github.com/project-flogo/stream/service/telemetry@master",
-    "github.com/project-flogo/flow/tester@master"
+    "github.com/project-flogo/services/flow-state/store/mem",
+    "github.com/project-flogo/stream/service/telemetry",
+    "github.com/project-flogo/flow/tester"
   ],
   "actionSettings": {
   "github.com/project-flogo/flow": {
