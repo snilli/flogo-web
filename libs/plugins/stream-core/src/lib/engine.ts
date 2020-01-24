@@ -1,7 +1,8 @@
 import { MetadataAttribute } from '@flogo-web/core';
 
 export interface StreamActionSettings {
-  pipelineURI: string;
+  pipelineURI?: string;
+  streamURI?: string;
   groupBy: string;
 }
 

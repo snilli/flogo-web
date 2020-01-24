@@ -9,7 +9,7 @@ import {
 } from '@flogo-web/plugins/stream-core';
 import { ResourceImportContext, ValidationError } from '@flogo-web/lib-server/core';
 
-import { STREAM_POINTER } from '../constants';
+import { PIPELINE_POINTER, STREAM_POINTER } from '../constants';
 import { makeResourceValidator } from './make-resource-validator';
 
 const KEY_STAGE_INDEX = 2;
@@ -41,9 +41,12 @@ function extractMetadata(
 ): StreamMetadata {
   const metadata = { ...resource.metadata };
   const originalResourceId = getOriginalId(normalizedResourceIds, resource.id);
+  const resourcePointerName = originalResourceId.startsWith('pipeline')
+    ? PIPELINE_POINTER
+    : STREAM_POINTER;
   const actionSettings = actionsManager.getSettingsForResourceId(
     originalResourceId,
-    STREAM_POINTER
+    resourcePointerName
   ) as StreamActionSettings;
   return {
     input: metadata.input || [],

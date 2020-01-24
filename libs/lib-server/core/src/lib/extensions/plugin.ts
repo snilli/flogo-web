@@ -19,6 +19,7 @@ export interface ResourceType<TResourceData = unknown> {
   type: string;
   ref: string;
   resourceType: string;
+  additionalResourceTypes?: string[];
   import: ResourceImporter<TResourceData>;
   export: ResourceExporter<TResourceData>;
 }
