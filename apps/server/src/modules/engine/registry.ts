@@ -135,6 +135,7 @@ export function initEngine(engine, options) {
   const skipContribLoad = options && options.skipContribLoad;
   const skipBundleInstall = options && options.skipBundleInstall;
   const useEngineConfig = options && options.useEngineConfig;
+  let isNewEngine = false;
 
   return engine
     .exists()
@@ -146,11 +147,12 @@ export function initEngine(engine, options) {
     })
     .then(shouldCreateNewEngine => {
       if (shouldCreateNewEngine) {
+        isNewEngine = true;
         return createEngine(engine, {
           defaultFlogoDescriptorPath,
           useContribBundle: !skipBundleInstall,
           useEngineConfig,
-        });
+        }).then(() => engine.build({ syncImports: true }));
       }
       return true;
     })
