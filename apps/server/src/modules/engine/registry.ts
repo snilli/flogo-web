@@ -11,15 +11,9 @@ const engineRegistry: { [key: string]: any } = {};
 let defaultResourceTypes: string[] = [];
 
 export function setDefaultResourceTypes(resourceTypes: string[]) {
-  defaultResourceTypes = [...resourceTypes]
-    .filter(ref => ref !== __DEV_RESOURCE_REF_PLACEHOLDER)
-    .map(ref => {
-      // todo: Remove the following temporary fix for broken `flogo build` command caused by stream v0.2.0
-      if (ref === 'github.com/project-flogo/stream') {
-        return 'github.com/project-flogo/stream@master';
-      }
-      return ref;
-    });
+  defaultResourceTypes = [...resourceTypes].filter(
+    ref => ref !== __DEV_RESOURCE_REF_PLACEHOLDER
+  );
 }
 
 /**
