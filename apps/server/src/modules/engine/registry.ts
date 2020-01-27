@@ -11,15 +11,9 @@ const engineRegistry: { [key: string]: any } = {};
 let defaultResourceTypes: string[] = [];
 
 export function setDefaultResourceTypes(resourceTypes: string[]) {
-  defaultResourceTypes = [...resourceTypes]
-    .filter(ref => ref !== __DEV_RESOURCE_REF_PLACEHOLDER)
-    .map(ref => {
-      // todo: Remove the following temporary fix for broken `flogo build` command caused by stream v0.2.0
-      if (ref === 'github.com/project-flogo/stream') {
-        return 'github.com/project-flogo/stream@master';
-      }
-      return ref;
-    });
+  defaultResourceTypes = [...resourceTypes].filter(
+    ref => ref !== __DEV_RESOURCE_REF_PLACEHOLDER
+  );
 }
 
 /**
@@ -141,6 +135,7 @@ export function initEngine(engine, options) {
   const skipContribLoad = options && options.skipContribLoad;
   const skipBundleInstall = options && options.skipBundleInstall;
   const useEngineConfig = options && options.useEngineConfig;
+  let isNewEngine = false;
 
   return engine
     .exists()
@@ -152,11 +147,12 @@ export function initEngine(engine, options) {
     })
     .then(shouldCreateNewEngine => {
       if (shouldCreateNewEngine) {
+        isNewEngine = true;
         return createEngine(engine, {
           defaultFlogoDescriptorPath,
           useContribBundle: !skipBundleInstall,
           useEngineConfig,
-        });
+        }).then(() => engine.build({ syncImports: true }));
       }
       return true;
     })
