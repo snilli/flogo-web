@@ -84,7 +84,7 @@ export class StreamSimulator {
   }
 
   async startNewProcess({ pipelineId, simulationDataFile, mappingsType }) {
-    console.log('simulator: starting new process', {
+    this.logToConsole('simulator: starting new process', {
       pipelineId,
       simulationDataFile,
       mappingsType,
@@ -108,7 +108,7 @@ export class StreamSimulator {
 
   onClientDisconnection(client: SimulationClient) {
     if (this.currentClient === client) {
-      console.log('simulator: client disconnected');
+      this.logToConsole('simulator: client disconnected');
       this.currentClient.unregister(this);
       this.currentClient = null;
 
@@ -122,22 +122,22 @@ export class StreamSimulator {
   }
 
   pause() {
-    console.log('simulator: pausing');
+    this.logToConsole('simulator: pausing');
     this.currentProcess.pause();
   }
 
   resume() {
-    console.log('simulator: resuming');
+    this.logToConsole('simulator: resuming');
     this.currentProcess.resume();
   }
 
   stop() {
-    console.log('simulator: stopping');
+    this.logToConsole('simulator: stopping');
     this.teardownRemoteProcess();
   }
 
   restart() {
-    console.log('simulator: restarting');
+    this.logToConsole('simulator: restarting');
     this.currentProcess.restart();
   }
 
@@ -149,15 +149,20 @@ export class StreamSimulator {
 
   private sendData(data) {
     if (this.currentClient) {
-      console.log('sending data to client', data);
+      this.logToConsole('sending data to client', data);
       this.currentClient.send(data);
     }
   }
 
   private sendStatus(status) {
     if (this.currentClient) {
-      console.log('sending status to client', status);
+      this.logToConsole('sending status to client', status);
       this.currentClient.emitStatus(status);
     }
+  }
+
+  private logToConsole(...params) {
+    // uncomment to enable console logging
+    // console.log(...params);
   }
 }
