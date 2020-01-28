@@ -90,8 +90,12 @@ export class SimulatorComponent implements OnInit, OnChanges, OnDestroy {
       this.updateSubs.forEach(s => s.unsubscribe());
     }
 
-    this.input$ = this.simulationService.observeData(this.currentStageId, 'started');
-    this.output$ = this.simulationService.observeData(this.currentStageId, 'finished');
+    this.input$ = this.simulationService
+      .observeData(this.currentStageId, 'started')
+      .pipe(takeUntil(this.destroy$));
+    this.output$ = this.simulationService
+      .observeData(this.currentStageId, 'finished')
+      .pipe(takeUntil(this.destroy$));
 
     this.updateSubs = [
       this.input$.pipe(take(1)).subscribe(() => {

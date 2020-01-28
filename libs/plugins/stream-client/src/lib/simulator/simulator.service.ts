@@ -75,17 +75,21 @@ export enum PipelineEventType {
 @Injectable({
   providedIn: 'root',
 })
-export class SimulatorService implements OnDestroy {
-  private readonly socket: SocketIOClient.Socket;
-  public readonly rawEvents$: Observable<PipelineEvent>;
-  public readonly status$: Observable<StreamSimulation.ProcessStatus>;
-  public readonly dataEvents$: Observable<PipelineEvent>;
-  public readonly start$ = new Subject<void>();
-  private readonly currentCacheSrc = new BehaviorSubject<DataCache>({});
+export class SimulatorService {
+  private socket: SocketIOClient.Socket;
+  public rawEvents$: Observable<PipelineEvent>;
+  public status$: Observable<StreamSimulation.ProcessStatus>;
+  public dataEvents$: Observable<PipelineEvent>;
+  public start$ = new Subject<void>();
+  private currentCacheSrc = new BehaviorSubject<DataCache>({});
   private destroy$ = SingleEmissionSubject.create();
 
-  constructor(@Inject(HOSTNAME) hostname: string) {
-    this.socket = io.connect(`${hostname}/stream-simulator`);
+  constructor(@Inject(HOSTNAME) private hostname: string) {
+    this.init();
+  }
+
+  init() {
+    this.socket = io.connect(`${this.hostname}/stream-simulator`);
     this.status$ = fromEvent(this.socket, 'simulator-status');
     this.rawEvents$ = fromEvent(this.socket, 'data');
 
@@ -118,7 +122,7 @@ export class SimulatorService implements OnDestroy {
       .subscribe(this.currentCacheSrc);
   }
 
-  ngOnDestroy() {
+  clear() {
     console.log('disconnecting');
     this.destroy$.emitAndComplete();
     this.socket.disconnect();

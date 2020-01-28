@@ -23,6 +23,7 @@ import {
   StreamStoreState as AppState,
 } from '../core';
 import { ParamsSchemaComponent } from '../params-schema';
+import { SimulatorService } from '../simulator';
 
 @Component({
   selector: 'flogo-stream-designer',
@@ -51,10 +52,13 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private streamService: StreamService,
     private contribInstallerService: ContribInstallerService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private simulation: SimulatorService
   ) {}
 
   ngOnInit() {
+    this.simulation.init();
+
     this.store
       .pipe(select(StreamSelectors.selectStreamState))
       .pipe(takeUntil(this.ngOnDestroy$))
@@ -122,6 +126,7 @@ export class StreamDesignerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.simulation.clear();
     this.ngOnDestroy$.emitAndComplete();
   }
 }

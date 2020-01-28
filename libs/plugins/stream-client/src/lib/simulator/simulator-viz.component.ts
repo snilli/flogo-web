@@ -14,9 +14,9 @@ import {
 import { Observable, combineLatest, pipe, Subscription } from 'rxjs';
 import { SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import { scan, filter, takeUntil, take, skipWhile } from 'rxjs/operators';
-import { PerspectiveWorker } from '@finos/perspective';
+import { PerspectiveWorker, Table } from '@finos/perspective';
 import { PerspectiveService } from './perspective.service';
-import PerspectiveViewer from '@finos/perspective-viewer';
+import { HTMLPerspectiveViewerElement } from '@finos/perspective-viewer';
 
 const VIZ_LIMIT = 20;
 
@@ -36,7 +36,7 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
   @ViewChild('viewer', { static: true }) viewerElem: ElementRef;
 
   public currentView;
-  public currentTable;
+  public currentTable: Table;
   public isStarting = true;
   private isReadyForChanges = false;
   private destroy$ = SingleEmissionSubject.create();
@@ -50,13 +50,11 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
 
   ngOnDestroy() {
     this.destroy$.emitAndComplete();
-    if (this.currentTable) {
-      this.currentTable.delete();
-    }
+    this.currentTable = null;
 
     const viewer = this.getViewer();
     if (viewer) {
-      viewer.delete();
+      viewer.delete(true);
     }
   }
 
@@ -69,10 +67,6 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
       return;
     }
     if (values$Change) {
-      // const viewer = this.getViewer();
-      // viewer.load(this.schema);
-      // this.setColumns();
-      // this.listenForUpdates();
       this.configure();
     }
     if (viewChanges && this.view) {
@@ -83,7 +77,8 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
   private configure() {
     this.isStarting = true;
     if (this.currentTable) {
-      this.currentTable.clear();
+      // docs specify the `clear()` method but the typing doesn't, hence the cast to "any"
+      (this.currentTable as any).clear();
     }
 
     if (this.valueChangeSubscription) {
@@ -109,11 +104,7 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
           // docs say loading table is fine but TS complains, hence the cast to "any"
           viewer.load(this.currentTable as any);
           if (prevTable) {
-            try {
-              prevTable.delete();
-            } catch (e) {
-              console.warn(e);
-            }
+            prevTable.delete();
           }
 
           if (this.view) {
@@ -162,7 +153,7 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
     this.getViewer().setAttribute('columns', stringifiedColumns);
   }
 
-  private getViewer(): PerspectiveViewer {
+  private getViewer(): HTMLPerspectiveViewerElement {
     return this.viewerElem && this.viewerElem.nativeElement;
   }
 
