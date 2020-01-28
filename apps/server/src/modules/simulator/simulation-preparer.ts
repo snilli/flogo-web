@@ -66,7 +66,7 @@ export class SimulationPreparer {
     );
     engineProcess.setAppJsonPath(TMP_PATH);
     const engine = await this.engineProvider();
-    engineProcess.start(engine.getProjectDetails());
+    await engineProcess.start(engine.getProjectDetails());
     remoteSimulatorProcess.setup(engineProcess);
     return remoteSimulatorProcess;
   }
