@@ -10,7 +10,7 @@ export class LogService {
 
   constructor(@Inject(HOSTNAME) hostname: string) {
     this.lines = [];
-    const socket = io(hostname);
+    const socket = io.connect(`${hostname}/engine-logger`);
     socket.on('on-connecting', this.onData.bind(this));
     socket.on('on-log', this.onData.bind(this));
   }

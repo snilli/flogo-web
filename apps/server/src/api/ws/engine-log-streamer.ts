@@ -1,5 +1,6 @@
 import * as socketio from 'socket.io';
 import { engineLogger } from '../../common/logging';
+import EventEmitter = NodeJS.EventEmitter;
 
 export class EngineLogStreamer {
   private cleanup: Function;
@@ -10,11 +11,11 @@ export class EngineLogStreamer {
     fields: ['level', 'timestamp', 'message'],
   };
 
-  constructor(private server: socketio.Server) {}
+  constructor(private channel: EventEmitter) {}
 
   init() {
     const logStreamListener = logData => {
-      this.server.emit(
+      this.channel.emit(
         'on-log',
         JSON.stringify({
           level: logData.level,
@@ -28,7 +29,7 @@ export class EngineLogStreamer {
     this.cleanup = () => logStream.removeListener('log', logStreamListener);
   }
 
-  registerClient(client: socketio.Socket) {
+  onNewConnection(client: socketio.Socket) {
     engineLogger.query(this.firstConnectionQuery, (err, results) => {
       if (err) {
         console.log(err);

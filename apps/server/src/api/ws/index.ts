@@ -5,17 +5,6 @@ import { StreamSimulator, SimulationClient } from '../../modules/simulator';
 // TODO: inject config
 export function init(server, { streamSimulator }: { streamSimulator: StreamSimulator }) {
   const wsServer: socketio.Server = require('socket.io')(server);
-  const sockets = new Set<socketio.Socket>();
-  const engineLogStreamer = new EngineLogStreamer(wsServer);
-
-  wsServer.on('connection', (ws: socketio.Socket) => {
-    engineLogStreamer.registerClient(ws);
-
-    sockets.add(ws);
-    ws.on('disconnect', () => {
-      sockets.delete(ws);
-    });
-  });
 
   let closed = false;
   server.on('close', () => {
@@ -24,9 +13,14 @@ export function init(server, { streamSimulator }: { streamSimulator: StreamSimul
     }
     closed = true;
     wsServer.close();
-    sockets.forEach(socket => socket.disconnect(true));
-    sockets.clear();
   });
+
+  const engineLoggerNs = wsServer.of('/engine-logger');
+  const engineLogStreamer = new EngineLogStreamer(engineLoggerNs);
+  engineLoggerNs.on('connection', clientSocket => {
+    engineLogStreamer.onNewConnection(clientSocket);
+  });
+  engineLogStreamer.init();
 
   wsServer.of('/stream-simulator').on('connection', clientSocket => {
     streamSimulator.updateClient(new SimulationClient(clientSocket));
