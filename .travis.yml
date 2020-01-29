@@ -46,3 +46,9 @@ jobs:
           docker tag flogo/flogo-web:latest-ml flogo/flogo-web:unstable-ml
           docker push flogo/flogo-web:unstable-ml
         fi
+
+        if [ ! -z "$TRAVIS_TAG" ]; then
+          echo "Tag detected, pushing tag '${TRAVIS_TAG}' to docker hub"
+          docker tag flogo/flogo-web:latest "flogo/flogo-web:${TRAVIS_TAG}"
+          docker push "flogo/flogo-web:${TRAVIS_TAG}"
+        fi
