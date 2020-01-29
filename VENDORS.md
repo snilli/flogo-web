@@ -2,51 +2,65 @@
 
 All notable changes to this project's dependencies will be documented in this file.
 
-## dev
+## v0.10.0
 
 - ** New **
-  - [@nrwl/cypress@8.2.0](https://github.com/nrwl/nx) [MIT]
-  - [@nrwl/jest@8.2.0](https://github.com/nrwl/nx) [MIT]
-  - [@nrwl/node@8.2.0](https://github.com/nrwl/nx) [MIT]
-  - [@nrwl/workspace@8.2.0](https://github.com/nrwl/nx) [MIT]
+  - [@angular-builders/custom-webpack@^8.2.0](https://github.com/finos/perspective) [Apache-2.0]
+  - [@finos/perspective@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
+  - [@finos/perspective-viewer@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
+  - [@finos/perspective-d3fc@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
+  - [@finos/perspective-viewer-hypergrid@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
+  - [@finos/perspective-webpack-plugin@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
+  - [@nrwl/angular@8.4.12](https://github.com/nrwl/nx) [MIT]
+  - [@nrwl/cypress@8.4.12](https://github.com/nrwl/nx) [MIT]
+  - [@nrwl/jest@8.4.12](https://github.com/nrwl/nx) [MIT]
+  - [@nrwl/node@8.4.12](https://github.com/nrwl/nx) [MIT]
+  - [@nrwl/workspace@8.4.12](https://github.com/nrwl/nx) [MIT]
+  - [@schematics/angular@8.2.2](https://github.com/angular/angular-cli) [MIT]
+  - [@types/socket.io@2.1.2](https://github.com/DefinitelyTyped/DefinitelyTyped) [MIT]
+  - [@types/ws@6.0.3](https://github.com/DefinitelyTyped/DefinitelyTyped) [MIT]
+  - [ws@^7.1.2](https://github.com/websockets/ws) [MIT]
 - ** Upgraded **
-  - [@koa/cors@3.0.0](https://github.com/koajs/cors) [MIT] (Was 2)
-  - [fs-extra@8.1.0](https://github.com/jprichardson/node-fs-extra) [MIT] (Was 7.0.1)
-  - [koa@2.7.0](https://github.com/koajs/koa) [MIT] (Was 2.6.2)
-  - [koa-body@4.1.0](https://github.com/dlau/koa-body) [MIT] (Was 4.0.4)
-  - [rxjs@^6.5.2](https://github.com/reactivex/rxjs) [Apache-2.0] (Was ^6.3.3)
-  - [@angular-devkit/build-angular@~0.800.6](https://github.com/angular/angular-cli) [MIT] (Was ~0.13.0)
-  - [@angular/animations@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular-devkit/build-angular@~0.801.1](https://github.com/angular/angular-cli) [MIT] (Was ~0.13.0)
+  - [@angular/animations@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
   - [@angular/cdk@~8.0.1](https://github.com/angular/components) [MIT] (Was ~7.3.5)
-  - [@angular/cli@8.0.6](https://github.com/angular/angular-cli) [MIT] (Was 7.3.6)
-  - [@angular/common@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/compiler@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/compiler-cli@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/core@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/forms@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/language-service@^8.0.3](https://github.com/angular/angular) [MIT] (Was ^7.0.0)
-  - [@angular/platform-browser@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/platform-browser-dynamic@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
-  - [@angular/router@~8.0.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/cli@8.1.1](https://github.com/angular/angular-cli) [MIT] (Was 7.3.6)
+  - [@angular/common@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/compiler@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/compiler-cli@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/core@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/forms@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/language-service@^8.2.3](https://github.com/angular/angular) [MIT] (Was ^7.0.0)
+  - [@angular/platform-browser@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/platform-browser-dynamic@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
+  - [@angular/router@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
   - [@ngrx/effects@8.0.1](https://github.com/ngrx/platform) [MIT] (Was 7.3.0)
   - [@ngrx/store@8.0.1](https://github.com/ngrx/platform) [MIT] (Was 7.3.0)
   - [@ngrx/store-devtools@8.0.1](https://github.com/ngrx/platform) [MIT] (Was 7.3.0)
   - [@types/jest@24.0.15](https://github.com/DefinitelyTyped/DefinitelyTyped) [MIT] (Was 24.0.9)
   - [@types/koa@^2.0.49](https://github.com/DefinitelyTyped/DefinitelyTyped) [MIT] (Was ^2.0.46)
+  - [chevrotain^6.0.0](https://github.com/SAP/chevrotain) [Apache2.0] (Was 4.1.0)
   - [codelyzer@^5.0.1](https://github.com/mgechev/codelyzer) [MIT] (Was ~4.5.0)
-  - [cypress@~3.3.1](https://github.com/cypress-io/cypress) [MIT] (Was 3.3.1)
+  - [cypress@~3.4.0](https://github.com/cypress-io/cypress) [MIT] (Was 3.3.1)
+  - [fs-extra@8.1.0](https://github.com/jprichardson/node-fs-extra) [MIT] (Was 7.0.1)
   - [jasmine-core@^3.4.0](https://github.com/jasmine/jasmine) [MIT] (Was ~2.99.1)
   - jasmine-marbles@0.6.0 [MIT] (Was 0.4.0)
   - [jest@24.8.0](https://github.com/facebook/jest) [MIT] (Was 24.1.0)
   - [jest-preset-angular@7.1.1](https://github.com/thymikee/jest-preset-angular) [MIT] (Was 7.0.0)
+  - [koa@2.7.0](https://github.com/koajs/koa) [MIT] (Was 2.6.2)
+  - [koa-body@4.1.0](https://github.com/dlau/koa-body) [MIT] (Was 4.0.4)
+  - [@koa/cors@3.0.0](https://github.com/koajs/cors) [MIT] (Was 2)
   - [karma@^4.1.0](https://github.com/karma-runner/karma) [MIT] (Was ~3.1.1)
   - [karma-cli@^2.0.0](https://github.com/karma-runner/karma-cli) [MIT] (Was ~1.0.1)
   - [karma-jasmine@^2.0.1](https://github.com/karma-runner/karma-jasmine) [MIT] (Was ~1.1.2)
   - [karma-jasmine-html-reporter@^1.4.2](https://github.com/dfederm/karma-jasmine-html-reporter) [MIT] (Was ^0.2.2)
+  - [monaco-editor@^0.17.1](https://github.com/Microsoft/monaco-editor) [MIT] (Was ^0.17.1)
   - [ngx-perfect-scrollbar@^8.0.0](https://github.com/zefoy/ngx-perfect-scrollbar) [MIT] (Was ^7.0.0)
+  - [prettier@^1.16.4](https://github.com/prettier/prettier) [MIT] (Was 1.15.3)
+  - [rxjs@^6.5.2](https://github.com/reactivex/rxjs) [Apache-2.0] (Was ^6.3.3)
   - [ts-node@~8.3.0](https://github.com/TypeStrong/ts-node) [MIT] (Was ~7.0.1)
   - [ts-node-dev@^1.0.0-pre.40](https://github.com/whitecolor/ts-node-dev) [MIT] (Was ^1.0.0-pre.31)
-  - [typescript@~3.4.5](https://github.com/Microsoft/TypeScript) [Apache-2.0] (Was ~3.2.4)
+  - [typescript@~3.5.3](https://github.com/Microsoft/TypeScript) [Apache-2.0] (Was ~3.2.4)
   - [web-animations-js@^2.3.2](https://github.com/web-animations/web-animations-js) [Apache-2.0] (Was ^2.3.1)
   - [zone.js@~0.9.1](https://github.com/angular/zone.js) [MIT] (Was ^0.8.29)
 - ** Removed **
@@ -54,7 +68,10 @@ All notable changes to this project's dependencies will be documented in this fi
   - source-map-support
   - @nrwl/builders
   - @nrwl/schematics
+  - @types/jquery
   - core-js
+  - jquery
+  - ng2-bs3-modal
   - ngrx-store-freeze
   - protractor
   - webdriver-manager
