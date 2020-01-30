@@ -50,8 +50,8 @@ export async function getInitializedEngine(
   const engineExists = await engine.exists();
   const isNewEngine = !engineExists || opts.forceCreate;
   await initEngine(engine, opts);
-  if (isNewEngine && !opts.syncImportsOnCreation) {
-    engine.build({ syncImports: true });
+  if (isNewEngine && opts.syncImportsOnCreation) {
+    await engine.build({ syncImports: true });
   }
   initTimer.done('EngineInit');
 
