@@ -27,6 +27,7 @@ export async function getInitializedEngine(
   enginePath,
   opts: {
     forceCreate?: boolean;
+    syncImportsOnCreation?: boolean;
     noLib?: boolean;
     libVersion?: string;
     useEngineConfig?: boolean;
@@ -46,7 +47,12 @@ export async function getInitializedEngine(
   engineRegistry[enginePath] = engine;
 
   const initTimer = logger.startTimer();
+  const engineExists = await engine.exists();
+  const isNewEngine = !engineExists || opts.forceCreate;
   await initEngine(engine, opts);
+  if (isNewEngine && !opts.syncImportsOnCreation) {
+    engine.build({ syncImports: true });
+  }
   initTimer.done('EngineInit');
 
   return engine;
@@ -150,7 +156,7 @@ export function initEngine(engine, options) {
           defaultFlogoDescriptorPath,
           useContribBundle: !skipBundleInstall,
           useEngineConfig,
-        }).then(() => engine.build({ syncImports: true }));
+        });
       }
       return true;
     })

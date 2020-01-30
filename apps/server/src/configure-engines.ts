@@ -10,6 +10,7 @@ initDb({ autosave: false })
     getInitializedEngine(config.defaultEngine.path, {
       forceCreate: false,
       useEngineConfig: true,
+      syncImportsOnCreation: true,
     })
   )
   .then(engine => syncTasks(engine))
