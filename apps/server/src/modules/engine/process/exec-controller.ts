@@ -49,12 +49,13 @@ export function execEngine(
 
 function startProcess(engineName: string, cwd: string, env: Record<string, string>) {
   const commandEnv = { ...process.env, ...DEFAULT_ENV, ...env };
+  return spawn(getCommand(engineName), [], { cwd, env: commandEnv });
+}
 
-  let command = `./${engineName}`;
-  let args = [];
+function getCommand(engineName: string) {
   if (processHost.isWindows()) {
-    command = process.env.comspec;
-    args = ['/c', engineName];
+    return engineName;
   }
-  return spawn(command, args, { cwd, env: commandEnv });
+
+  return `./${engineName}`;
 }
