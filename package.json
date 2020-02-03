@@ -113,7 +113,7 @@
     "@ngrx/store": "8.0.1",
     "@ngrx/store-devtools": "8.0.1",
     "@ngx-translate/core": "11.0.1",
-    "@nrwl/angular": "^8.9.0",
+    "@nrwl/angular": "8.9.0",
     "@nrwl/cypress": "8.9.0",
     "@nrwl/jest": "8.9.0",
     "@nrwl/node": "8.9.0",
