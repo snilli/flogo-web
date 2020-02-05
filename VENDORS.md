@@ -10,7 +10,7 @@ All notable changes to this project's dependencies will be documented in this fi
   - [@finos/perspective-viewer@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
   - [@finos/perspective-d3fc@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
   - [@finos/perspective-viewer-hypergrid@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
-  - [@finos/perspective-webpack-plugin@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
+  - [@finos/perspective-webpack-plugin@^0.3.8](https://github.com/finos/perspective) [Apache-2.0]
   - [@nrwl/angular@8.4.12](https://github.com/nrwl/nx) [MIT]
   - [@nrwl/cypress@8.4.12](https://github.com/nrwl/nx) [MIT]
   - [@nrwl/jest@8.4.12](https://github.com/nrwl/nx) [MIT]
