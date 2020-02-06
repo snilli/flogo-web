@@ -50,13 +50,15 @@
           [class.disabled]="
             !(
               (this.tabs.areDirty() || this.isTaskDetailEdited) &&
-              this.tabs.areValid() && this.isValidTaskName
+              this.tabs.areValid() &&
+              this.isValidTaskName
             )
           "
           [disabled]="
             !(
               (this.tabs.areDirty() || this.isTaskDetailEdited) &&
-              this.tabs.areValid() && this.isValidTaskName
+              this.tabs.areValid() &&
+              this.isValidTaskName
             )
           "
           (click)="save()"
