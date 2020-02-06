@@ -42,7 +42,8 @@
       "tags": []
     },
     "demo-libs-e2e": {
-      "tags": []
+      "tags": [],
+      "implicitDependencies": ["demo-libs"]
     },
     "plugins-stream-client": {
       "tags": ["client", "plugins", "streams"]
