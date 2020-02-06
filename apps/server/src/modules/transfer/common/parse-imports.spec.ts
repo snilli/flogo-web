@@ -35,8 +35,13 @@ describe('parseImports', () => {
   });
 
   test('should not accept malformed imports', () => {
-    ['a b d', '', null, undefined, 'abc/def/', 'abc/def aliasShouldNotBeHere'].forEach(
-      testCase => expect(() => parseSingleImport(testCase)).toThrow()
-    );
+    [
+      'a b d',
+      '',
+      null,
+      undefined,
+      'abc/def/',
+      'abc/def aliasShouldNotBeHere',
+    ].forEach(testCase => expect(() => parseSingleImport(testCase)).toThrow());
   });
 });

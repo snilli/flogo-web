@@ -50,10 +50,7 @@ export class FlogoFlowDiagramComponent {
       takeUntil(this.ngOnDestroy$)
     );
     this.store
-      .pipe(
-        select(FlowSelectors.getCurrentHandlerId),
-        takeUntil(this.ngOnDestroy$)
-      )
+      .pipe(select(FlowSelectors.getCurrentHandlerId), takeUntil(this.ngOnDestroy$))
       .subscribe(handlerType => {
         this.currentDiagramId = handlerType;
       });

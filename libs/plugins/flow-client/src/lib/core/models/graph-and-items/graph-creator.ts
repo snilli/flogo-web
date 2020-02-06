@@ -34,14 +34,11 @@ export function makeTaskNodes(
   tasks: BackendTask[],
   items: Dictionary<Item>
 ): Dictionary<GraphNode> {
-  return tasks.reduce(
-    (nodes, task) => {
-      const node = makeTask(task, items[task.id]);
-      nodes[node.id] = node;
-      return nodes;
-    },
-    {} as Dictionary<GraphNode>
-  );
+  return tasks.reduce((nodes, task) => {
+    const node = makeTask(task, items[task.id]);
+    nodes[node.id] = node;
+    return nodes;
+  }, {} as Dictionary<GraphNode>);
 }
 
 function makeTask(task: BackendTask, item: Item): GraphNode {

@@ -16,7 +16,10 @@ export function mountFlogoMapperContribution() {
   });
   monaco.languages.setMonarchTokensProvider(languageId, <any>loadTokenizer());
   monaco.languages.setLanguageConfiguration(languageId, {
-    brackets: [['{', '}'], ['[', ']']],
+    brackets: [
+      ['{', '}'],
+      ['[', ']'],
+    ],
 
     autoClosingPairs: [
       { open: '{', close: '}', notIn: [] },

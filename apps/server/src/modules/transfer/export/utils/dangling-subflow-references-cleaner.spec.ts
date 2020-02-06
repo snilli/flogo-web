@@ -10,7 +10,10 @@ describe('exporter.utils.DanglingSubflowReferencesCleaner', () => {
   };
   const linkedFlow = {
     metadata: {
-      input: [{ name: 'foo', type: 'string' }, { name: 'bar', type: 'string' }],
+      input: [
+        { name: 'foo', type: 'string' },
+        { name: 'bar', type: 'string' },
+      ],
     },
   };
   const cleanMappings = DanglingSubflowReferencesCleaner.create().cleanMappings(

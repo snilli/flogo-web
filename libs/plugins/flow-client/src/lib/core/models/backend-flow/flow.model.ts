@@ -136,9 +136,9 @@ const generateDiagramTraverser = schemas => {
         taskInfo.activityRef = task.ref;
       }
 
-      taskInfo.attributes = _parseFlowAttributes(<DiagramTaskAttribute[]>(
-        get(task, 'attributes.inputs')
-      ));
+      taskInfo.attributes = _parseFlowAttributes(
+        <DiagramTaskAttribute[]>get(task, 'attributes.inputs')
+      );
 
       /* add inputMappings */
 
@@ -153,9 +153,9 @@ const generateDiagramTraverser = schemas => {
       }
       /* add outputMappings */
 
-      const outputMappings = parseFlowMappings(<DiagramTaskAttributeMapping[]>(
-        get(task, 'outputMappings')
-      ));
+      const outputMappings = parseFlowMappings(
+        <DiagramTaskAttributeMapping[]>get(task, 'outputMappings')
+      );
 
       if (!isEmpty(outputMappings)) {
         taskInfo.ouputMappings = outputMappings;

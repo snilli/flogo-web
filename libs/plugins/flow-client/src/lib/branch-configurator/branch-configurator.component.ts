@@ -72,10 +72,7 @@ export class BranchConfiguratorComponent implements OnInit {
         }
       });
     this.store
-      .pipe(
-        select(FlowSelectors.getInstalledFunctions),
-        takeUntil(this.destroy$)
-      )
+      .pipe(select(FlowSelectors.getInstalledFunctions), takeUntil(this.destroy$))
       .subscribe(functions => {
         this.installedFunctions = functions;
       });
@@ -129,10 +126,7 @@ export class BranchConfiguratorComponent implements OnInit {
       this.installedFunctions
     );
     this.inputMapperStateSubscription = this.inputMapperController.state$
-      .pipe(
-        skip(1),
-        takeUntil(this.contextChange$)
-      )
+      .pipe(skip(1), takeUntil(this.contextChange$))
       .subscribe(state => {
         this.isEmpty = !state.mappings.condition;
         this.isSaveDisabled = !state.isDirty || !state.isValid || this.isEmpty;

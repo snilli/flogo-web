@@ -120,10 +120,7 @@ export class FlowComponent implements OnInit, OnDestroy {
         this.store.dispatch(new FlowActions.ContributionInstalled(contribDetails))
       );
     this.store
-      .pipe(
-        select(FlowSelectors.selectDebugPanelOpen),
-        takeUntil(this.ngOnDestroy$)
-      )
+      .pipe(select(FlowSelectors.selectDebugPanelOpen), takeUntil(this.ngOnDestroy$))
       .subscribe(isOpen => {
         this.isOpen = isOpen;
       });

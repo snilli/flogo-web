@@ -8,10 +8,7 @@ import { mountFlogoMapperContribution } from '../monaco-contribution';
 })
 export class MonacoEditorLoaderService {
   isMonacoLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private loaded$ = this.isMonacoLoaded.pipe(
-    filter<boolean>(Boolean),
-    shareReplay(1)
-  );
+  private loaded$ = this.isMonacoLoaded.pipe(filter<boolean>(Boolean), shareReplay(1));
   private _monacoPath = 'assets/monaco-editor/vs';
 
   set monacoPath(value) {

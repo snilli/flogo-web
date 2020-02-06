@@ -48,14 +48,8 @@ export const selectHandlers = createSelector(
   selectFlowState,
   (flowState: FlowState) => flowState.handlers
 );
-export const selectApp = createSelector(
-  selectFlowState,
-  flowState => flowState.app
-);
-export const selectActionId = createSelector(
-  selectFlowState,
-  flowState => flowState.id
-);
+export const selectApp = createSelector(selectFlowState, flowState => flowState.app);
+export const selectActionId = createSelector(selectFlowState, flowState => flowState.id);
 export const selectTriggerConfigure = createSelector(
   selectFlowState,
   (flowState: FlowState) => flowState.triggerConfigure
@@ -95,9 +89,8 @@ export const getAllItems = createSelector(
   (mainItems, errorItems) => ({ mainItems, errorItems })
 );
 
-export const getRunnableState = createSelector(
-  getAllItems,
-  ({ mainItems, errorItems }) => determineRunnableStatus(mainItems, errorItems)
+export const getRunnableState = createSelector(getAllItems, ({ mainItems, errorItems }) =>
+  determineRunnableStatus(mainItems, errorItems)
 );
 
 export const getCurrentHandlerId = createSelector(
@@ -233,22 +226,16 @@ export const getCurrentActivityExecutionErrors = createSelector(
   }
 );
 
-export const getAllNodes = createSelector(
-  selectFlowState,
-  flowState => {
-    return {
-      errorNodes: flowState.errorGraph.nodes,
-      mainNodes: flowState.mainGraph.nodes,
-    };
-  }
-);
+export const getAllNodes = createSelector(selectFlowState, flowState => {
+  return {
+    errorNodes: flowState.errorGraph.nodes,
+    mainNodes: flowState.mainGraph.nodes,
+  };
+});
 
 export const getGraph = (handlerType: HandlerType) => {
   const graphName = getGraphName(handlerType);
-  return createSelector(
-    selectFlowState,
-    flowState => flowState[graphName] as FlowGraph
-  );
+  return createSelector(selectFlowState, flowState => flowState[graphName] as FlowGraph);
 };
 
 const getMainGraphNodes = createSelector(
@@ -259,28 +246,23 @@ const getErrorGraphNodes = createSelector(
   getGraph(HandlerType.Error),
   errorGraph => errorGraph.nodes
 );
-export const getPrimaryFlowHasExecutionErrors = createSelector(
-  getMainGraphNodes,
-  nodes => nodesContainErrors(nodes)
+export const getPrimaryFlowHasExecutionErrors = createSelector(getMainGraphNodes, nodes =>
+  nodesContainErrors(nodes)
 );
-export const getErrorFlowHasExecutionErrors = createSelector(
-  getErrorGraphNodes,
-  nodes => nodesContainErrors(nodes)
+export const getErrorFlowHasExecutionErrors = createSelector(getErrorGraphNodes, nodes =>
+  nodesContainErrors(nodes)
 );
 
-export const selectAppInfo = createSelector(
-  selectApp,
-  app => {
-    if (!app) {
-      return {
-        appId: null,
-      };
-    }
+export const selectAppInfo = createSelector(selectApp, app => {
+  if (!app) {
     return {
-      appId: app.id,
+      appId: null,
     };
   }
-);
+  return {
+    appId: app.id,
+  };
+});
 
 export const selectAppAndFlowInfo = createSelector(
   selectAppInfo,

@@ -25,10 +25,7 @@ export class FlowTabsComponent {
 
   constructor(private store: Store<FlowState>) {
     this.store
-      .pipe(
-        select(FlowSelectors.selectErrorPanelStatus),
-        takeUntil(this.ngOnDestroy$)
-      )
+      .pipe(select(FlowSelectors.selectErrorPanelStatus), takeUntil(this.ngOnDestroy$))
       .subscribe(isErrorPanelOpen => (this.isErrorHandlerShown = isErrorPanelOpen));
     this.showBadgeForFlow$ = this.store.pipe(select(getPrimaryFlowHasExecutionErrors));
     this.showBadgeForError$ = this.store.pipe(select(getErrorFlowHasExecutionErrors));

@@ -15,19 +15,15 @@ export function commitTaskConfiguration(
     handlerType,
     item: { id: itemId },
   } = payload;
-  const oldLinkedSubflowId = getLinkedSubflow(getItem(
-    state,
-    handlerType,
-    itemId
-  ) as ItemSubflow);
+  const oldLinkedSubflowId = getLinkedSubflow(
+    getItem(state, handlerType, itemId) as ItemSubflow
+  );
   state = itemUpdate(state, payload);
   state = graphUpdate(state, payload);
   state = subflowSchemaUpdate(state, payload);
-  const newLinkedSubflowId = getLinkedSubflow(getItem(
-    state,
-    handlerType,
-    itemId
-  ) as ItemSubflow);
+  const newLinkedSubflowId = getLinkedSubflow(
+    getItem(state, handlerType, itemId) as ItemSubflow
+  );
   if (oldLinkedSubflowId !== newLinkedSubflowId) {
     state = removeSubschemaIfNotUsed(state, oldLinkedSubflowId);
   }

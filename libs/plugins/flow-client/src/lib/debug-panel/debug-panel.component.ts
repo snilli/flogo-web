@@ -80,11 +80,7 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const selectAndShare = selector =>
-      this.store.pipe(
-        select(selector),
-        shareReplay(1)
-      );
+    const selectAndShare = selector => this.store.pipe(select(selector), shareReplay(1));
     this.isRunDisabled$ = selectAndShare(
       FlowSelectors.getIsRunDisabledForSelectedActivity
     );
@@ -110,10 +106,7 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
     const executionResult$ = selectAndShare(
       FlowSelectors.getSelectedActivityExecutionResult
     );
-    this.activityHasRun$ = executionResult$.pipe(
-      map(Boolean),
-      takeUntil(this.destroy$)
-    );
+    this.activityHasRun$ = executionResult$.pipe(map(Boolean), takeUntil(this.destroy$));
     this.fields$ = combineLatest([form$, selectedActivity$, executionResult$]).pipe(
       this.mergeToFormFields(),
       shareReplay(1),

@@ -127,7 +127,7 @@ export class AutoCompleteDirective implements OnChanges, OnInit, OnDestroy {
     const autocompleteTrigger = this.containerRef.nativeElement;
     if (
       clickTarget !== autocompleteTrigger &&
-      (this.popoverRef && !this.popoverRef.overlayElement.contains(clickTarget))
+      this.popoverRef && !this.popoverRef.overlayElement.contains(clickTarget)
     ) {
       this.close();
     }

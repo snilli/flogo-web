@@ -5,6 +5,4 @@ export * from './state';
 export * from './models';
 export * from './interfaces';
 export * from './constants';
-export {
-  MicroServiceModelConverter,
-} from './models/profiles/microservice-converter.model';
+export { MicroServiceModelConverter } from './models/profiles/microservice-converter.model';

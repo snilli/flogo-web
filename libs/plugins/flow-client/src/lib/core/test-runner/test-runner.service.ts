@@ -207,10 +207,7 @@ export class TestRunnerService implements OnDestroy {
   }
 
   private getFlowStateOnce(): Observable<FlowState> {
-    return this.store.pipe(
-      select(FlowSelectors.selectFlowState),
-      take(1)
-    );
+    return this.store.pipe(select(FlowSelectors.selectFlowState), take(1));
   }
 
   private handleRunError(error) {

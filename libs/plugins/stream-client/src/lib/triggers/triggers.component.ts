@@ -62,10 +62,7 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store
-      .pipe(
-        select(getTriggersState),
-        takeUntil(this.ngDestroy$)
-      )
+      .pipe(select(getTriggersState), takeUntil(this.ngDestroy$))
       .subscribe(triggerState => {
         this.triggersList = triggerState.triggers;
         this.actionId = triggerState.actionId;

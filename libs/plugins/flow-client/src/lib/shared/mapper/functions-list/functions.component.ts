@@ -37,15 +37,10 @@ export class FunctionsComponent implements OnInit, OnDestroy {
     const state$ = this.mapperService.state$.pipe(shareReplay());
     this.functions$ = state$.pipe(selectNodesFromFunctions);
     this.filterTerm$ = state$.pipe(selectFilterFromFunctions);
-    state$
-      .pipe(
-        selectedInputKey,
-        takeUntil(this.ngDestroy)
-      )
-      .subscribe(() => {
-        this.name = '';
-        this.description = null;
-      });
+    state$.pipe(selectedInputKey, takeUntil(this.ngDestroy)).subscribe(() => {
+      this.name = '';
+      this.description = null;
+    });
   }
 
   ngOnDestroy() {

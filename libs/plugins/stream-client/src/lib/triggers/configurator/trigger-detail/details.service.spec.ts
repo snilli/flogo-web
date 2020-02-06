@@ -61,13 +61,13 @@ describe('Serive: ConfigureDetailsService', function(this: {
   it('Should create a reply mapper with the correct arguments', () => {
     this.mapperControllerFactory.createController.and.callFake((...args) => args);
     this.testService.build(MockData);
-    expect(this.mapperControllerFactory.createController.calls.mostRecent().args).toEqual(
-      [
-        MockData.schema.reply,
-        MockData.streamMetadata.output,
-        MockData.handler.actionMappings.output,
-        MockData.functions,
-      ]
-    );
+    expect(
+      this.mapperControllerFactory.createController.calls.mostRecent().args
+    ).toEqual([
+      MockData.schema.reply,
+      MockData.streamMetadata.output,
+      MockData.handler.actionMappings.output,
+      MockData.functions,
+    ]);
   });
 });
