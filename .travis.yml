@@ -23,7 +23,7 @@ jobs:
     - stage: test
       name: "Unit tests and code checks"
       script:
-        - yarn format:check --all
+        - yarn format:check
         - yarn lint
         - yarn test
     - stage: test
