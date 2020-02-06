@@ -47,9 +47,7 @@ export class ErrorFactory {
       context,
       type: TYPES.ArgumentTypeMismatch,
       severity: ERROR,
-      message: `Expected type of parameter '${msgParams.paramName}' to be '${
-        msgParams.expectedType
-      }' but got '${msgParams.actualType}'.`,
+      message: `Expected type of parameter '${msgParams.paramName}' to be '${msgParams.expectedType}' but got '${msgParams.actualType}'.`,
     };
   }
 
@@ -63,9 +61,7 @@ export class ErrorFactory {
       context,
       type: TYPES.ArgumentCountMismatch,
       severity: ERROR,
-      message: `Expected ${msgParams.expectedCount} arguments, but got ${
-        msgParams.actualCount
-      }.`,
+      message: `Expected ${msgParams.expectedCount} arguments, but got ${msgParams.actualCount}.`,
     };
   }
 
@@ -79,9 +75,7 @@ export class ErrorFactory {
       context,
       type: TYPES.MinimumArgumentCountMismatch,
       severity: ERROR,
-      message: `Expected at least ${msgParams.leastExpectedCount} arguments, but got ${
-        msgParams.actualCount
-      }.`,
+      message: `Expected at least ${msgParams.leastExpectedCount} arguments, but got ${msgParams.actualCount}.`,
     };
   }
 
@@ -95,9 +89,7 @@ export class ErrorFactory {
       context,
       type: TYPES.UnassignableType,
       severity: ERROR,
-      message: `Type '${msgParams.actual}' is not assignable to type '${
-        msgParams.expected
-      }'.`,
+      message: `Type '${msgParams.actual}' is not assignable to type '${msgParams.expected}'.`,
     };
   }
 
@@ -125,9 +117,7 @@ export class ErrorFactory {
       context,
       type: TYPES.InvalidPropertyReference,
       severity: ERROR,
-      message: `Property '${msgParams.propName}' does not exist in '${
-        msgParams.parentName
-      }'.`,
+      message: `Property '${msgParams.propName}' does not exist in '${msgParams.parentName}'.`,
     };
   }
 
@@ -141,9 +131,7 @@ export class ErrorFactory {
       context,
       type: TYPES.UnexpectedMemberAccess,
       severity: ERROR,
-      message: `Unexpected access of property '${
-        msgParams.propName
-      }'. Cannot access a property of ${msgParams.parentType} type.`,
+      message: `Unexpected access of property '${msgParams.propName}'. Cannot access a property of ${msgParams.parentType} type.`,
     };
   }
 
@@ -225,9 +213,7 @@ export class ErrorFactory {
       context,
       type: TYPES.InvalidExpressionResult,
       severity: ERROR,
-      message: `Invalid expression result, expected ${msgParams.expected} but got ${
-        msgParams.actual
-      }.`,
+      message: `Invalid expression result, expected ${msgParams.expected} but got ${msgParams.actual}.`,
     };
   }
 }

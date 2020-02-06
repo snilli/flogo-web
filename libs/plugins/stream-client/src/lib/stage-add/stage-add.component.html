@@ -9,7 +9,7 @@
   />
   <span class="flogo-icon-search icon-search"></span>
 </div>
-<div class="content" *ngIf="(filteredActivities$ | async) as activities">
+<div class="content" *ngIf="filteredActivities$ | async as activities">
   <button
     class="list-item install-item qa-install-item"
     (click)="handleInstallerWindow(true)"

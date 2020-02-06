@@ -121,9 +121,7 @@ describe('Service: RunOrchestratorService', function(this: {
           expect(error.name).toEqual(ERRORS.PROCESS_NOT_COMPLETED);
           expect(error.status).toEqual(
             RunStatusCode.Failed,
-            `Expected error.status to be ${RunStatusCode.Failed} but found ${
-              error.status
-            }`
+            `Expected error.status to be ${RunStatusCode.Failed} but found ${error.status}`
           );
         },
         done
@@ -164,9 +162,7 @@ describe('Service: RunOrchestratorService', function(this: {
         state => {
           expect(state.status).toEqual(
             sequence[count].status,
-            `Trial ${count} expected status ${sequence[count].status} but found ${
-              state.status
-            }`
+            `Trial ${count} expected status ${sequence[count].status} but found ${state.status}`
           );
           count++;
         },
@@ -216,9 +212,7 @@ describe('Service: RunOrchestratorService', function(this: {
           state => {
             expect(state.status).toEqual(
               sequence[count].status,
-              `Trial ${count} expected status ${sequence[count].status} but found ${
-                state.status
-              }`
+              `Trial ${count} expected status ${sequence[count].status} but found ${state.status}`
             );
             count++;
           },

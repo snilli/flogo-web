@@ -5,7 +5,7 @@
     [ngClass]="{ 'flogo-flow-tabs-item--selected': !isErrorHandlerShown }"
   >
     {{ 'FLOWS:PRIMARY-FLOW' | translate }}
-    <div class="error-badge" *ngIf="(showBadgeForFlow$ | async)"></div>
+    <div class="error-badge" *ngIf="showBadgeForFlow$ | async"></div>
   </li>
   <li
     class="flogo-flow-tabs-item"
@@ -13,6 +13,6 @@
     [ngClass]="{ 'flogo-flow-tabs-item--selected': isErrorHandlerShown }"
   >
     {{ 'FLOWS:ERROR-HANDLER' | translate }}
-    <div class="error-badge" *ngIf="(showBadgeForError$ | async)"></div>
+    <div class="error-badge" *ngIf="showBadgeForError$ | async"></div>
   </li>
 </ul>

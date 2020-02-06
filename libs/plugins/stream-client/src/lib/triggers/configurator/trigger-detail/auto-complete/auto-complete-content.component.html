@@ -10,7 +10,7 @@
     (options?.appVariables | async)?.length > 0
   "
 >
-  <ng-container *ngIf="(options?.allowedValues | async) as allowedValues">
+  <ng-container *ngIf="options?.allowedValues | async as allowedValues">
     <ul role="listbox" *ngIf="allowedValues.length > 0" class="options-group">
       <li
         *ngFor="let value of allowedValues"
@@ -22,7 +22,7 @@
       </li>
     </ul>
   </ng-container>
-  <ng-container *ngIf="(options?.appVariables | async) as variables">
+  <ng-container *ngIf="options?.appVariables | async as variables">
     <div class="options-group-divider"></div>
     <ul
       role="listbox"

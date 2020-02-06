@@ -1,5 +1,5 @@
 <div
-  *ngFor="let notification of (notifications$ | async)"
+  *ngFor="let notification of notifications$ | async"
   @notificationAnim
   [attr.data-notification-type]="notification.type"
   class="uxpl-notification"

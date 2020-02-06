@@ -261,7 +261,7 @@
   </button>
 </div>
 
-<div class="content-empty" *ngIf="(appDetailService.isEmpty$ | async)">
+<div class="content-empty" *ngIf="appDetailService.isEmpty$ | async">
   <img src="/assets/svg/flogo.flynn-placeholder.svg" />
   <p class="content-empty__message">{{ 'APP-DETAILS:NO-RESOURCES-FOUND' | translate }}</p>
   <button class="flogo-button--default" (click)="openCreateResource()">
@@ -271,7 +271,7 @@
 
 <ng-container *ngIf="resourceViewType === 'resources'; else resourcesGroupedByTrigger">
   <flogo-apps-resource-views-by-resource
-    *ngFor="let triggerGroup of (appDetailService.groupsByResource$ | async)"
+    *ngFor="let triggerGroup of appDetailService.groupsByResource$ | async"
     [triggers]="triggerGroup.triggers"
     [resource]="triggerGroup.flow"
     (resourceSelected)="onResourceSelected($event)"
@@ -280,7 +280,7 @@
 </ng-container>
 <ng-template #resourcesGroupedByTrigger>
   <flogo-apps-resource-views-by-trigger
-    *ngFor="let resourceGroup of (appDetailService.groupsByTrigger$ | async)"
+    *ngFor="let resourceGroup of appDetailService.groupsByTrigger$ | async"
     [trigger]="resourceGroup.trigger"
     [resources]="resourceGroup.flows"
     (resourceSelected)="onResourceSelected($event)"
