@@ -24,8 +24,8 @@ jobs:
       name: "Unit tests and code checks"
       script:
         - yarn format:check
-        - yarn lint
-        - yarn test
+        - yarn nx affected --target=lint --base=origin/master --parallel
+        - yarn nx affected --target=test --base=origin/master --parallel
     - stage: test
       name: "E2E tests"
       script: yarn e2e:ci

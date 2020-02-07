@@ -34,4 +34,5 @@ jobs:
           fi
           echo "Base => $NX_BASE"
           yarn format:check -- --base=$NX_BASE
-          yarn affected:lint -- --base=$NX_BASE
+          yarn nx affected --target=lint --base=$NX_BASE --parallel
+          yarn nx affected --target=test --base=$NX_BASE --parallel
