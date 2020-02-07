@@ -1,12 +1,9 @@
 import { Container } from 'inversify';
-import { Middleware, ParameterizedContext } from 'koa';
+import { RouterContext } from 'koa-router';
 import { ResourceService } from '../../../modules/resources';
 import { IMiddleware as RouterMiddleware } from 'koa-router';
 
-export type ResourceServiceContext = ParameterizedContext<
-  any,
-  ResourceServiceContextData
->;
+export type ResourceServiceContext = RouterContext<any, ResourceServiceContextData>;
 
 export interface ResourceServiceContextData {
   resourceService: ResourceService;
