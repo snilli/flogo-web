@@ -1,10 +1,6 @@
 name: ci
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   build:
@@ -26,7 +22,10 @@ jobs:
       - name: Run lint
         shell: bash
         run: |
-          if [[ $GITHUB_BASE_REF ]]
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]
+          then
+            export NX_BASE="remotes/origin/master"
+          elif [[ $GITHUB_BASE_REF ]]
           then
             export NX_BASE=remotes/origin/$GITHUB_BASE_REF
           else
@@ -34,5 +33,4 @@ jobs:
           fi
           echo "Base => $NX_BASE"
           yarn format:check -- --base=$NX_BASE
-          yarn nx affected --target=lint --base=$NX_BASE --parallel
-          yarn nx affected --target=test --base=$NX_BASE --parallel
+          yarn nx affected --target=lint --base=$NX_BASE --head=HEAD --parallel
