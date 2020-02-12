@@ -8,7 +8,7 @@ import { mountRestApi } from '../api';
 import * as path from 'path';
 
 const KoaApp = require('koa');
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const cors = require('@koa/cors');
 const serveStatic = require('koa-static');
 const bodyParser = require('koa-body');

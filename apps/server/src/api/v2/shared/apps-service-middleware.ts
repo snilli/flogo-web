@@ -1,5 +1,5 @@
 import { Middleware, ParameterizedContext } from 'koa';
-import { RouterContext } from 'koa-router';
+import { RouterContext } from '@koa/router';
 import { Container } from 'inversify';
 import { AppsService } from '../../../modules/apps';
 import { AppTriggersService } from '../../../modules/apps/triggers';

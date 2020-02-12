@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import 'koa-body';
 
-import Router from 'koa-router';
+import Router from '@koa/router';
 
 import { ERROR_TYPES, ErrorManager } from '../../common/errors';
 import { exportApp } from './apps/export';

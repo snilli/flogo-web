@@ -1,7 +1,7 @@
 import { format as formatUrl } from 'url';
 import * as Koa from 'koa';
-import * as Router from 'koa-router';
-const RouterConstructor = require('koa-router');
+import * as Router from '@koa/router';
+const RouterConstructor = require('@koa/router');
 const request = require('got');
 
 import { getServiceRegistry, getConfigSummary } from './config';

@@ -1,4 +1,4 @@
-import * as Router from 'koa-router';
+import * as Router from '@koa/router';
 import { Container } from 'inversify';
 import { createRouter as createV2Router } from './v2';
 

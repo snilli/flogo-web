@@ -1,6 +1,6 @@
 import { Context } from 'koa';
-import * as Router from 'koa-router';
-const RouterClass = require('koa-router');
+import * as Router from '@koa/router';
+const RouterClass = require('@koa/router');
 
 import { HandlersService } from '../../modules/apps/handlers-service';
 import { ErrorManager, ERROR_TYPES } from '../../common/errors';
