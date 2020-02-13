@@ -90,7 +90,7 @@ export class HeaderComponent {
   /**
    * Reference handler to the bottom block based on whose availability the styling to the header changes
    **/
-  @ContentChild(BottomBlockDirective, { static: false })
+  @ContentChild(BottomBlockDirective)
   bottomAreaContent: ElementRef;
 
   onMouseOverBackControl() {

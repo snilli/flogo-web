@@ -42,7 +42,7 @@ export class SelectComponent
    */
   @Input() fieldId: string;
 
-  @ViewChild(TemplatePortalDirective, { static: false })
+  @ViewChild(TemplatePortalDirective)
   contentTemplate: TemplatePortalDirective;
 
   @ViewChild(SelectPanelComponent, { static: true })

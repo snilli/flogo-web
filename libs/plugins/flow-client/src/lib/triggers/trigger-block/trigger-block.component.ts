@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Trigger, TRIGGER_MENU_OPERATION } from '../../core';
-import { TriggerMenuSelectionEvent } from './models';
 
 export interface TriggerMenuSelectionEvent {
   operation: string;

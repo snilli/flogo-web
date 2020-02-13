@@ -33,7 +33,7 @@ export class SettingsFormFieldComponent implements OnChanges {
   @Input() settingControl: FormControl;
   @Input() appProperties?: string[] | Observable<string>;
   @Output() enableSettings = new EventEmitter<ElementRef>();
-  @ViewChild('field', { static: false }) fieldRef: ElementRef;
+  @ViewChild('field') fieldRef: ElementRef;
 
   useCodeEditor: boolean;
   editorOut: (value: string) => SettingValue;

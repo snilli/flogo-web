@@ -26,7 +26,8 @@ export class FileDownloaderService {
   }
 
   download(content: ArrayBuffer | Blob, fileName = 'file') {
-    const url = this.window.URL.createObjectURL(content);
+    const URL = (this.window as any).URL;
+    const url = URL.createObjectURL(content);
     const link = this.document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', fileName);

@@ -13,7 +13,7 @@ import { FieldErrorComponent } from './field-error.component';
   `,
 })
 class TestContainerComponent {
-  @ViewChild('component', { static: false }) testComponent: FieldErrorComponent;
+  @ViewChild('component') testComponent: FieldErrorComponent;
   errors: ValidationErrors | null;
 }
 
