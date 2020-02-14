@@ -159,7 +159,7 @@
     "nodemon": "^1.18.4",
     "perfect-scrollbar": "^1.4.0",
     "prettier": "1.19.1",
-    "primeng": "^7.0.0",
+    "primeng": "8.1.1",
     "read-pkg": "^4.0.1",
     "server-destroy": "^1.0.1",
     "sinon": "^4.4.1",
