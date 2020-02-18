@@ -51,7 +51,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/parser/jest.config.js",
-            "tsConfig": "libs/parser/tsconfig.spec.json"
+            "tsConfig": "libs/parser/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -114,7 +115,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/server/jest.config.js",
-            "tsConfig": "apps/server/tsconfig.spec.json"
+            "tsConfig": "apps/server/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -296,7 +298,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/lib-server/jest.config.js",
-            "tsConfig": "libs/lib-server/tsconfig.spec.json"
+            "tsConfig": "libs/lib-server/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
