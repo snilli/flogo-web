@@ -15,6 +15,6 @@ export function checkSimulationConfig(resource: Resource<StreamData>) {
   return resource;
 }
 
-function isValidMappingType(val: unknown): val is StreamSimulation.InputMappingType {
+function isValidMappingType(val: any): val is StreamSimulation.InputMappingType {
   return Object.values(StreamSimulation.InputMappingType).includes(val);
 }
