@@ -12,7 +12,10 @@ import { By } from '@angular/platform-browser';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 import { App } from '@flogo-web/core';
-import { CoreModule as FlogoCoreModule } from '@flogo-web/lib-client/core';
+import {
+  CoreModule as FlogoCoreModule,
+  SanitizeService,
+} from '@flogo-web/lib-client/core';
 import { SharedModule as FlogoSharedModule } from '@flogo-web/lib-client/common';
 import { NotificationsServiceMock } from '@flogo-web/lib-client/notifications/testing';
 import { FakeRootLanguageModule } from '@flogo-web/lib-client/language/testing';
@@ -79,6 +82,7 @@ describe('FlogoApplicationDetailComponent component', () => {
       ],
       providers: [
         { provide: AppDetailService, useClass: MockAppDetailService },
+        { provide: SanitizeService, useValue: { sanitizeHTMLInput: v => v } },
         {
           provide: NotificationsService,
           useValue: new NotificationsServiceMock(),
