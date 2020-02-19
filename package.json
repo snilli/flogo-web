@@ -59,6 +59,8 @@
   },
   "author": "TIBCO Software Inc.",
   "dependencies": {
+    "@angular/compiler": "~9.0.0",
+    "@angular/compiler-cli": "~9.0.0",
     "@koa/cors": "3.0.0",
     "@koa/router": "^8.0.7",
     "ajv": "^6.1.1",
@@ -91,14 +93,12 @@
     "ws": "^7.1.2"
   },
   "devDependencies": {
+    "@angular/cli": "9.0.2",
     "@angular-builders/custom-webpack": "^8.2.0",
     "@angular-devkit/build-angular": "0.900.2",
     "@angular/animations": "~9.0.0",
     "@angular/cdk": "~9.0.0",
-    "@angular/cli": "9.0.2",
     "@angular/common": "~9.0.0",
-    "@angular/compiler": "~9.0.0",
-    "@angular/compiler-cli": "~9.0.0",
     "@angular/core": "~9.0.0",
     "@angular/forms": "~9.0.0",
     "@angular/language-service": "^9.0.0",
