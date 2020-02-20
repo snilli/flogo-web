@@ -50,19 +50,16 @@ export const selectTriggerConfigure = createSelector(
   (streamState: FlogoStreamState) => streamState.triggerConfigure
 );
 
-export const selectAppInfo = createSelector(
-  selectApp,
-  app => {
-    if (!app) {
-      return {
-        appId: null,
-      };
-    }
+export const selectAppInfo = createSelector(selectApp, app => {
+  if (!app) {
     return {
-      appId: app.id,
+      appId: null,
     };
   }
-);
+  return {
+    appId: app.id,
+  };
+});
 
 export const selectStreamMetadata = createSelector(
   selectStreamState,
@@ -141,12 +138,9 @@ export const getDiagramSelection = createSelector(
 );
 
 export const getStagesAsTiles = (maxTileCount: number) => {
-  return createSelector(
-    selectGraph,
-    (graph: DiagramGraph) => {
-      return graphToTiles(graph, maxTileCount);
-    }
-  );
+  return createSelector(selectGraph, (graph: DiagramGraph) => {
+    return graphToTiles(graph, maxTileCount);
+  });
 };
 
 function findIndexForCurrentSelection(

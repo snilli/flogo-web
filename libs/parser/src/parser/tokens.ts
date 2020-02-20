@@ -7,9 +7,7 @@ export const IdentifierName = createToken({
   label: 'Identifier',
   // TODO: should we change this regex for manual parsing to avoid perf issues?
   pattern: new RegExp(
-    `[_${UnicodeCategory.Letter}][_${UnicodeCategory.Letter}${
-      UnicodeCategory.DecimalDigit
-    }]*`
+    `[_${UnicodeCategory.Letter}][_${UnicodeCategory.Letter}${UnicodeCategory.DecimalDigit}]*`
   ),
 });
 export const True = createToken({
@@ -181,9 +179,7 @@ export const Lookup = createToken({
   pattern: /\$/,
 });
 const RESOLVER_PATTERN = new RegExp(
-  `[_${UnicodeCategory.Letter}][_\.${UnicodeCategory.Letter}${
-    UnicodeCategory.DecimalDigit
-  }]*`
+  `[_${UnicodeCategory.Letter}][_\.${UnicodeCategory.Letter}${UnicodeCategory.DecimalDigit}]*`
 );
 
 function matchResolverIdentifier(text: string, startOffset?: number, tokens?: IToken[]) {

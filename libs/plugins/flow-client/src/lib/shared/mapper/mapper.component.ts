@@ -125,10 +125,7 @@ export class MapperComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initContext() {
-    const stop$ = merge(this.ngDestroy, this.contextChanged).pipe(
-      first(),
-      share()
-    );
+    const stop$ = merge(this.ngDestroy, this.contextChanged).pipe(first(), share());
 
     const state$ = this.mapperService.state$.pipe(
       catchError(err => {
@@ -139,20 +136,12 @@ export class MapperComponent implements OnInit, OnChanges, OnDestroy {
       share()
     );
 
-    state$
-      .pipe(
-        selectCurrentNode,
-        takeUntil(stop$)
-      )
-      .subscribe(currentInputNode => {
-        this.currentInput = currentInputNode;
-      });
+    state$.pipe(selectCurrentNode, takeUntil(stop$)).subscribe(currentInputNode => {
+      this.currentInput = currentInputNode;
+    });
 
     state$
-      .pipe(
-        selectMappings,
-        takeUntil(stop$)
-      )
+      .pipe(selectMappings, takeUntil(stop$))
       .subscribe(change => this.mappingsChange.emit(change));
 
     this.dragOverEditor
@@ -165,11 +154,7 @@ export class MapperComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe(position => this.editorService.dragOver(position));
 
     this.mapperService.state$
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(stop$),
-        first()
-      )
+      .pipe(distinctUntilChanged(), takeUntil(stop$), first())
       .subscribe((state: MapperState) => {
         const inputsData = state.inputs;
         // open first input by default

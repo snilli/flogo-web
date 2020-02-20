@@ -1,11 +1,11 @@
-import * as Router from 'koa-router';
+import * as Router from '@koa/router';
 import { createInstancesRouter } from './instances';
 import { createProcessesRouter } from './processes';
 import { createResourceMiddleware } from '../resources/resource-service-middleware';
 import { FlowRunnerCreator } from '../../../modules/engine/process/flow-runner-creator';
 import { FlowExporter } from '../../../modules/transfer/export/flow-exporter';
 
-const RouterConstructor = require('koa-router');
+const RouterConstructor = require('@koa/router');
 
 const createRouter = (opts?: Router.IRouterOptions): Router =>
   new RouterConstructor(opts);

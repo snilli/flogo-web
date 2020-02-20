@@ -11,7 +11,9 @@ export enum ValueType {
   Bytes = 'bytes',
 }
 
-const _allTypes: ReadonlyArray<ValueType> = Object.values(ValueType);
+const _allTypes: ReadonlyArray<ValueType> = Object.values(
+  ValueType
+) as readonly ValueType[];
 const _defaultValuesForValueTypes: [ValueType, any][] = [
   [ValueType.String, ''],
   [ValueType.Integer, 0],

@@ -24,10 +24,7 @@ import {
 import { EditorService, InsertEvent } from './editor.service';
 
 function distinctAndDebounce(obs) {
-  return obs.pipe(
-    debounceTime(300),
-    distinctUntilChanged()
-  );
+  return obs.pipe(debounceTime(300), distinctUntilChanged());
 }
 
 interface EditorHint {

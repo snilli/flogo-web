@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import * as Router from 'koa-router';
+import * as Router from '@koa/router';
 import { Services } from '../services';
 import { findAndExportFlow } from './find-and-export-flow';
 import { FlowRunnerCreator } from '../../../../modules/engine/process/flow-runner-creator';

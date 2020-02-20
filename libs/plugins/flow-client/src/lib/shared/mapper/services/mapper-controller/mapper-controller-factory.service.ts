@@ -68,13 +68,10 @@ export class MapperControllerFactory {
       newState.outputs.nodes = outputs;
       newState.functions.nodes = functions;
     }
-    newState.inputs.nodes = nodeList.reduce(
-      (nodes, node) => {
-        nodes[node.path] = node;
-        return nodes;
-      },
-      {} as { [path: string]: MapperTreeNode }
-    );
+    newState.inputs.nodes = nodeList.reduce((nodes, node) => {
+      nodes[node.path] = node;
+      return nodes;
+    }, {} as { [path: string]: MapperTreeNode });
     return newState;
   }
 
@@ -195,9 +192,9 @@ export class MapperControllerFactory {
     let node = nodes.shift();
 
     const linkedArrayPaths = [];
-    let processedExpression = ArrayMappingHelper.processExpressionForEach(<string>(
-      mapping.expression
-    ));
+    let processedExpression = ArrayMappingHelper.processExpressionForEach(
+      <string>mapping.expression
+    );
     processedExpression.node = rootArrayNode;
     processedExpression.fullLinkedPath =
       mapping.parsedExpressionDetails.memberReferences[0];
@@ -207,9 +204,9 @@ export class MapperControllerFactory {
       const relativePath = this.makeRelativeNodePath(node, prevNode);
       mapping = mapping.mappings ? mapping.mappings[relativePath] : null;
       if (mapping && !isEmptyExpression(mapping)) {
-        processedExpression = ArrayMappingHelper.processExpressionForEach(<string>(
-          mapping.expression
-        ));
+        processedExpression = ArrayMappingHelper.processExpressionForEach(
+          <string>mapping.expression
+        );
         processedExpression.node = node;
         const hasMemberReferences =
           mapping.parsedExpressionDetails &&

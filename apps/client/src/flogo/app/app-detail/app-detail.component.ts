@@ -145,10 +145,7 @@ export class FlogoApplicationDetailComponent implements OnDestroy, OnChanges, On
       });
 
     this.appDetailService.app$
-      .pipe(
-        distinctUntilKeyChanged<App>('id'),
-        takeUntilDestroyed
-      )
+      .pipe(distinctUntilKeyChanged<App>('id'), takeUntilDestroyed)
       .subscribe(() => {
         this.focusNameFieldIfNewApp();
       });

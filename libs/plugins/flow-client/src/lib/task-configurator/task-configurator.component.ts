@@ -153,10 +153,7 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
         }
       });
     this.store
-      .pipe(
-        select(FlowSelectors.getInstalledFunctions),
-        takeUntil(this.destroy$)
-      )
+      .pipe(select(FlowSelectors.getInstalledFunctions), takeUntil(this.destroy$))
       .subscribe(functions => {
         this.installedFunctions = functions;
       });
@@ -430,7 +427,10 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
   }
 
   private initActivitySettings(settingPropsToMap, activitySettings) {
-    const { subscription, controller } = this.configureMappingsController(
+    const {
+      subscription,
+      controller,
+    } = this.configureMappingsController(
       TASK_TABS.SETTINGS,
       this.activitySettingsStateSubscription,
       { propsToMap: settingPropsToMap, inputScope: [], mappings: activitySettings }
@@ -454,10 +454,7 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
       this.installedFunctions
     );
     const subscription = controller.status$
-      .pipe(
-        skip(1),
-        takeUntil(this.contextChange$)
-      )
+      .pipe(skip(1), takeUntil(this.contextChange$))
       .subscribe(({ isValid, isDirty }) => {
         const selectedTab = this.tabs.get(tabType);
         selectedTab.isValid = isValid;
@@ -494,7 +491,10 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
   }
 
   private resetInputMappingsController(propsToMap, inputScope, mappings) {
-    const { subscription, controller } = this.configureMappingsController(
+    const {
+      subscription,
+      controller,
+    } = this.configureMappingsController(
       TASK_TABS.INPUT_MAPPINGS,
       this.inputMapperStateSubscription,
       { propsToMap, inputScope, mappings }

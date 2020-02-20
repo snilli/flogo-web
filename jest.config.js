@@ -19,8 +19,7 @@ module.exports = {
   resolver: '@nrwl/jest/plugins/resolver',
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageReporters: ['html'],
-  // todo: switch for setupFilesAfterEnv after https://github.com/nrwl/nx/issues/1343 is fixed
-  setupTestFrameworkScriptFile: '<rootDir>/jest.setup.ts',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
 
 function getJestProjectsRoots(projectsConfig) {

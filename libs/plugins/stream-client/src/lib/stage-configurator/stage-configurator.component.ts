@@ -107,10 +107,7 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
         }
       });
     this.store
-      .pipe(
-        select(getInstalledFunctions),
-        takeUntil(this.destroy$)
-      )
+      .pipe(select(getInstalledFunctions), takeUntil(this.destroy$))
       .subscribe(functions => {
         this.installedFunctions = functions;
       });
@@ -240,7 +237,10 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   }
 
   private initInputMappings(propsToMap, scope, mappings) {
-    const { subscription, controller } = this.configureMappingsController(
+    const {
+      subscription,
+      controller,
+    } = this.configureMappingsController(
       TASK_TABS.INPUT_MAPPINGS,
       this.inputMapperStateSubscription,
       { propsToMap, scope, mappings }
@@ -250,7 +250,10 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   }
 
   private initActivitySettings(settingPropsToMap, activitySettings) {
-    const { subscription, controller } = this.configureMappingsController(
+    const {
+      subscription,
+      controller,
+    } = this.configureMappingsController(
       TASK_TABS.SETTINGS,
       this.activitySettingsStateSubscription,
       { propsToMap: settingPropsToMap, scope: [], mappings: activitySettings }
@@ -260,7 +263,10 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   }
 
   private initOutputMappings(outputPropsToMap, scope = [], outputMappings) {
-    const { subscription, controller } = this.configureMappingsController(
+    const {
+      subscription,
+      controller,
+    } = this.configureMappingsController(
       TASK_TABS.OUTPUT_MAPPINGS,
       this.outputMapperStateSubscription,
       { propsToMap: outputPropsToMap, scope, mappings: outputMappings }
@@ -284,10 +290,7 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
       this.installedFunctions
     );
     const subscription = controller.status$
-      .pipe(
-        skip(1),
-        takeUntil(this.contextChange$)
-      )
+      .pipe(skip(1), takeUntil(this.contextChange$))
       .subscribe(({ isValid, isDirty }) => {
         const selectedTab = this.tabs.get(tabType);
         selectedTab.isValid = isValid;

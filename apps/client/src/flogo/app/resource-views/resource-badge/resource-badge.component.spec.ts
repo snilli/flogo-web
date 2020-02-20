@@ -13,7 +13,7 @@ import { ResourceBadgeComponent } from './resource-badge.component';
 })
 class TestContainerComponent {
   type = 'example';
-  color = '#ff0000';
+  color = 'rgb(255, 0, 0)';
 }
 
 describe('ResourceBadgeComponent', () => {
@@ -38,7 +38,7 @@ describe('ResourceBadgeComponent', () => {
   });
 
   it('should set the background color', () => {
-    expect(debugElement.styles['background-color']).toEqual('#ff0000');
+    expect(debugElement.styles['background-color']).toEqual('rgb(255, 0, 0)');
   });
 
   it('should display the type initials as label', () => {

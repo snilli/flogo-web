@@ -1,4 +1,4 @@
-import * as Router from 'koa-router';
+import * as Router from '@koa/router';
 import { ERROR_TYPES, ErrorManager } from '../../common/errors';
 import { buildTrigger } from './triggers/build';
 import {

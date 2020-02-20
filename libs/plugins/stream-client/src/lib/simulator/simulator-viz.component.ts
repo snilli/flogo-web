@@ -93,10 +93,7 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
           valueAccumulator(this.simulationId)
         )
       )
-        .pipe(
-          takeUntil(this.destroy$),
-          take(1)
-        )
+        .pipe(takeUntil(this.destroy$), take(1))
         .subscribe(([worker, values]: [PerspectiveWorker, any[]]) => {
           const viewer = this.getViewer();
           const prevTable = this.currentTable;
@@ -162,10 +159,7 @@ export class SimulatorVizComponent implements OnDestroy, AfterViewInit, OnChange
       this.valueChangeSubscription.unsubscribe();
     }
     this.valueChangeSubscription = this.values$
-      .pipe(
-        takeUntil(this.destroy$),
-        valueAccumulator(this.simulationId)
-      )
+      .pipe(takeUntil(this.destroy$), valueAccumulator(this.simulationId))
       .subscribe(values => {
         table.update(values);
       });

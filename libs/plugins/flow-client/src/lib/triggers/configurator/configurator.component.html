@@ -16,7 +16,7 @@
     <div class="configuration__triggers js-triggers-list">
       <flogo-triggers-configure-trigger
         class="js-trigger-element"
-        *ngFor="let trigger of (triggerStatuses$ | async)"
+        *ngFor="let trigger of triggerStatuses$ | async"
         [triggerData]="trigger"
         [selectedTriggerId]="selectedTriggerId"
         (selectTrigger)="changeTriggerSelection($event)"

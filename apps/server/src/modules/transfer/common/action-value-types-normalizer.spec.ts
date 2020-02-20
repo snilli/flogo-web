@@ -10,7 +10,10 @@ describe('importer.common.actionValueTypesNormalizer', () => {
         { name: 'in2', type: 'integer' },
         { name: 'in3', type: 'string' },
       ],
-      output: [{ name: 'out1', type: 'int' }, { name: 'out2', type: 'long' }],
+      output: [
+        { name: 'out1', type: 'int' },
+        { name: 'out2', type: 'long' },
+      ],
     },
     tasks: [
       {

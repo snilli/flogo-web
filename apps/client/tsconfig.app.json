@@ -5,5 +5,8 @@
     "types": []
   },
   "exclude": ["test.ts", "**/*.spec.ts", "**/*.mock.ts", "**/testing/*"],
-  "include": ["**/*.ts", "../../libs/plugins/flow-client/src/index.ts"]
+  "include": ["src/typings.d.ts", "src/polyfills.ts", "src/main.ts"],
+  "angularCompilerOptions": {
+    "enableIvy": false
+  }
 }

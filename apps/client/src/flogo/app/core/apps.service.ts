@@ -59,10 +59,7 @@ export class AppDetailService {
   public readonly groupsByResource$: Observable<TriggerGroup[]>;
   public readonly isEmpty$: Observable<boolean>;
 
-  public app$ = this.appSource.asObservable().pipe(
-    filter<App>(Boolean),
-    shareReplay(1)
-  );
+  public app$ = this.appSource.asObservable().pipe(filter<App>(Boolean), shareReplay(1));
 
   public actionEvent$ = this.actionEventsSource.asObservable();
 
@@ -215,9 +212,7 @@ export class AppDetailService {
         }, new Set<string>());
       })
     );
-    const shimmableTriggers$: Observable<
-      ContributionSchema[]
-    > = this.contributionService.getShimContributionDetails();
+    const shimmableTriggers$: Observable<ContributionSchema[]> = this.contributionService.getShimContributionDetails();
     return combineLatest(triggersUsed$, shimmableTriggers$).pipe(
       map(([triggersUsed, shimTriggerSchemas]) => {
         return shimTriggerSchemas

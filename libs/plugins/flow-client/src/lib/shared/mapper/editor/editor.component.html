@@ -1,6 +1,6 @@
 <div
   class="hints-overlay"
-  *ngIf="(valueHints$ | async) as hints"
+  *ngIf="valueHints$ | async as hints"
   (click)="onHintOverlayClick()"
 >
   <div *ngIf="hints?.length > 0; else placeholder">

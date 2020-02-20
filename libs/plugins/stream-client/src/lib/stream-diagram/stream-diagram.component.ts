@@ -41,24 +41,15 @@ export class StreamDiagramComponent implements OnDestroy {
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(private store: Store<StreamStoreState>) {
-    this.items$ = this.store.pipe(
-      select(selectGraph),
-      takeUntil(this.ngOnDestroy$)
-    );
+    this.items$ = this.store.pipe(select(selectGraph), takeUntil(this.ngOnDestroy$));
     this.store
-      .pipe(
-        select(getDiagramSelection),
-        takeUntil(this.ngOnDestroy$)
-      )
+      .pipe(select(getDiagramSelection), takeUntil(this.ngOnDestroy$))
       .subscribe(currentSelection => {
         this.currentSelection = currentSelection;
       });
 
     this.store
-      .pipe(
-        select(getStagesAsTiles(MAX_TILES)),
-        takeUntil(this.ngOnDestroy$)
-      )
+      .pipe(select(getStagesAsTiles(MAX_TILES)), takeUntil(this.ngOnDestroy$))
       .subscribe((streamTiles: TaskTile[]) => {
         this.tiles = streamTiles;
         const lastTile = streamTiles[streamTiles.length - 1];

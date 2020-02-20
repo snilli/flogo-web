@@ -20,14 +20,8 @@ import { FlogoStreamState } from '../stream.state';
 import { createTriggerConfigureFields } from './cases/create-trigger-configure-fields';
 import { normalizeSettings } from './cases/normalize-settings';
 
-export const getSchemas = createSelector(
-  selectTriggerConfigure,
-  state => state.schemas
-);
-export const getAllTabs = createSelector(
-  selectTriggerConfigure,
-  state => state.tabs
-);
+export const getSchemas = createSelector(selectTriggerConfigure, state => state.schemas);
+export const getAllTabs = createSelector(selectTriggerConfigure, state => state.tabs);
 
 export const selectCurrentTriggerId = createSelector(
   selectTriggerConfigure,

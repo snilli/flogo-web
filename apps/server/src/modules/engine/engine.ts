@@ -170,10 +170,7 @@ class Engine {
    * @return {boolean} if successful, return true, otherwise return false
    */
   addFlow(flowPath: string) {
-    return commander.add.flow(
-      this.path,
-      flowPath
-    );
+    return commander.add.flow(this.path, flowPath);
   }
 
   /**

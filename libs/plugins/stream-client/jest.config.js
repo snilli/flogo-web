@@ -6,6 +6,5 @@ module.exports = {
     'jest-preset-angular/AngularSnapshotSerializer.js',
     'jest-preset-angular/HTMLCommentSerializer.js',
   ],
-  // todo: switch for setupFilesAfterEnv after https://github.com/nrwl/nx/issues/1343 is fixed
-  setupTestFrameworkScriptFile: './src/test.setup.ts',
+  setupFilesAfterEnv: ['./src/test.setup.ts'],
 };

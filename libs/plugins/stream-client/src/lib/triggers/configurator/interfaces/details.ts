@@ -16,7 +16,7 @@ export interface ConfigureTriggerDetails {
   fields: {
     [tabName in TriggerConfigureTabType]: {
       [fieldName: string]: TriggerConfigureFields | TriggerConfigureField;
-    }
+    };
   };
   schema: TriggerSchema;
 }
@@ -33,7 +33,7 @@ export interface SettingControlInfo extends SchemaAttribute {
 
 export interface TriggerInformation {
   settingsControls: {
-    [groupType in SettingControlGroupType]: Dictionary<SettingControlInfo>
+    [groupType in SettingControlGroupType]: Dictionary<SettingControlInfo>;
   };
   trigger: {
     handlersCount: number;

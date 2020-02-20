@@ -1,5 +1,5 @@
 <div class="js-debug-panel-content debug-panel__content content">
-  <div *ngIf="(activity$ | async) as activity; else emptyText" class="activity">
+  <div *ngIf="activity$ | async as activity; else emptyText" class="activity">
     <div class="activity__info-group">
       <div class="activity__name">
         <span>{{ activity.name }}</span>
@@ -15,7 +15,7 @@
       <div class="activity__id">ID: {{ activity.id }}</div>
       <div class="activity__description">{{ activity.description }}</div>
       <button
-        *ngIf="(isRestartableTask$ | async)"
+        *ngIf="isRestartableTask$ | async"
         class="flogo-button--secondary btn-run"
         [disabled]="isRunDisabled$ | async"
         (click)="run()"

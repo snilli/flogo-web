@@ -1,5 +1,5 @@
 import { Context, Middleware } from 'koa';
-import * as Router from 'koa-router';
+import * as Router from '@koa/router';
 import { Services } from './services';
 
 export function createInstancesRouter(

@@ -24,15 +24,13 @@ export class FlogoAppComponent implements OnInit {
   constructor(public router: Router, private activatedRoute: ActivatedRoute) {}
 
   public ngOnInit() {
-    this.router.events.pipe(delay(0)).subscribe(
-      (event: RouterEvent): void => {
-        if (event instanceof NavigationStart) {
-          this.isPageLoading = true;
-        } else if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
-          this.isPageLoading = false;
-        }
+    this.router.events.pipe(delay(0)).subscribe((event: RouterEvent): void => {
+      if (event instanceof NavigationStart) {
+        this.isPageLoading = true;
+      } else if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
+        this.isPageLoading = false;
       }
-    );
+    });
 
     this.activatedRoute.queryParams.subscribe(
       (params: Params) => (this.showNav = !params['nonav'])

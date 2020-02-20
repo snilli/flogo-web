@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
-import * as Router from 'koa-router';
-const RouterConstructor = require('koa-router');
+import * as Router from '@koa/router';
+const RouterConstructor = require('@koa/router');
 
 import { config } from '../../config/app-config';
 import { flushAndCloseDb } from '../../common/db';
