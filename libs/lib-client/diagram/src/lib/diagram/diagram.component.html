@@ -1,12 +1,14 @@
-<flogo-diagram-tiles-svg></flogo-diagram-tiles-svg>
-<flogo-diagram-row
-  *ngFor="let row of tileMatrix; trackBy: trackRowBy; let rowIndex = index"
-  @diagramRow
-  [row]="row"
-  [rowIndex]="tileMatrix.length - rowIndex - 1"
-  [selection]="selection"
-  [isReadOnly]="isReadOnly"
-  (action)="onAction($event)"
-  class="diagram-row"
->
-</flogo-diagram-row>
+<div class="group" cdkDropListGroup>
+  <flogo-diagram-tiles-svg></flogo-diagram-tiles-svg>
+  <flogo-diagram-row
+    *ngFor="let row of tileMatrix; trackBy: trackRowBy; let rowIndex = index"
+    @diagramRow
+    [row]="row"
+    [rowIndex]="tileMatrix.length - rowIndex - 1"
+    [selection]="selection"
+    [isReadOnly]="isReadOnly"
+    (action)="onAction($event)"
+    class="diagram-row"
+  >
+  </flogo-diagram-row>
+</div>

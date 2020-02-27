@@ -9,9 +9,10 @@ import { TileTaskComponent } from './tiles/tile-task.component';
 
 import { TileBranchComponent } from './tiles/tile-branch.component';
 import { TileSsvgComponent } from './tiles/tiles-svg';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
-  imports: [CommonModule, LanguageModule],
+  imports: [CommonModule, LanguageModule, DragDropModule],
 
   exports: [DiagramComponent, TileInsertComponent, TileTaskComponent, TileSsvgComponent],
   declarations: [

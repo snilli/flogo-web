@@ -1,39 +1,41 @@
-<ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
-  <div
-    *ngIf="tile.type === tileTypes.Padding || tile.type == tileTypes.Placeholder"
-    @tileGeneric
-    [@.disabled]="tile.type === tileTypes.Placeholder"
-    class="tile tile--slot"
-    [class.tile--placeholder]="tile.type === tileTypes.Placeholder"
-  ></div>
-  <flogo-diagram-tile-insert
-    *ngIf="tile.type === tileTypes.Insert"
-    @tileInsert
-    class="tile--slot"
-    [tile]="tile"
-    [currentSelection]="selection"
-    (select)="onInsertSelected($event)"
-  ></flogo-diagram-tile-insert>
-  <flogo-diagram-tile-task
-    *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Task"
-    @tileTask
-    [tile]="tile"
-    [currentSelection]="selection"
-    [isReadOnly]="isReadOnly"
-    (select)="onTaskSelected($event)"
-    (branch)="onTaskAction($event)"
-    (remove)="onTaskAction($event)"
-    (configure)="onTaskAction($event)"
-  ></flogo-diagram-tile-task>
-  <flogo-diagram-tile-branch
-    *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Branch"
-    @tileGeneric
-    class="tile--branch"
-    [tile]="tile"
-    [currentSelection]="selection"
-    [isReadOnly]="isReadOnly"
-    [spanRows]="calculateBranchSpan(tile)"
-    (select)="onTaskSelected($event)"
-    (remove)="onTaskAction($event)"
-  ></flogo-diagram-tile-branch>
-</ng-template>
+<div class="list" cdkDropList>
+  <ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
+    <div
+      *ngIf="tile.type === tileTypes.Padding || tile.type == tileTypes.Placeholder"
+      @tileGeneric
+      [@.disabled]="tile.type === tileTypes.Placeholder"
+      class="tile tile--slot"
+      [class.tile--placeholder]="tile.type === tileTypes.Placeholder"
+    ></div>
+    <flogo-diagram-tile-insert
+      *ngIf="tile.type === tileTypes.Insert"
+      @tileInsert
+      class="tile--slot"
+      [tile]="tile"
+      [currentSelection]="selection"
+      (select)="onInsertSelected($event)"
+    ></flogo-diagram-tile-insert>
+    <flogo-diagram-tile-task cdkDrag cdkDragBoundary="flogo-diagram"
+                             *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Task"
+                             @tileTask
+                             [tile]="tile"
+                             [currentSelection]="selection"
+                             [isReadOnly]="isReadOnly"
+                             (select)="onTaskSelected($event)"
+                             (branch)="onTaskAction($event)"
+                             (remove)="onTaskAction($event)"
+                             (configure)="onTaskAction($event)"
+    ></flogo-diagram-tile-task>
+    <flogo-diagram-tile-branch
+      *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Branch"
+      @tileGeneric
+      class="tile--branch"
+      [tile]="tile"
+      [currentSelection]="selection"
+      [isReadOnly]="isReadOnly"
+      [spanRows]="calculateBranchSpan(tile)"
+      (select)="onTaskSelected($event)"
+      (remove)="onTaskAction($event)"
+    ></flogo-diagram-tile-branch>
+  </ng-template>
+</div>
