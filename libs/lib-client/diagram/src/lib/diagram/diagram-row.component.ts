@@ -13,10 +13,11 @@ import { NodeType } from '@flogo-web/lib-client/core';
 
 import { Tile, TaskTile, TileType, DiagramAction, DiagramSelection } from '../interfaces';
 import { actionEventFactory } from '../action-event-factory';
-import { RowIndexService, isTaskTile, isInsertTile } from '../shared';
+import { RowIndexService } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
 import { trackTileByFn } from '../tiles/track-tile-by';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+
 @Component({
   selector: 'flogo-diagram-row',
   templateUrl: './diagram-row.component.html',
@@ -35,6 +36,8 @@ export class DiagramRowComponent implements OnChanges {
   nodeTypes = NodeType;
   tiles: Tile[];
   trackTileBy = trackTileByFn;
+  // Needed to maintain the index of the branch tile for updating the tile on dropped in this row
+  branchTileIndex;
 
   constructor(private rowIndexService: RowIndexService) {}
 
@@ -42,6 +45,9 @@ export class DiagramRowComponent implements OnChanges {
     if (rowChange) {
       this.tiles = this.row;
     }
+    this.branchTileIndex = this.tiles.findIndex(
+      (tile: TaskTile) => tile.task?.type === NodeType.Branch
+    );
   }
 
   calculateBranchSpan(taskTile: TaskTile) {
@@ -66,14 +72,8 @@ export class DiagramRowComponent implements OnChanges {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      const newIndex =
-        event.container.data.findIndex((item: TaskTile) => item.task?.type === 'branch') +
-        event.currentIndex +
-        1;
-      const prevIndex =
-        event.previousContainer.data.findIndex(
-          (item: TaskTile) => item.task?.type === 'task'
-        ) + event.previousIndex;
+      const newIndex = this.branchTileIndex + event.currentIndex + 1;
+      const prevIndex = event.item.data.index;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,

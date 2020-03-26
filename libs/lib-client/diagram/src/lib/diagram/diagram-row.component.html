@@ -5,7 +5,13 @@
   (cdkDropListDropped)="updateTile($event)"
   [cdkDropListData]="tiles"
 >
-  <ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
+  <ng-template
+    ngFor
+    let-tile
+    let-index="index"
+    [ngForOf]="tiles"
+    [ngForTrackBy]="trackTileBy"
+  >
     <div
       *ngIf="tile.type === tileTypes.Padding || tile.type == tileTypes.Placeholder"
       @tileGeneric
@@ -27,7 +33,7 @@
       *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Task"
       @tileTask
       [tile]="tile"
-      [cdkDragData]="tile"
+      [cdkDragData]="{ tile: tile, index: index }"
       [currentSelection]="selection"
       [isReadOnly]="isReadOnly"
       (select)="onTaskSelected($event)"
