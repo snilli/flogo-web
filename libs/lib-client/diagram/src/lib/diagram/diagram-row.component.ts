@@ -69,11 +69,11 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   updateTile(event: CdkDragDrop<Tile[]>) {
+    const newIndex = this.branchTileIndex + event.currentIndex + 1;
+    const prevIndex = event.item.data.index;
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(event.container.data, prevIndex, newIndex);
     } else {
-      const newIndex = this.branchTileIndex + event.currentIndex + 1;
-      const prevIndex = event.item.data.index;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
