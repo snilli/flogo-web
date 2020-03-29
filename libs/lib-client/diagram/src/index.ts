@@ -5,6 +5,7 @@ export {
   DiagramAction,
   DiagramActionChild,
   DiagramActionSelf,
+  DiagramActionMove,
   Tile,
   TaskTile,
   TileType,

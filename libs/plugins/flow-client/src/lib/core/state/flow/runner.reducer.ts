@@ -17,9 +17,12 @@ export function runnerReducer(
       }
       break;
     case ActionType.RemoveItem:
-      state = markAsConfigChanged(state);
-      state = markAsStructureChanged(state);
-      state = removeExecutionDataForItem(state, action.payload.itemId);
+    case ActionType.MoveItem:
+      {
+        state = markAsConfigChanged(state);
+        state = markAsStructureChanged(state);
+        state = removeExecutionDataForItem(state, action.payload.itemId);
+      }
       break;
     case ActionType.NewExecutionRegistered:
       {

@@ -2,7 +2,7 @@
   class="list"
   cdkDropList
   cdkDropListOrientation="horizontal"
-  (cdkDropListDropped)="updateTile($event)"
+  (cdkDropListDropped)="moveTile($event)"
   [cdkDropListData]="tiles"
 >
   <ng-template
@@ -33,7 +33,7 @@
       *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Task"
       @tileTask
       [tile]="tile"
-      [cdkDragData]="{ tile: tile, index: index }"
+      [cdkDragData]="{ id: tile?.task?.id, index: index }"
       [currentSelection]="selection"
       [isReadOnly]="isReadOnly"
       (select)="onTaskSelected($event)"

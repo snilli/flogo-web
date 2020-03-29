@@ -4,6 +4,7 @@ export enum DiagramActionType {
   Branch = 'branch',
   Remove = 'remove',
   Configure = 'configure',
+  Move = 'move',
 }
 
 export interface DiagramAction {
@@ -19,4 +20,10 @@ export interface DiagramActionSelf extends DiagramAction {
 export interface DiagramActionChild extends DiagramAction {
   type: DiagramActionType.Insert | DiagramActionType.Branch;
   parentId: string;
+}
+
+export interface DiagramActionMove extends DiagramAction {
+  type: DiagramActionType.Move;
+  id: string;
+  parentId: string | null;
 }

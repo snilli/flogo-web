@@ -68,7 +68,7 @@ export class DiagramRowComponent implements OnChanges {
     this.action.emit(action);
   }
 
-  updateTile(event: CdkDragDrop<Tile[]>) {
+  moveTile(event: CdkDragDrop<Tile[]>) {
     const newIndex = this.branchTileIndex + event.currentIndex + 1;
     const prevIndex = event.item.data.index;
     if (event.previousContainer === event.container) {
@@ -81,5 +81,9 @@ export class DiagramRowComponent implements OnChanges {
         newIndex
       );
     }
+    const newParent: TaskTile = <TaskTile>this.tiles[newIndex - 1];
+    this.action.emit(
+      actionEventFactory.move(event.item.data.id, newParent && newParent.task.id)
+    );
   }
 }
