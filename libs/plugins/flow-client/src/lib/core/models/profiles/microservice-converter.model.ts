@@ -21,7 +21,7 @@ import {
   ItemSubflow,
   UiFlow,
 } from '../../interfaces';
-import { FLOGO_FLOW_DIAGRAM_NODE_TYPE } from '../../constants';
+import { FLOGO_FLOW_DIAGRAM_NODE_TYPE, BRANCH_PREFIX } from '../../constants';
 import { makeGraphAndItems } from '../graph-and-items';
 import { ItemFactory } from '../graph-and-items/item-factory';
 import { flogoGenTriggerID, flogoGenNodeID } from './utils';
@@ -145,7 +145,7 @@ export class MicroServiceModelConverter {
     const resourceData = resource && resource.data;
     const tasks = (resourceData && resourceData.tasks) || [];
     const links = (resourceData && resourceData.links) || [];
-    const branchIdGenerator = () => uniqueId('::branch::');
+    const branchIdGenerator = () => uniqueId(BRANCH_PREFIX);
 
     const mainComponents = makeGraphAndItems(
       tasks,

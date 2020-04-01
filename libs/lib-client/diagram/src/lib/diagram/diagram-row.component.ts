@@ -16,7 +16,7 @@ import { actionEventFactory } from '../action-event-factory';
 import { RowIndexService } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
 import { trackTileByFn } from '../tiles/track-tile-by';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'flogo-diagram-row',
@@ -36,8 +36,6 @@ export class DiagramRowComponent implements OnChanges {
   nodeTypes = NodeType;
   tiles: Tile[];
   trackTileBy = trackTileByFn;
-  // Needed to maintain the index of the branch tile for updating the tile on dropped in this row
-  branchTileIndex;
 
   constructor(private rowIndexService: RowIndexService) {}
 
@@ -45,9 +43,6 @@ export class DiagramRowComponent implements OnChanges {
     if (rowChange) {
       this.tiles = this.row;
     }
-    this.branchTileIndex = this.tiles.findIndex(
-      (tile: TaskTile) => tile.task?.type === NodeType.Branch
-    );
   }
 
   calculateBranchSpan(taskTile: TaskTile) {
@@ -69,21 +64,32 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   moveTile(event: CdkDragDrop<Tile[]>) {
-    const newIndex = this.branchTileIndex + event.currentIndex + 1;
-    const prevIndex = event.item.data.index;
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, prevIndex, newIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        prevIndex,
-        newIndex
-      );
+    const {
+      previousIndex,
+      currentIndex,
+      item: itemBeingMoved,
+      container,
+      previousContainer,
+    } = event;
+
+    if (previousContainer === container && previousIndex === currentIndex) {
+      /* Returning if the item is dropped in it's original place */
+      return;
     }
-    const newParent: TaskTile = <TaskTile>this.tiles[newIndex - 1];
-    this.action.emit(
-      actionEventFactory.move(event.item.data.id, newParent && newParent.task.id)
-    );
+
+    const taskTilesInContainer = container.getSortedItems();
+    let newParentId: string = null;
+
+    if (currentIndex > 0) {
+      if (previousContainer === container && currentIndex > previousIndex) {
+        newParentId = taskTilesInContainer[currentIndex]?.data;
+      } else {
+        newParentId = taskTilesInContainer[currentIndex - 1]?.data;
+      }
+    } else if (this.rowIndex > 0) {
+      newParentId = this.rowIndexService.getBranchIdInRow(this.rowIndex);
+    }
+
+    this.action.emit(actionEventFactory.move(itemBeingMoved.data, newParentId));
   }
 }
