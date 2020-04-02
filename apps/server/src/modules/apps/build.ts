@@ -12,8 +12,10 @@ const defaultBuildOptions = (options: BuildOptions): BuildOptions => ({
   ...options,
 });
 
-export async function buildBinary(appId, options: BuildOptions) {
-  return orchestrateBuild(appId, engine => engine.build(defaultBuildOptions(options)));
+export async function buildBinary(exportApp, options: BuildOptions) {
+  return orchestrateBuild(exportApp, engine =>
+    engine.build(defaultBuildOptions(options))
+  );
 }
 
 /**
