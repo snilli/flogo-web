@@ -176,7 +176,6 @@ export class AppsService {
    * @throws Not found error if app not found
    */
   async build(appId, options) {
-    // TODO:FIX_0.9.0: buildBinary is expecting the first parameter as appId but here we are sending function?
     return buildBinary(() => this.export(appId), options);
   }
 
