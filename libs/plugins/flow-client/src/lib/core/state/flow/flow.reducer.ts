@@ -13,7 +13,7 @@ import { executionUpdate } from './cases/execution-update';
 import { commitTaskConfiguration } from './cases/commit-task-configuration';
 import { updateMetadata } from './cases/update-metadata';
 import { cleanDanglingTaskOutputMappings } from './cases/clean-dangling-tasks-output-mappings';
-import { updateLinksOnMove } from './cases/update-links';
+import { updateLinksOnDrop } from './cases/update-on-drop';
 import { runnerReducer } from './runner.reducer';
 
 const ActionType = actions.ActionType;
@@ -64,7 +64,7 @@ export function flowReducer(
       return removeItem(state, action.payload);
     }
     case ActionType.MoveItem: {
-      return updateLinksOnMove(state, action.payload);
+      return updateLinksOnDrop(state, action.payload);
     }
     case ActionType.ItemUpdated: {
       state = itemUpdate(state, action.payload);

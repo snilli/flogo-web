@@ -1,13 +1,10 @@
-import { DiagramGraph } from '@flogo-web/lib-client/core';
+import { DiagramGraph, GraphNodeDictionary, NodeType } from '@flogo-web/lib-client/core';
 
-import { FlowState } from '../flow.state';
-import { getGraphName } from '../../utils';
-import { BRANCH_PREFIX } from '../../../constants';
+const taskIdFinder = (nodes: GraphNodeDictionary) => {
+  return (id: string) => nodes && nodes[id] && nodes[id].type === NodeType.Task;
+};
 
-const getNonBranchId = (id: string) => !id.startsWith(BRANCH_PREFIX);
-
-export function updateLinksOnMove(state: FlowState, { handlerType, itemId, parentId }) {
-  /*
+/*
   Case 1. If root element is moved to different place. It will not have a previous parent and it will have previous child.
           It will have a new parent and may have new child
   Case 2. If an element is moved as root. It will have parent, it will have child.
@@ -15,22 +12,32 @@ export function updateLinksOnMove(state: FlowState, { handlerType, itemId, paren
   Case 3. If an element is moved to last element of a row. It will have parent, it may have child.
           It will have a new parent in the branch id and it will not have a new child
   Case 4. And a normal movement from normal place to another normal place
-   */
-  const currentGraphName: string = getGraphName(handlerType);
-  const graph: DiagramGraph = { ...state[currentGraphName] };
+ */
+
+export function updateLinks(
+  currentGraph: DiagramGraph,
+  movingItemId: string,
+  newParentId: string
+) {
+  const graph = { ...currentGraph };
+  const findTaskId = taskIdFinder(graph.nodes);
   const allNodes = graph.nodes;
-  const nodeToMove = allNodes[itemId];
+  const nodeToMove = allNodes[movingItemId];
   const prevParentId = nodeToMove.parents.pop();
-  const prevChildId = nodeToMove.children.find(getNonBranchId);
-  const newParentNode = parentId && allNodes[parentId];
+  const prevChildId = nodeToMove.children.find(findTaskId);
+  const newParentNode = newParentId && allNodes[newParentId];
   const newChildId = newParentNode
-    ? newParentNode.children.find(getNonBranchId)
+    ? newParentNode.children.find(findTaskId)
     : graph.rootId;
 
   nodeToMove.children = replaceNodeIds(nodeToMove.children, prevChildId, newChildId);
-  if (parentId) {
-    nodeToMove.parents.push(parentId);
-    newParentNode.children = replaceNodeIds(newParentNode.children, newChildId, itemId);
+  if (newParentId) {
+    nodeToMove.parents.push(newParentId);
+    newParentNode.children = replaceNodeIds(
+      newParentNode.children,
+      newChildId,
+      movingItemId
+    );
   } else {
     graph.rootId = nodeToMove.id;
   }
@@ -39,7 +46,7 @@ export function updateLinksOnMove(state: FlowState, { handlerType, itemId, paren
     const prevParentNode = prevParentId && allNodes[prevParentId];
     prevParentNode.children = replaceNodeIds(
       prevParentNode.children,
-      itemId,
+      movingItemId,
       prevChildId
     );
   } else {
@@ -50,18 +57,23 @@ export function updateLinksOnMove(state: FlowState, { handlerType, itemId, paren
 
   if (prevChildId) {
     const prevChildNode = prevChildId && allNodes[prevChildId];
-    prevChildNode.parents = replaceNodeIds(prevChildNode.parents, itemId, prevParentId);
+    prevChildNode.parents = replaceNodeIds(
+      prevChildNode.parents,
+      movingItemId,
+      prevParentId
+    );
   }
 
   if (newChildId) {
     const newChildNode = newChildId && allNodes[newChildId];
-    newChildNode.parents = replaceNodeIds(newChildNode.parents, parentId, itemId);
+    newChildNode.parents = replaceNodeIds(
+      newChildNode.parents,
+      newParentId,
+      movingItemId
+    );
   }
 
-  return {
-    ...state,
-    [currentGraphName]: graph,
-  };
+  return graph;
 }
 
 /****

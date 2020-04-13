@@ -8,15 +8,16 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { NodeType } from '@flogo-web/lib-client/core';
 
-import { Tile, TaskTile, TileType, DiagramAction, DiagramSelection } from '../interfaces';
+import { DiagramAction, DiagramSelection, TaskTile, Tile, TileType } from '../interfaces';
 import { actionEventFactory } from '../action-event-factory';
 import { RowIndexService } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
 import { trackTileByFn } from '../tiles/track-tile-by';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { DragTileService } from '../drag-tiles';
 
 @Component({
   selector: 'flogo-diagram-row',
@@ -37,7 +38,10 @@ export class DiagramRowComponent implements OnChanges {
   tiles: Tile[];
   trackTileBy = trackTileByFn;
 
-  constructor(private rowIndexService: RowIndexService) {}
+  constructor(
+    private rowIndexService: RowIndexService,
+    private dragService: DragTileService
+  ) {}
 
   ngOnChanges({ row: rowChange }: SimpleChanges) {
     if (rowChange) {
@@ -64,32 +68,12 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   moveTile(event: CdkDragDrop<Tile[]>) {
-    const {
-      previousIndex,
-      currentIndex,
-      item: itemBeingMoved,
-      container,
-      previousContainer,
-    } = event;
-
-    if (previousContainer === container && previousIndex === currentIndex) {
-      /* Returning if the item is dropped in it's original place */
-      return;
-    }
-
-    const taskTilesInContainer = container.getSortedItems();
-    let newParentId: string = null;
-
-    if (currentIndex > 0) {
-      if (previousContainer === container && currentIndex > previousIndex) {
-        newParentId = taskTilesInContainer[currentIndex]?.data;
-      } else {
-        newParentId = taskTilesInContainer[currentIndex - 1]?.data;
-      }
-    } else if (this.rowIndex > 0) {
-      newParentId = this.rowIndexService.getBranchIdInRow(this.rowIndex);
-    }
-
-    this.action.emit(actionEventFactory.move(itemBeingMoved.data, newParentId));
+    const { itemId, parentId } = this.dragService.prepareDropActionData(event, () => {
+      const branchTile: TaskTile = this.tiles.find(
+        (tile: TaskTile) => tile?.task?.type === NodeType.Branch
+      ) as TaskTile;
+      return branchTile?.task.id;
+    });
+    this.action.emit(actionEventFactory.move(itemId, parentId));
   }
 }
