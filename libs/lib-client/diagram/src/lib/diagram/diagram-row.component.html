@@ -5,12 +5,7 @@
   (cdkDropListDropped)="moveTile($event)"
   [cdkDropListData]="tiles"
 >
-  <ng-template
-    ngFor
-    let-tile
-    [ngForOf]="tiles"
-    [ngForTrackBy]="trackTileBy"
-  >
+  <ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
     <div
       *ngIf="tile.type === tileTypes.Padding || tile.type == tileTypes.Placeholder"
       @tileGeneric
