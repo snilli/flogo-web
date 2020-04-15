@@ -1,3 +1,5 @@
+import { updateLinks } from '@flogo-web/lib-client/diagram';
+
 import * as selectionFactory from '../models/stream/selection';
 import { INITIAL_STREAM_STATE, FlogoStreamState } from './stream.state';
 import { StreamActionsUnion, StreamActionType } from './stream.actions';
@@ -62,6 +64,17 @@ export function streamReducer(
       };
     case StreamActionType.DeleteStage:
       return removeStage(state, action.payload);
+    case StreamActionType.MoveStage:
+      return {
+        ...state,
+        mainGraph: {
+          ...updateLinks(
+            state?.mainGraph,
+            action.payload.itemId,
+            action.payload.parentId
+          ),
+        },
+      };
     case StreamActionType.UpdateMetadata:
       state = cleanDanglingTaskOutputMappings(state, action.payload);
       return {

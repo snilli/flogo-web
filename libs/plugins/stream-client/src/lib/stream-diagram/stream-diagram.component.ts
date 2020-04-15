@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { DiagramGraph, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 import {
@@ -14,6 +15,7 @@ import {
   TileType,
   trackTileByFn,
   InsertTile,
+  DragTileService,
 } from '@flogo-web/lib-client/diagram';
 
 import {
@@ -40,7 +42,10 @@ export class StreamDiagramComponent implements OnDestroy {
   placeholders = [];
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
-  constructor(private store: Store<StreamStoreState>) {
+  constructor(
+    private store: Store<StreamStoreState>,
+    private dragService: DragTileService
+  ) {
     this.items$ = this.store.pipe(select(selectGraph), takeUntil(this.ngOnDestroy$));
     this.store
       .pipe(select(getDiagramSelection), takeUntil(this.ngOnDestroy$))
@@ -88,6 +93,14 @@ export class StreamDiagramComponent implements OnDestroy {
   selectStage(taskTile: TaskTile) {
     this.store.dispatch(new StreamActions.SelectStage(taskTile.task.id));
   }
+
+  moveStage(event: CdkDragDrop<Tile[]>) {
+    const dropActionData = this.dragService.prepareDropActionData(event);
+    if (dropActionData) {
+      this.store.dispatch(new StreamActions.MoveStage(dropActionData));
+    }
+  }
+
   private updateAvailableSlots(streamTiles) {
     this.availableSlots = MAX_TILES - streamTiles.length;
     if (this.availableSlots) {
