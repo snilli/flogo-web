@@ -68,12 +68,15 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   moveTile(event: CdkDragDrop<Tile[]>) {
-    const { itemId, parentId } = this.dragService.prepareDropActionData(event, () => {
+    const dropActionData = this.dragService.prepareDropActionData(event, () => {
       const branchTile: TaskTile = this.tiles.find(
         (tile: TaskTile) => tile?.task?.type === NodeType.Branch
       ) as TaskTile;
       return branchTile?.task.id;
     });
-    this.action.emit(actionEventFactory.move(itemId, parentId));
+    if (dropActionData) {
+      const { itemId, parentId } = dropActionData;
+      this.action.emit(actionEventFactory.move(itemId, parentId));
+    }
   }
 }

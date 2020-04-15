@@ -9,7 +9,7 @@ import { DropActionData } from './interface';
 export class DragTileService {
   prepareDropActionData(
     dropEvent: CdkDragDrop<Tile[]>,
-    getBranchId: () => string
+    getBranchId?: () => string
   ): DropActionData {
     const { previousIndex, currentIndex, item, container, previousContainer } = dropEvent;
 
