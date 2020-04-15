@@ -28,6 +28,7 @@
       @tileTask
       [tile]="tile"
       [cdkDragData]="tile?.task?.id"
+      [cdkDragDisabled]="isReadOnly"
       [currentSelection]="selection"
       [isReadOnly]="isReadOnly"
       (select)="onTaskSelected($event)"
