@@ -68,6 +68,9 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   moveTile(event: CdkDragDrop<Tile[]>) {
+    if(this.isItemDroppedOnEmptyArea(event)) {
+      return;
+    }
     const dropActionData = this.dragService.prepareDropActionData(event, () => {
       const branchTile: TaskTile = this.tiles.find(
         (tile: TaskTile) => tile?.task?.type === NodeType.Branch
@@ -78,5 +81,9 @@ export class DiagramRowComponent implements OnChanges {
       const { itemId, parentId } = dropActionData;
       this.action.emit(actionEventFactory.move(itemId, parentId));
     }
+  }
+
+  isItemDroppedOnEmptyArea(dragDropEvent) {
+    return !dragDropEvent.isPointerOverContainer;
   }
 }
