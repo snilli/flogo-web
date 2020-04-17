@@ -1,9 +1,5 @@
 <ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
-  <div
-    *ngIf="tile.type === tileTypes.Padding"
-    @tileGeneric
-    class="tile tile--slot"
-  ></div>
+  <div *ngIf="tile.type === tileTypes.Padding" @tileGeneric class="tile tile--slot"></div>
   <flogo-diagram-tile-branch
     *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Branch"
     @tileGeneric

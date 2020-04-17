@@ -68,7 +68,7 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   moveTile(event: CdkDragDrop<Tile[]>) {
-    if(this.isItemDroppedOnEmptyArea(event)) {
+    if (this.isItemDroppedOnEmptyArea(event)) {
       return;
     }
     const dropActionData = this.dragService.prepareDropActionData(event, () => {
