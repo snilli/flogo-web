@@ -1,12 +1,35 @@
+import { groupBy } from 'lodash';
 import { Injectable } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
-import { Tile } from '@flogo-web/lib-client/diagram';
+import { NodeType } from '@flogo-web/lib-client/core';
 
-import { DropActionData } from './interface';
+import { TaskTile, Tile, TileType } from '../interfaces';
+import { DropActionData, TilesGroupedByZone } from './interface';
 
 @Injectable()
 export class DragTileService {
+  groupTilesByZone(allTiles: Tile[]): TilesGroupedByZone {
+    const { preDropZone, dropZone, postDropZone } = groupBy(allTiles, (tile: Tile) => {
+      switch (tile.type) {
+        case TileType.Padding:
+          return 'preDropZone';
+        case TileType.Task: {
+          const { task } = tile as TaskTile;
+          return task.type === NodeType.Branch ? 'preDropZone' : 'dropZone';
+        }
+        case TileType.Insert:
+        case TileType.Placeholder:
+          return 'postDropZone';
+      }
+    });
+    return {
+      preDropZone: preDropZone || [],
+      dropZone: dropZone || [],
+      postDropZone: postDropZone || [],
+    };
+  }
+
   prepareDropActionData(
     dropEvent: CdkDragDrop<Tile[]>,
     getBranchId?: () => string

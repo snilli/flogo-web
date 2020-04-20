@@ -10,14 +10,12 @@ import {
 } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
-import { NodeType } from '@flogo-web/lib-client/core';
-
 import { DiagramAction, DiagramSelection, TaskTile, Tile, TileType } from '../interfaces';
 import { actionEventFactory } from '../action-event-factory';
 import { RowIndexService } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
 import { trackTileByFn } from '../tiles/track-tile-by';
-import { DragTileService } from '../drag-tiles';
+import { DragTileService, TilesGroupedByZone } from '../drag-tiles';
 
 @Component({
   selector: 'flogo-diagram-row',
@@ -34,8 +32,7 @@ export class DiagramRowComponent implements OnChanges {
   @Output() action = new EventEmitter<DiagramAction>();
 
   tileTypes = TileType;
-  nodeTypes = NodeType;
-  tiles: Tile[];
+  groupedTiles: TilesGroupedByZone<Tile>;
   trackTileBy = trackTileByFn;
 
   constructor(
@@ -45,7 +42,7 @@ export class DiagramRowComponent implements OnChanges {
 
   ngOnChanges({ row: rowChange }: SimpleChanges) {
     if (rowChange) {
-      this.tiles = this.row;
+      this.groupedTiles = this.dragService.groupTilesByZone(this.row);
     }
   }
 
@@ -72,8 +69,8 @@ export class DiagramRowComponent implements OnChanges {
       return;
     }
     const dropActionData = this.dragService.prepareDropActionData(event, () => {
-      const branchTile: TaskTile = this.tiles.find(
-        (tile: TaskTile) => tile?.task?.type === NodeType.Branch
+      const branchTile: TaskTile = this.groupedTiles.preDropZone.find(
+        (tile: TaskTile) => tile.type === TileType.Task
       ) as TaskTile;
       return branchTile?.task.id;
     });

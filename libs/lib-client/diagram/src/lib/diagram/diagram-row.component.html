@@ -1,7 +1,12 @@
-<ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
+<ng-template
+  ngFor
+  let-tile
+  [ngForOf]="groupedTiles?.preDropZone"
+  [ngForTrackBy]="trackTileBy"
+>
   <div *ngIf="tile.type === tileTypes.Padding" @tileGeneric class="tile tile--slot"></div>
   <flogo-diagram-tile-branch
-    *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Branch"
+    *ngIf="tile.type === tileTypes.Task"
     @tileGeneric
     class="tile--branch"
     [tile]="tile"
@@ -16,18 +21,21 @@
   class="list"
   cdkDropList
   cdkDropListOrientation="horizontal"
+  [cdkDropListDisabled]="isReadOnly"
   (cdkDropListDropped)="moveTile($event)"
-  [cdkDropListData]="tiles"
 >
-  <ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
+  <ng-template
+    ngFor
+    let-tile
+    [ngForOf]="groupedTiles?.dropZone"
+    [ngForTrackBy]="trackTileBy"
+  >
     <flogo-diagram-tile-task
       cdkDrag
       cdkDragBoundary="flogo-diagram"
-      *ngIf="tile.type === tileTypes.Task && tile.task?.type === nodeTypes.Task"
       @tileTask
       [tile]="tile"
       [cdkDragData]="tile?.task?.id"
-      [cdkDragDisabled]="isReadOnly"
       [currentSelection]="selection"
       [isReadOnly]="isReadOnly"
       (select)="onTaskSelected($event)"
@@ -37,7 +45,12 @@
     ></flogo-diagram-tile-task>
   </ng-template>
 </div>
-<ng-template ngFor let-tile [ngForOf]="tiles" [ngForTrackBy]="trackTileBy">
+<ng-template
+  ngFor
+  let-tile
+  [ngForOf]="groupedTiles?.postDropZone"
+  [ngForTrackBy]="trackTileBy"
+>
   <div
     *ngIf="tile.type == tileTypes.Placeholder"
     @tileGeneric
