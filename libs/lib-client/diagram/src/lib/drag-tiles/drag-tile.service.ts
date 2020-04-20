@@ -16,7 +16,12 @@ export class DragTileService {
           return 'preDropZone';
         case TileType.Task: {
           const { task } = tile as TaskTile;
-          return task.type === NodeType.Branch ? 'preDropZone' : 'dropZone';
+          if (task.type === NodeType.Branch) {
+            return 'preDropZone';
+          } else if (!task?.features?.canHaveChildren) {
+            return 'postDropZone';
+          }
+          return 'dropZone';
         }
         case TileType.Insert:
         case TileType.Placeholder:
