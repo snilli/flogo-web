@@ -18,10 +18,10 @@ export class DragTileService {
           const { task } = tile as TaskTile;
           if (task.type === NodeType.Branch) {
             return 'preDropZone';
-          } else if (!task?.features?.canHaveChildren) {
-            return 'postDropZone';
+          } else if (task?.features?.canHaveChildren) {
+            return 'dropZone';
           }
-          return 'dropZone';
+          return 'postDropZone';
         }
         case TileType.Insert:
         case TileType.Placeholder:
@@ -39,7 +39,18 @@ export class DragTileService {
     dropEvent: CdkDragDrop<Tile[]>,
     getBranchId?: () => string
   ): DropActionData {
-    const { previousIndex, currentIndex, item, container, previousContainer } = dropEvent;
+    const {
+      previousIndex,
+      currentIndex,
+      item,
+      container,
+      previousContainer,
+      isPointerOverContainer,
+    } = dropEvent;
+
+    if (!isPointerOverContainer) {
+      return;
+    }
 
     if (previousContainer === container && previousIndex === currentIndex) {
       /* Returning if the item is dropped in it's original place */
