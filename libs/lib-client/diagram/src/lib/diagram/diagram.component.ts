@@ -13,6 +13,8 @@ import {
 
 import { FlowGraph } from '@flogo-web/lib-client/core';
 
+import { DragTileService } from '@flogo-web/lib-client/diagram';
+
 import { DiagramAction, DiagramSelection, Tile } from '../interfaces';
 import { EMPTY_MATRIX, RowIndexService } from '../shared';
 import { makeRenderableMatrix, TileMatrix } from '../renderable-model';
@@ -36,10 +38,14 @@ export class DiagramComponent implements OnChanges, OnDestroy {
   @Input() @HostBinding('class.flogo-diagram-is-readonly') isReadOnly = false;
   @Output() action = new EventEmitter<DiagramAction>();
   tileMatrix: TileMatrix;
+  rowParentsList: string[][] = [];
 
   trackRowBy: TrackByFunction<Tile[]>;
 
-  constructor(private rowIndexService: RowIndexService) {
+  constructor(
+    private rowIndexService: RowIndexService,
+    private dragService: DragTileService
+  ) {
     this.trackRowBy = diagramRowTracker(this);
   }
 
@@ -62,12 +68,21 @@ export class DiagramComponent implements OnChanges, OnDestroy {
   private updateMatrix() {
     const tileMatrix = makeRenderableMatrix(this.flow, 10, this.isReadOnly);
     this.rowIndexService.updateRowIndexes(tileMatrix);
-    if (tileMatrix.length > 0) {
+    if (tileMatrix.length > 1) {
+      const rowParentsList = this.updateRowParentsList(tileMatrix);
       // matrix is reversed to make sure html stack order always goes from bottom to top
       // i.e. top rows are rendered in front of bottom rows, this ensures branches don't display on top of the tiles above
       this.tileMatrix = tileMatrix.reverse();
-    } else if (!this.isReadOnly) {
+      this.rowParentsList = rowParentsList.reverse();
+    } else if (tileMatrix.length === 0 && !this.isReadOnly) {
       this.tileMatrix = EMPTY_MATRIX;
+    } else {
+      this.tileMatrix = tileMatrix;
     }
+  }
+
+  private updateRowParentsList(tileMatrix) {
+    const rowIndexes = this.rowIndexService.getRowIndexes();
+    return this.dragService.getAllRowsParentTiles(tileMatrix, rowIndexes);
   }
 }

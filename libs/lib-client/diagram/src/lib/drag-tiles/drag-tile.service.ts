@@ -77,4 +77,43 @@ export class DragTileService {
       parentId,
     };
   }
+
+  getAllRowsParentTiles(tileMatrix, rowIndexes) {
+    const rowParentList = [];
+    const allRowsParentsList = [];
+    tileMatrix.forEach(row => {
+      const branchTask = row.find(tile => {
+        return tile?.task?.type === NodeType.Branch;
+      });
+      if (branchTask) {
+        const rowParent = branchTask.task.parents[0];
+        rowParentList.push(rowParent);
+      } else {
+        rowParentList.push(null);
+      }
+    });
+    rowParentList.forEach(parentTile => {
+      allRowsParentsList.push(this.getRowParents(parentTile, rowParentList, rowIndexes));
+    });
+    return allRowsParentsList;
+  }
+
+  private getRowParents(parentTile, rowsParent, rowIndexes) {
+    if (!parentTile) {
+      return null;
+    }
+    const allParentTiles = [parentTile];
+    while (parentTile) {
+      parentTile = this.getRowParent(parentTile, rowsParent, rowIndexes);
+      if (parentTile) {
+        allParentTiles.push(parentTile);
+      }
+    }
+    return allParentTiles;
+  }
+
+  private getRowParent(parentTile, rowsParent, rowIndexes) {
+    const parentRowIndex = rowIndexes.get(parentTile);
+    return rowsParent[parentRowIndex];
+  }
 }

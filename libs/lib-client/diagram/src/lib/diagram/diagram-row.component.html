@@ -21,6 +21,7 @@
   cdkDropList
   cdkDropListOrientation="horizontal"
   [cdkDropListDisabled]="isReadOnly"
+  [cdkDropListEnterPredicate]="restrictTileDrop"
   (cdkDropListDropped)="moveTile($event)"
 >
   <ng-template

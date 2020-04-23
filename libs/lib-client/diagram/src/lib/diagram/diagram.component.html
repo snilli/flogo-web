@@ -4,6 +4,7 @@
     *ngFor="let row of tileMatrix; trackBy: trackRowBy; let rowIndex = index"
     @diagramRow
     [row]="row"
+    [rowParents]="rowParentsList[rowIndex]"
     [rowIndex]="tileMatrix.length - rowIndex - 1"
     [selection]="selection"
     [isReadOnly]="isReadOnly"

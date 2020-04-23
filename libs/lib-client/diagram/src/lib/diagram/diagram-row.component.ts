@@ -8,7 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDrag } from '@angular/cdk/drag-drop';
 
 import { DiagramAction, DiagramSelection, TaskTile, Tile, TileType } from '../interfaces';
 import { actionEventFactory } from '../action-event-factory';
@@ -26,6 +26,7 @@ import { DragTileService, TilesGroupedByZone } from '../drag-tiles';
 })
 export class DiagramRowComponent implements OnChanges {
   @Input() row: Tile[];
+  @Input() rowParents: string[];
   @Input() selection: DiagramSelection;
   @Input() rowIndex: number;
   @HostBinding('class.is-readonly') @Input() isReadOnly = false;
@@ -76,4 +77,8 @@ export class DiagramRowComponent implements OnChanges {
       this.action.emit(actionEventFactory.move(itemId, parentId));
     }
   }
+
+  restrictTileDrop = (dragEvent: CdkDrag) => {
+    return !this.rowParents?.length || !this.rowParents.includes(dragEvent.data);
+  };
 }
