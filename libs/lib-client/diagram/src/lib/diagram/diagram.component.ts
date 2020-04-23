@@ -13,13 +13,12 @@ import {
 
 import { FlowGraph } from '@flogo-web/lib-client/core';
 
-import { DragTileService } from '@flogo-web/lib-client/diagram';
-
 import { DiagramAction, DiagramSelection, Tile } from '../interfaces';
 import { EMPTY_MATRIX, RowIndexService } from '../shared';
 import { makeRenderableMatrix, TileMatrix } from '../renderable-model';
 import { diagramAnimations } from './diagram.animations';
 import { diagramRowTracker } from './diagram-row-tracker';
+import { DragTileService } from '../drag-tiles';
 
 @Component({
   // temporal name until old diagram implementation is removed
