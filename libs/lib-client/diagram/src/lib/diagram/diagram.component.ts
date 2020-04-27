@@ -37,7 +37,6 @@ export class DiagramComponent implements OnChanges, OnDestroy {
   @Input() @HostBinding('class.flogo-diagram-is-readonly') isReadOnly = false;
   @Output() action = new EventEmitter<DiagramAction>();
   tileMatrix: TileMatrix;
-  rowParentsList: string[][];
 
   trackRowBy: TrackByFunction<Tile[]>;
 
@@ -67,20 +66,19 @@ export class DiagramComponent implements OnChanges, OnDestroy {
   private updateMatrix() {
     const tileMatrix = makeRenderableMatrix(this.flow, 10, this.isReadOnly);
     this.rowIndexService.updateRowIndexes(tileMatrix);
-    this.rowParentsList = [];
     if (tileMatrix.length > 0) {
-      const rowParentsList = this.updateRowParentsList(tileMatrix);
       // matrix is reversed to make sure html stack order always goes from bottom to top
       // i.e. top rows are rendered in front of bottom rows, this ensures branches don't display on top of the tiles above
       this.tileMatrix = tileMatrix.reverse();
-      this.rowParentsList = rowParentsList.reverse();
+      this.updateRowParents();
     } else if (!this.isReadOnly) {
       this.tileMatrix = EMPTY_MATRIX;
     }
   }
 
-  private updateRowParentsList(tileMatrix) {
-    const rowIndexes = this.rowIndexService.getRowIndexes();
-    return this.dragService.getAllRowsParentTiles(tileMatrix, rowIndexes);
+  private updateRowParents() {
+    this.dragService.updateRowParents(this.tileMatrix, taskId =>
+      this.rowIndexService.getRowIndexForTask(taskId)
+    );
   }
 }

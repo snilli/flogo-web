@@ -24,10 +24,6 @@ export class RowIndexService {
     return this.rowIndexes.get(taskId);
   }
 
-  getRowIndexes() {
-    return this.rowIndexes;
-  }
-
   clear() {
     if (this.rowIndexes) {
       this.rowIndexes.clear();

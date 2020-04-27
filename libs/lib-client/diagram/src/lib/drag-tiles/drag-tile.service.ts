@@ -9,6 +9,8 @@ import { DropActionData, TilesGroupedByZone } from './interface';
 
 @Injectable()
 export class DragTileService {
+  private rowAllParents: Map<number, string[]>;
+
   groupTilesByZone(allTiles: Tile[]): TilesGroupedByZone {
     const { preDropZone, dropZone, postDropZone } = groupBy(allTiles, (tile: Tile) => {
       switch (tile.type) {
@@ -78,42 +80,39 @@ export class DragTileService {
     };
   }
 
-  getAllRowsParentTiles(tileMatrix, rowIndexes) {
-    const rowParentList = [];
-    const allRowsParentsList = [];
-    tileMatrix.forEach(row => {
+  updateRowParents(tileMatrix, getRowIndex: (tileId: string) => number) {
+    this.rowAllParents = new Map<number, string[]>();
+    const rowParentMap = new Map<number, string>();
+    const totalRows = tileMatrix.length;
+    tileMatrix.forEach((row, index) => {
+      const rowIndex = totalRows - index - 1;
       const branchTask = row.find(tile => {
         return tile?.task?.type === NodeType.Branch;
       });
       if (branchTask) {
-        const rowParent = branchTask.task.parents[0];
-        rowParentList.push(rowParent);
-      } else {
-        rowParentList.push(null);
+        rowParentMap.set(rowIndex, branchTask.task.parents[0]);
       }
     });
-    rowParentList.forEach(parentTile => {
-      allRowsParentsList.push(this.getRowParents(parentTile, rowParentList, rowIndexes));
+    rowParentMap.forEach((rowParent, rowIndex) => {
+      this.rowAllParents.set(
+        rowIndex,
+        this.getRowAllParents(rowParent, rowParentMap, getRowIndex)
+      );
     });
-    return allRowsParentsList;
   }
 
-  private getRowParents(parentTile, rowsParent, rowIndexes) {
-    if (!parentTile) {
-      return null;
-    }
-    const allParentTiles = [parentTile];
+  private getRowAllParents(parentTile, rowParents, getRowIndex) {
+    const allParentTiles = [];
     while (parentTile) {
-      parentTile = this.getRowParent(parentTile, rowsParent, rowIndexes);
-      if (parentTile) {
-        allParentTiles.push(parentTile);
-      }
+      allParentTiles.push(parentTile);
+      const parentRowIndex = getRowIndex(parentTile);
+      parentTile = rowParents.get(parentRowIndex);
     }
     return allParentTiles;
   }
 
-  private getRowParent(parentTile, rowsParent, rowIndexes) {
-    const parentRowIndex = rowIndexes.get(parentTile);
-    return rowsParent[parentRowIndex];
+  isTileAllowedToDropInRow(tileId, rowIndex) {
+    const rowParents = this.rowAllParents.get(rowIndex);
+    return !rowParents?.length || !rowParents.includes(tileId);
   }
 }

@@ -26,7 +26,6 @@ import { DragTileService, TilesGroupedByZone } from '../drag-tiles';
 })
 export class DiagramRowComponent implements OnChanges {
   @Input() row: Tile[];
-  @Input() rowParents: string[];
   @Input() selection: DiagramSelection;
   @Input() rowIndex: number;
   @HostBinding('class.is-readonly') @Input() isReadOnly = false;
@@ -79,6 +78,6 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   restrictTileDrop = (dragEvent: CdkDrag) => {
-    return !this.rowParents?.length || !this.rowParents.includes(dragEvent.data);
+    return this.dragService.isTileAllowedToDropInRow(dragEvent.data, this.rowIndex);
   };
 }
