@@ -19,77 +19,84 @@ export function updateLinks(
   movingItemId: string,
   newParentId: string
 ) {
-  const graph = { ...currentGraph };
-  const findTaskId = taskIdFinder(graph.nodes);
-  const allNodes = graph.nodes;
-  const nodeToMove = allNodes[movingItemId];
-  const prevParentId = nodeToMove.parents.pop();
+  const allNodes = currentGraph.nodes;
+  let rootId = currentGraph.rootId;
+  const findTaskId = taskIdFinder(allNodes);
+  const modifiedNodes = {};
+  let nodeToMove = allNodes[movingItemId];
+  const prevParentId = nodeToMove.parents[0];
+  nodeToMove = { ...nodeToMove, parents: [] };
   const prevChildId = nodeToMove.children.find(findTaskId);
-  const newParentNode = newParentId && allNodes[newParentId];
-  const newChildId = newParentNode
-    ? newParentNode.children.find(findTaskId)
-    : graph.rootId;
-
-  nodeToMove.children = replaceNodeIds(nodeToMove.children, prevChildId, newChildId);
+  let newParentNode = newParentId && allNodes[newParentId];
+  const newChildId = newParentNode ? newParentNode.children.find(findTaskId) : rootId;
+  nodeToMove = {
+    ...nodeToMove,
+    children: replaceNodeIds(nodeToMove.children, prevChildId, newChildId),
+  };
+  modifiedNodes[movingItemId] = nodeToMove;
   if (newParentId) {
     nodeToMove.parents.push(newParentId);
-    newParentNode.children = replaceNodeIds(
-      newParentNode.children,
-      newChildId,
-      movingItemId
-    );
+    newParentNode = {
+      ...newParentNode,
+      children: replaceNodeIds(newParentNode.children, newChildId, movingItemId),
+    };
+    modifiedNodes[newParentId] = newParentNode;
   } else {
-    graph.rootId = nodeToMove.id;
+    rootId = nodeToMove.id;
   }
 
   if (prevParentId) {
-    const prevParentNode = prevParentId && allNodes[prevParentId];
-    prevParentNode.children = replaceNodeIds(
-      prevParentNode.children,
-      movingItemId,
-      prevChildId
-    );
+    let prevParentNode = modifiedNodes[prevParentId] || allNodes[prevParentId];
+    prevParentNode = {
+      ...prevParentNode,
+      children: replaceNodeIds(prevParentNode.children, movingItemId, prevChildId),
+    };
+    modifiedNodes[prevParentId] = prevParentNode;
   } else {
     /* In case where we are moving the root item, then moved item's non branch child becomes root.
      * Here there will be a previous child as a root element without children cannot be moved to root*/
-    graph.rootId = prevChildId;
+    rootId = prevChildId;
   }
 
   if (prevChildId) {
-    const prevChildNode = prevChildId && allNodes[prevChildId];
-    prevChildNode.parents = replaceNodeIds(
-      prevChildNode.parents,
-      movingItemId,
-      prevParentId
-    );
+    let prevChildNode = modifiedNodes[prevChildId] || allNodes[prevChildId];
+    prevChildNode = {
+      ...prevChildNode,
+      parents: replaceNodeIds(prevChildNode.parents, movingItemId, prevParentId),
+    };
+    modifiedNodes[prevChildId] = prevChildNode;
   }
 
   if (newChildId) {
-    const newChildNode = newChildId && allNodes[newChildId];
-    newChildNode.parents = replaceNodeIds(
-      newChildNode.parents,
-      newParentId,
-      movingItemId
-    );
+    let newChildNode = modifiedNodes[newChildId] || allNodes[newChildId];
+    newChildNode = {
+      ...newChildNode,
+      parents: replaceNodeIds(newChildNode.parents, newParentId, movingItemId),
+    };
+    modifiedNodes[newChildId] = newChildNode;
   }
 
-  return graph;
+  return {
+    ...currentGraph,
+    nodes: {
+      ...currentGraph.nodes,
+      ...modifiedNodes,
+    },
+    rootId: rootId,
+  };
 }
 
 /****
  * This function handles the logic to remove a previous node Id and add a new node Id to the array.
  *
- * @param inArray {Array} String array which holds all the children of the tile
+ * @param inArray {Array} String array which holds all the children/parents of the tile
  * @param replaceId {string | undefined} Id to be removed from the array
  * @param withId {string | undefined} Id to be added as the first element to the array
  */
 function replaceNodeIds(inArray: string[], replaceId: string, withId: string) {
-  const idx = inArray.indexOf(replaceId);
-  if (replaceId && idx > -1) {
-    inArray.splice(idx, 1);
-  }
+  const replaceArray = inArray.filter(id => id !== replaceId);
   if (withId) {
-    inArray.unshift(withId);
+    replaceArray.unshift(withId);
   }
-  return inArray;
+  return replaceArray;
 }
