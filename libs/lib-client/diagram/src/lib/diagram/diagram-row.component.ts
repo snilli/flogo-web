@@ -8,14 +8,15 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { CdkDragDrop, CdkDrag } from '@angular/cdk/drag-drop';
 
-import { NodeType } from '@flogo-web/lib-client/core';
-
-import { Tile, TaskTile, TileType, DiagramAction, DiagramSelection } from '../interfaces';
+import { DiagramAction, DiagramSelection, TaskTile, Tile, TileType } from '../interfaces';
 import { actionEventFactory } from '../action-event-factory';
-import { RowIndexService, isTaskTile, isInsertTile } from '../shared';
+import { RowIndexService } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
 import { trackTileByFn } from '../tiles/track-tile-by';
+import { DragTileService, TilesGroupedByZone } from '../drag-tiles';
+
 @Component({
   selector: 'flogo-diagram-row',
   templateUrl: './diagram-row.component.html',
@@ -31,15 +32,17 @@ export class DiagramRowComponent implements OnChanges {
   @Output() action = new EventEmitter<DiagramAction>();
 
   tileTypes = TileType;
-  nodeTypes = NodeType;
-  tiles: Tile[];
+  groupedTiles: TilesGroupedByZone<Tile>;
   trackTileBy = trackTileByFn;
 
-  constructor(private rowIndexService: RowIndexService) {}
+  constructor(
+    private rowIndexService: RowIndexService,
+    private dragService: DragTileService
+  ) {}
 
   ngOnChanges({ row: rowChange }: SimpleChanges) {
     if (rowChange) {
-      this.tiles = this.row;
+      this.groupedTiles = this.dragService.groupTilesByZone(this.row);
     }
   }
 
@@ -60,4 +63,21 @@ export class DiagramRowComponent implements OnChanges {
   onTaskAction(action: DiagramAction) {
     this.action.emit(action);
   }
+
+  moveTile(event: CdkDragDrop<Tile[]>) {
+    const dropActionData = this.dragService.prepareDropActionData(event, () => {
+      const branchTile: TaskTile = this.groupedTiles.preDropZone.find(
+        (tile: TaskTile) => tile.type === TileType.Task
+      ) as TaskTile;
+      return branchTile?.task.id;
+    });
+    if (dropActionData) {
+      const { itemId, parentId } = dropActionData;
+      this.action.emit(actionEventFactory.move(itemId, parentId));
+    }
+  }
+
+  restrictTileDrop = (dragEvent: CdkDrag) => {
+    return this.dragService.isTileAllowedToDropInRow(dragEvent.data, this.rowIndex);
+  };
 }

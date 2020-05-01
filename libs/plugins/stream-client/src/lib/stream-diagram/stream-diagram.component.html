@@ -1,14 +1,23 @@
 <flogo-diagram-tiles-svg> </flogo-diagram-tiles-svg>
 <div class="tiles-wrapper">
-  <flogo-diagram-tile-task
-    *ngFor="let tile of tiles; trackBy: trackTileBy"
-    class="tile__separator"
-    [tile]="tile"
-    [currentSelection]="currentSelection"
-    (select)="selectStage($event)"
-    (remove)="onDiagramAction($event)"
-    (configure)="onDiagramAction($event)"
-  ></flogo-diagram-tile-task>
+  <div
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="moveStage($event)"
+  >
+    <flogo-diagram-tile-task
+      *ngFor="let tile of tiles; trackBy: trackTileBy"
+      class="tile__separator"
+      cdkDrag
+      cdkDragBoundary="flogo-stream-diagram"
+      [cdkDragData]="tile?.task?.id"
+      [tile]="tile"
+      [currentSelection]="currentSelection"
+      (select)="selectStage($event)"
+      (remove)="onDiagramAction($event)"
+      (configure)="onDiagramAction($event)"
+    ></flogo-diagram-tile-task>
+  </div>
   <flogo-diagram-tile-insert
     fgAddStage
     *ngIf="availableSlots > 0"

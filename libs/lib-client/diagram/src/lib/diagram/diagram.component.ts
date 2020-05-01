@@ -18,6 +18,7 @@ import { EMPTY_MATRIX, RowIndexService } from '../shared';
 import { makeRenderableMatrix, TileMatrix } from '../renderable-model';
 import { diagramAnimations } from './diagram.animations';
 import { diagramRowTracker } from './diagram-row-tracker';
+import { DragTileService } from '../drag-tiles';
 
 @Component({
   // temporal name until old diagram implementation is removed
@@ -39,7 +40,10 @@ export class DiagramComponent implements OnChanges, OnDestroy {
 
   trackRowBy: TrackByFunction<Tile[]>;
 
-  constructor(private rowIndexService: RowIndexService) {
+  constructor(
+    private rowIndexService: RowIndexService,
+    private dragService: DragTileService
+  ) {
     this.trackRowBy = diagramRowTracker(this);
   }
 
@@ -66,8 +70,15 @@ export class DiagramComponent implements OnChanges, OnDestroy {
       // matrix is reversed to make sure html stack order always goes from bottom to top
       // i.e. top rows are rendered in front of bottom rows, this ensures branches don't display on top of the tiles above
       this.tileMatrix = tileMatrix.reverse();
+      this.updateRowParents();
     } else if (!this.isReadOnly) {
       this.tileMatrix = EMPTY_MATRIX;
     }
+  }
+
+  private updateRowParents() {
+    this.dragService.updateRowParents(this.tileMatrix, taskId =>
+      this.rowIndexService.getRowIndexForTask(taskId)
+    );
   }
 }

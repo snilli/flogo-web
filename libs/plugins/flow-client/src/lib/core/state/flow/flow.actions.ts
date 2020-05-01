@@ -13,6 +13,7 @@ export enum ActionType {
   ConfigureItem = '[Flow] Configure item',
   SelectItem = '[Flow] Select item',
   RemoveItem = '[Flow] Remove item',
+  MoveItem = '[Flow] Change item position',
   CreateBranch = '[Flow] Create branch',
   ItemUpdated = '[Flow] Item updated',
   CommitItemConfiguration = '[Flow] Commit item configuration',
@@ -81,6 +82,13 @@ export class TaskItemCreated implements BaseFlowAction {
 export class RemoveItem implements BaseFlowAction {
   readonly type = ActionType.RemoveItem;
   constructor(public payload: { handlerType: HandlerType; itemId: string }) {}
+}
+
+export class MoveItem implements BaseFlowAction {
+  readonly type = ActionType.MoveItem;
+  constructor(
+    public payload: { handlerType: HandlerType; itemId: string; parentId: string }
+  ) {}
 }
 
 export class ItemUpdated implements BaseFlowAction {
@@ -185,6 +193,7 @@ export type ActionsUnion =
   | ClearSelection
   | SelectItem
   | RemoveItem
+  | MoveItem
   | CreateBranch
   | ItemUpdated
   | UpdateMetadata

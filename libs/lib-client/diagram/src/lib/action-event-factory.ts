@@ -1,4 +1,4 @@
-import { DiagramActionType } from './interfaces';
+import { DiagramActionType, DiagramActionMove } from './interfaces';
 import { DiagramActionChild, DiagramActionSelf } from './interfaces';
 
 export const actionEventFactory = {
@@ -6,6 +6,13 @@ export const actionEventFactory = {
     return {
       type: DiagramActionType.Insert,
       parentId,
+    };
+  },
+  move(id: string, parentId: string): DiagramActionMove {
+    return {
+      type: DiagramActionType.Move,
+      id,
+      parentId: parentId || null,
     };
   },
   branch(parentId: string): DiagramActionChild {

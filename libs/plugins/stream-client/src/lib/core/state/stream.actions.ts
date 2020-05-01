@@ -20,6 +20,7 @@ export enum StreamActionType {
   SelectStage = '[Stream] Select item',
   SelectRemoveStage = '[Stream] Ask to delete stage',
   DeleteStage = '[Stream] Confirm delete stage',
+  MoveStage = '[Stream] Change stage position',
   ConfigureStage = '[Stream] Configure stage',
   CancelStageConfiguration = '[Stream] Cancel stage configuration',
   CommitStageConfiguration = '[Stream] Commit stage configuration',
@@ -91,6 +92,11 @@ export class ConfirmDeleteStage implements BaseStreamAction {
   constructor(public payload: string) {}
 }
 
+export class MoveStage implements BaseStreamAction {
+  readonly type = StreamActionType.MoveStage;
+  constructor(public payload: { itemId: string; parentId: string }) {}
+}
+
 export class UpdateMetadata implements BaseStreamAction {
   readonly type = StreamActionType.UpdateMetadata;
   constructor(public payload: StreamMetadata) {}
@@ -135,6 +141,7 @@ export type StreamActionsUnion =
   | SelectStage
   | SelectRemoveStage
   | ConfirmDeleteStage
+  | MoveStage
   | CancelCreateStage
   | StageItemCreated
   | UpdateMetadata

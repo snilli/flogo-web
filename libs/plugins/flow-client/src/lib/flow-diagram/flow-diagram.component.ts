@@ -10,6 +10,7 @@ import {
   DiagramSelection,
   DiagramActionChild,
   DiagramActionSelf,
+  DiagramActionMove,
 } from '@flogo-web/lib-client/diagram';
 
 import { HandlerType } from '../core/models';
@@ -95,6 +96,15 @@ export class FlogoFlowDiagramComponent {
           handlerType: this.currentDiagramId,
           itemId: (<DiagramActionSelf>diagramAction).id,
         });
+      }
+      case DiagramActionType.Move: {
+        return this.store.dispatch(
+          new FlowActions.MoveItem({
+            handlerType: this.currentDiagramId,
+            itemId: (<DiagramActionMove>diagramAction).id,
+            parentId: (<DiagramActionMove>diagramAction).parentId,
+          })
+        );
       }
     }
   }

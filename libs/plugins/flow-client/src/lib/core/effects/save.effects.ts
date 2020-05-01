@@ -18,6 +18,7 @@ export class SaveEffects {
       ActionType.RemoveItem,
       ActionType.ItemUpdated,
       ActionType.CommitItemConfiguration,
+      ActionType.MoveItem,
       ActionType.UpdateMetadata
     ),
     switchMap(() => this.saveFlow()),
