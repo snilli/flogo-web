@@ -19,6 +19,7 @@ import { makeRenderableMatrix, TileMatrix } from '../renderable-model';
 import { diagramAnimations } from './diagram.animations';
 import { diagramRowTracker } from './diagram-row-tracker';
 import { DragTileService } from '../drag-tiles';
+import { MAX_ROW_LENGTH } from '../constants';
 
 @Component({
   // temporal name until old diagram implementation is removed
@@ -52,6 +53,7 @@ export class DiagramComponent implements OnChanges, OnDestroy {
       readOnlyChange && readOnlyChange.currentValue !== readOnlyChange.previousValue;
     if (flowChange || readOnlyDidChange) {
       this.updateMatrix();
+      this.dragService.initTilesDropAllowStatus(this.flow);
     }
   }
 
@@ -64,7 +66,7 @@ export class DiagramComponent implements OnChanges, OnDestroy {
   }
 
   private updateMatrix() {
-    const tileMatrix = makeRenderableMatrix(this.flow, 10, this.isReadOnly);
+    const tileMatrix = makeRenderableMatrix(this.flow, MAX_ROW_LENGTH, this.isReadOnly);
     this.rowIndexService.updateRowIndexes(tileMatrix);
     if (tileMatrix.length > 0) {
       // matrix is reversed to make sure html stack order always goes from bottom to top
