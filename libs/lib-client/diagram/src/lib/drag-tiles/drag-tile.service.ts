@@ -225,7 +225,7 @@ export class DragTileService {
 
   isDropAllowedIfTileHasBranch(dragTileId, dropPositionInRow) {
     const dragTileChildren = this.nodes[dragTileId].children;
-    if (dragTileChildren.length > 1) {
+    if (dragTileChildren.length) {
       const branchPaths = this.getAllBranchPaths(dragTileId);
       const maxPathLength = branchPaths.reduce((maxLength, path) => {
         const pathLength = path.length;
@@ -259,7 +259,6 @@ export class DragTileService {
       const tilePaths = this.getTilePaths(tileId);
       tilePaths.forEach(path => this.updateTilesInPathDropStatus(tileId, path));
     }
-    return;
   }
 
   getTilePaths(tileId) {
