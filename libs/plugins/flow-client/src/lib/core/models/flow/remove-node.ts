@@ -19,7 +19,7 @@ export function removeNode(
   flowGraph = { ...flowGraph, nodes: resultNodes };
   items = resultItems;
   if (nodeToRemove.parents.length <= 0 && nodeToRemove.children.length <= 0) {
-    return { flowGraph, items };
+    return { flowGraph: { ...flowGraph, rootId: null }, items };
   }
 
   const [parentId] = nodeToRemove.parents;
