@@ -1,4 +1,4 @@
-import { groupBy, map, pickBy } from 'lodash';
+import { groupBy, map, pickBy, cloneDeep } from 'lodash';
 import { Injectable } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
@@ -33,6 +33,7 @@ export class DragTileService {
   private nodes: GraphNodeDictionary;
   private maxPaths: Array<string[]>;
   private tilesDropAllowStatus: Map<string, TileDropAllowStatus>;
+  private tilesDropAllowStatusCopy: Map<string, TileDropAllowStatus>;
 
   groupTilesByZone(allTiles: Tile[]): TilesGroupedByZone {
     const { preDropZone, dropZone, postDropZone } = groupBy(allTiles, (tile: Tile) => {
@@ -70,6 +71,7 @@ export class DragTileService {
     const { previousIndex, currentIndex, item, container, previousContainer } = dropEvent;
 
     if (!this.isDragInsideContainer) {
+      this.resetDropAllowStatus();
       return;
     }
 
@@ -77,6 +79,7 @@ export class DragTileService {
 
     if (previousContainer === container && previousIndex === currentIndex) {
       /* Returning if the item is dropped in it's original place */
+      this.resetDropAllowStatus();
       return;
     }
 
@@ -84,8 +87,12 @@ export class DragTileService {
       const dropTileDetails = getDropTileDetails(currentIndex);
       const isDropAllowed = dropTileDetails.dropTileId
         ? this.isDropAllowedOnDropTile(dropTileDetails, item.data)
-        : this.isDropAllowedIfTileHasBranch(item.data, dropTileDetails.dropPositionInRow);
+        : this.isDropAllowedAsLastTileInDropList(
+            item.data,
+            dropTileDetails.dropPositionInRow
+          );
       if (!isDropAllowed) {
+        this.resetDropAllowStatus();
         return;
       }
     }
@@ -223,10 +230,18 @@ export class DragTileService {
     );
   }
 
+  isDropAllowedAsLastTileInDropList(dragTileId, dropPositionInRow) {
+    if (dropPositionInRow < MAX_ROW_LENGTH) {
+      return this.isDropAllowedIfTileHasBranch(dragTileId, dropPositionInRow);
+    }
+    return false;
+  }
+
   isDropAllowedIfTileHasBranch(dragTileId, dropPositionInRow) {
     const dragTileChildren = this.nodes[dragTileId].children;
+    const branchTiles = this.getAllBranchTiles(dragTileId);
     if (dragTileChildren.length) {
-      const branchPaths = this.getAllBranchPaths(dragTileId);
+      const branchPaths = this.getAllBranchPaths(branchTiles);
       const maxPathLength = branchPaths.reduce((maxLength, path) => {
         const pathLength = path.length;
         return pathLength > maxLength ? pathLength : maxLength;
@@ -239,8 +254,7 @@ export class DragTileService {
     return true;
   }
 
-  getAllBranchPaths(fromTileId) {
-    const branchTiles = this.getAllBranchTiles(fromTileId);
+  getAllBranchPaths(branchTiles) {
     let branchPaths = [];
     branchTiles.forEach(
       branchTile => (branchPaths = branchPaths.concat(this.getPathsFromTile(branchTile)))
@@ -255,6 +269,7 @@ export class DragTileService {
   }
 
   updateTilesDropAllowStatus(tileId: string) {
+    this.tilesDropAllowStatusCopy = cloneDeep(this.tilesDropAllowStatus);
     if (!this.getTileDropAllowStatus(tileId).allow) {
       const tilePaths = this.getTilePaths(tileId);
       tilePaths.forEach(path => this.updateTilesInPathDropStatus(tileId, path));
@@ -283,5 +298,14 @@ export class DragTileService {
 
   getTileDropAllowStatus(tileId): TileDropAllowStatus {
     return this.tilesDropAllowStatus.get(tileId);
+  }
+
+  resetDropAllowStatus() {
+    /* Reset drop allow status map when tile drop reverts to it's original position
+     *  Case 1: Tile dropped in its original position
+     *  Case 2: Tile dropped outside drop list container
+     *  Case 3: Tile cannot be dropped at a particular position as it will overflow the max tile limit of a row
+     * */
+    this.tilesDropAllowStatus = cloneDeep(this.tilesDropAllowStatusCopy);
   }
 }
