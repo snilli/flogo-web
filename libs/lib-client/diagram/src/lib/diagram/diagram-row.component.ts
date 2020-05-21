@@ -1,4 +1,3 @@
-import { concat } from 'lodash';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -50,9 +49,8 @@ export class DiagramRowComponent implements OnChanges {
   ngOnChanges({ row: rowChange }: SimpleChanges) {
     if (rowChange) {
       this.groupedTiles = this.dragService.groupTilesByZone(this.row);
-      this.filledTiles = concat(
-        this.groupedTiles.preDropZone,
-        this.groupedTiles.dropZone
+      this.filledTiles = this.row.filter(
+        tile => tile.type === TileType.Padding || tile.type === TileType.Task
       );
     }
   }
@@ -95,7 +93,7 @@ export class DiagramRowComponent implements OnChanges {
             (tile: TaskTile) => tile.task?.id === dropTileId
           );
         } else {
-          /* When tile is dropped at the last place of the row  */
+          /* When tile is dropped after the last tile of the droplist  */
           dropPositionInRow = this.filledTiles.length;
         }
         return { dropTileId, dropPositionInRow };
