@@ -13,6 +13,7 @@ import {
   ContributionsService,
   FLOGO_CONTRIB_TYPE,
 } from '@flogo-web/lib-client/core';
+import { BRANCH_PREFIX } from '@flogo-web/lib-client/diagram';
 import {
   ApiFlowResource,
   FlowMetadata,
@@ -21,7 +22,7 @@ import {
   ItemSubflow,
   UiFlow,
 } from '../../interfaces';
-import { FLOGO_FLOW_DIAGRAM_NODE_TYPE, BRANCH_PREFIX } from '../../constants';
+import { FLOGO_FLOW_DIAGRAM_NODE_TYPE } from '../../constants';
 import { makeGraphAndItems } from '../graph-and-items';
 import { ItemFactory } from '../graph-and-items/item-factory';
 import { flogoGenTriggerID, flogoGenNodeID } from './utils';

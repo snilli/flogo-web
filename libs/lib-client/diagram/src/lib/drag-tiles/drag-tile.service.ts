@@ -1,11 +1,12 @@
-import { groupBy } from 'lodash';
+import { groupBy, map, pickBy, cloneDeep } from 'lodash';
 import { Injectable } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
-import { NodeType } from '@flogo-web/lib-client/core';
+import { GraphNodeDictionary, NodeType } from '@flogo-web/lib-client/core';
 
 import { TaskTile, Tile, TileType } from '../interfaces';
 import { DropActionData, TilesGroupedByZone } from './interface';
+import { BRANCH_PREFIX, MAX_ROW_LENGTH } from '../constants';
 
 /* The following enum is based on the return value of MouseEvent.buttons as described in
     https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
@@ -20,10 +21,19 @@ export enum DragTilePosition {
   INSIDE,
 }
 
+interface TileDropAllowStatus {
+  allow: boolean;
+  occurrenceInMaxPaths: number;
+}
+
 @Injectable()
 export class DragTileService {
   private rowAllParents: Map<number, string[]>;
   private isDragInsideContainer = false;
+  private nodes: GraphNodeDictionary;
+  private maxPaths: Array<string[]>;
+  private tilesDropAllowStatus: Map<string, TileDropAllowStatus>;
+  private tilesDropAllowStatusCopy: Map<string, TileDropAllowStatus>;
 
   groupTilesByZone(allTiles: Tile[]): TilesGroupedByZone {
     const { preDropZone, dropZone, postDropZone } = groupBy(allTiles, (tile: Tile) => {
@@ -53,11 +63,15 @@ export class DragTileService {
 
   prepareDropActionData(
     dropEvent: CdkDragDrop<Tile[]>,
-    getBranchId?: () => string
+    getBranchId?: () => string,
+    getDropTileDetails?: (
+      dropPosition: number
+    ) => { dropTileId: string; dropPositionInRow: number }
   ): DropActionData {
     const { previousIndex, currentIndex, item, container, previousContainer } = dropEvent;
 
     if (!this.isDragInsideContainer) {
+      this.resetDropAllowStatus();
       return;
     }
 
@@ -65,7 +79,22 @@ export class DragTileService {
 
     if (previousContainer === container && previousIndex === currentIndex) {
       /* Returning if the item is dropped in it's original place */
+      this.resetDropAllowStatus();
       return;
+    }
+
+    if (getDropTileDetails) {
+      const dropTileDetails = getDropTileDetails(currentIndex);
+      const isDropAllowed = dropTileDetails.dropTileId
+        ? this.isDropAllowedOnDropTile(dropTileDetails, item.data)
+        : this.isDropAllowedAsLastTileInDropList(
+            item.data,
+            dropTileDetails.dropPositionInRow
+          );
+      if (!isDropAllowed) {
+        this.resetDropAllowStatus();
+        return;
+      }
     }
 
     const taskTilesInContainer = container.getSortedItems();
@@ -140,5 +169,143 @@ export class DragTileService {
 
   private resetDraggingTracker() {
     this.isDragInsideContainer = false;
+  }
+
+  initTilesDropAllowStatus(flow) {
+    this.nodes = {};
+    this.maxPaths = new Array<string[]>();
+    this.tilesDropAllowStatus = new Map<string, TileDropAllowStatus>();
+    const rootId = flow.rootId;
+    if (rootId) {
+      this.nodes = flow.nodes;
+      const allPaths = this.getPathsFromTile(rootId);
+      this.maxPaths = allPaths.filter(path => path.length === MAX_ROW_LENGTH);
+      this.setTileDropAllowStatus();
+    }
+  }
+
+  getPathsFromTile(fromTile, path = [], allPaths = []) {
+    if (this.isNonBranchTask(fromTile)) {
+      path.push(fromTile);
+    }
+    const children = this.nodes[fromTile].children;
+    if (children.length) {
+      for (const child of children) {
+        this.getPathsFromTile(child, [...path], allPaths);
+      }
+    } else {
+      allPaths.push(path);
+    }
+    return allPaths;
+  }
+
+  setTileDropAllowStatus() {
+    const nonBranchTasks = pickBy(this.nodes, (node, nodeId) =>
+      this.isNonBranchTask(nodeId)
+    );
+    const taskIds = map(nonBranchTasks, (node, nodeId) => nodeId);
+    taskIds.forEach(taskId => {
+      this.tilesDropAllowStatus.set(taskId, this.tileOccurrencesInMaxPaths(taskId));
+    });
+  }
+
+  isNonBranchTask(taskId) {
+    return !taskId.startsWith(BRANCH_PREFIX);
+  }
+
+  tileOccurrencesInMaxPaths(tileId): TileDropAllowStatus {
+    let occurrence = 0;
+    this.maxPaths.forEach(path => {
+      if (path.includes(tileId)) {
+        occurrence++;
+      }
+    });
+    return { allow: !occurrence, occurrenceInMaxPaths: occurrence };
+  }
+
+  isDropAllowedOnDropTile(dropTileDetails, dragTile): boolean {
+    return (
+      this.tilesDropAllowStatus.get(dropTileDetails.dropTileId).allow &&
+      this.isDropAllowedIfTileHasBranch(dragTile, dropTileDetails.dropPositionInRow)
+    );
+  }
+
+  isDropAllowedAsLastTileInDropList(dragTileId, dropPositionInRow) {
+    if (dropPositionInRow < MAX_ROW_LENGTH) {
+      return this.isDropAllowedIfTileHasBranch(dragTileId, dropPositionInRow);
+    }
+    return false;
+  }
+
+  isDropAllowedIfTileHasBranch(dragTileId, dropPositionInRow) {
+    const dragTileChildren = this.nodes[dragTileId].children;
+    const branchTiles = this.getAllBranchTiles(dragTileId);
+    if (dragTileChildren.length) {
+      const branchPaths = this.getAllBranchPaths(branchTiles);
+      const maxPathLength = branchPaths.reduce((maxLength, path) => {
+        const pathLength = path.length;
+        return pathLength > maxLength ? pathLength : maxLength;
+      }, 0);
+      const maxIndexInRow = MAX_ROW_LENGTH - 1;
+      if (dropPositionInRow + maxPathLength > maxIndexInRow) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  getAllBranchPaths(branchTiles) {
+    let branchPaths = [];
+    branchTiles.forEach(
+      branchTile => (branchPaths = branchPaths.concat(this.getPathsFromTile(branchTile)))
+    );
+    return branchPaths;
+  }
+
+  getAllBranchTiles(tileId) {
+    const tile = this.nodes[tileId];
+    const tileChildren = tile.children;
+    return tileChildren.filter(child => child.startsWith(BRANCH_PREFIX));
+  }
+
+  updateTilesDropAllowStatus(tileId: string) {
+    this.tilesDropAllowStatusCopy = cloneDeep(this.tilesDropAllowStatus);
+    if (!this.getTileDropAllowStatus(tileId).allow) {
+      const tilePaths = this.getTilePaths(tileId);
+      tilePaths.forEach(path => this.updateTilesInPathDropStatus(tileId, path));
+    }
+  }
+
+  getTilePaths(tileId) {
+    return this.maxPaths.filter(path => path.includes(tileId));
+  }
+
+  updateTilesInPathDropStatus(dragTileId, tilePath) {
+    const dragTileOccurrence = this.getTileDropAllowStatus(dragTileId)
+      .occurrenceInMaxPaths;
+    tilePath.forEach(tileId => {
+      const tileDropStatus = this.getTileDropAllowStatus(tileId);
+      if (tileDropStatus.occurrenceInMaxPaths <= dragTileOccurrence) {
+        this.updateTileDropStatusAllow(tileId);
+      }
+    });
+  }
+
+  updateTileDropStatusAllow(tileId: string) {
+    const currentStatus = this.getTileDropAllowStatus(tileId);
+    this.tilesDropAllowStatus.set(tileId, { ...currentStatus, allow: true });
+  }
+
+  getTileDropAllowStatus(tileId): TileDropAllowStatus {
+    return this.tilesDropAllowStatus.get(tileId);
+  }
+
+  resetDropAllowStatus() {
+    /* Reset drop allow status map when tile drop reverts to it's original position
+     *  Case 1: Tile dropped in its original position
+     *  Case 2: Tile dropped outside drop list container
+     *  Case 3: Tile cannot be dropped at a particular position as it will overflow the max tile limit of a row
+     * */
+    this.tilesDropAllowStatus = cloneDeep(this.tilesDropAllowStatusCopy);
   }
 }

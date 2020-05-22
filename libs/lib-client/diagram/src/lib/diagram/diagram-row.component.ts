@@ -8,7 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { CdkDragDrop, CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDrag, CdkDragStart } from '@angular/cdk/drag-drop';
 
 import { DiagramAction, DiagramSelection, TaskTile, Tile, TileType } from '../interfaces';
 import { actionEventFactory } from '../action-event-factory';
@@ -34,7 +34,12 @@ export class DiagramRowComponent implements OnChanges {
   tileTypes = TileType;
   draggingPosition = DragTilePosition;
   groupedTiles: TilesGroupedByZone<Tile>;
+  filledTiles: Array<Tile>;
   trackTileBy = trackTileByFn;
+
+  restrictTileDrop = (dragEvent: CdkDrag) => {
+    return this.dragService.isTileAllowedToDropInRow(dragEvent.data, this.rowIndex);
+  };
 
   constructor(
     private rowIndexService: RowIndexService,
@@ -44,6 +49,9 @@ export class DiagramRowComponent implements OnChanges {
   ngOnChanges({ row: rowChange }: SimpleChanges) {
     if (rowChange) {
       this.groupedTiles = this.dragService.groupTilesByZone(this.row);
+      this.filledTiles = this.row.filter(
+        tile => tile.type === TileType.Padding || tile.type === TileType.Task
+      );
     }
   }
 
@@ -66,23 +74,42 @@ export class DiagramRowComponent implements OnChanges {
   }
 
   moveTile(event: CdkDragDrop<Tile[]>) {
-    const dropActionData = this.dragService.prepareDropActionData(event, () => {
-      const branchTile: TaskTile = this.groupedTiles.preDropZone.find(
-        (tile: TaskTile) => tile.type === TileType.Task
-      ) as TaskTile;
-      return branchTile?.task.id;
-    });
+    const dropActionData = this.dragService.prepareDropActionData(
+      event,
+      () => {
+        const branchTile: TaskTile = this.groupedTiles.preDropZone.find(
+          (tile: TaskTile) => tile.type === TileType.Task
+        ) as TaskTile;
+        return branchTile?.task.id;
+      },
+      dropPosition => {
+        const dropZoneTiles = this.groupedTiles.dropZone;
+        let dropTileId;
+        let dropPositionInRow;
+        if (dropPosition < dropZoneTiles.length) {
+          const dropTile: TaskTile = dropZoneTiles[dropPosition] as TaskTile;
+          dropTileId = dropTile.task.id;
+          dropPositionInRow = this.filledTiles.findIndex(
+            (tile: TaskTile) => tile.task?.id === dropTileId
+          );
+        } else {
+          /* When tile is dropped after the last tile of the droplist  */
+          dropPositionInRow = this.filledTiles.length;
+        }
+        return { dropTileId, dropPositionInRow };
+      }
+    );
     if (dropActionData) {
       const { itemId, parentId } = dropActionData;
       this.action.emit(actionEventFactory.move(itemId, parentId));
     }
   }
 
-  restrictTileDrop = (dragEvent: CdkDrag) => {
-    return this.dragService.isTileAllowedToDropInRow(dragEvent.data, this.rowIndex);
-  };
-
   updateDraggingState(pos: DragTilePosition, buttons: number) {
     this.dragService.changeDraggingTracker(pos, buttons);
+  }
+
+  onTaskDragStart(dragStartEvent: CdkDragStart) {
+    this.dragService.updateTilesDropAllowStatus(dragStartEvent.source.data);
   }
 }
