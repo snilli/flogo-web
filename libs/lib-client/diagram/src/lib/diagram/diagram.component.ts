@@ -11,15 +11,16 @@ import {
   TrackByFunction,
 } from '@angular/core';
 
-import { FlowGraph } from '@flogo-web/lib-client/core';
+import { FlowGraph, SingleEmissionSubject } from '@flogo-web/lib-client/core';
 
-import { DiagramAction, DiagramSelection, Tile } from '../interfaces';
+import { DiagramAction, DiagramSelection, TaskTile, Tile } from '../interfaces';
 import { EMPTY_MATRIX, RowIndexService } from '../shared';
 import { makeRenderableMatrix, TileMatrix } from '../renderable-model';
 import { diagramAnimations } from './diagram.animations';
 import { diagramRowTracker } from './diagram-row-tracker';
 import { DragTileService } from '../drag-tiles';
 import { MAX_ROW_LENGTH } from '../constants';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   // temporal name until old diagram implementation is removed
@@ -38,14 +39,22 @@ export class DiagramComponent implements OnChanges, OnDestroy {
   @Input() @HostBinding('class.flogo-diagram-is-readonly') isReadOnly = false;
   @Output() action = new EventEmitter<DiagramAction>();
   tileMatrix: TileMatrix;
+  isDragging: boolean;
 
   trackRowBy: TrackByFunction<Tile[]>;
+
+  private ngDestroy$ = SingleEmissionSubject.create();
 
   constructor(
     private rowIndexService: RowIndexService,
     private dragService: DragTileService
   ) {
     this.trackRowBy = diagramRowTracker(this);
+    this.dragService.isDragging$
+      .pipe(takeUntil(this.ngDestroy$))
+      .subscribe(isDragging => {
+        this.isDragging = isDragging;
+      });
   }
 
   ngOnChanges({ flow: flowChange, isReadOnly: readOnlyChange }: SimpleChanges) {
@@ -53,12 +62,20 @@ export class DiagramComponent implements OnChanges, OnDestroy {
       readOnlyChange && readOnlyChange.currentValue !== readOnlyChange.previousValue;
     if (flowChange || readOnlyDidChange) {
       this.updateMatrix();
-      this.dragService.initTilesDropAllowStatus(this.flow);
+      this.dragService.initTilesDropAllowStatus(this.flow, tileId => {
+        const tileRowIndex = this.rowIndexService.getRowIndexForTask(tileId);
+        // calculate rowIndex as matrix is reversed to make sure html stack order always goes from bottom to top
+        const rowIndex = this.tileMatrix.length - tileRowIndex - 1;
+        return this.tileMatrix[rowIndex].findIndex(
+          (tile: TaskTile) => tile.task?.id === tileId
+        );
+      });
     }
   }
 
   ngOnDestroy() {
     this.rowIndexService.clear();
+    this.ngDestroy$.emitAndComplete();
   }
 
   onAction(action: DiagramAction) {

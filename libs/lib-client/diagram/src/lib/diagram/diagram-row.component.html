@@ -36,6 +36,7 @@
       cdkDrag
       cdkDragBoundary="flogo-diagram"
       @tileTask
+      [class.disable-tile]="isDragging && disableTile(tile?.task?.id)"
       [tile]="tile"
       [cdkDragData]="tile?.task?.id"
       [currentSelection]="selection"
@@ -67,6 +68,7 @@
   <flogo-diagram-tile-task
     *ngIf="tile.type === tileTypes.Task"
     @tileTask
+    [class.disable-tile]="isDragging"
     [tile]="tile"
     [currentSelection]="selection"
     [isReadOnly]="isReadOnly"
