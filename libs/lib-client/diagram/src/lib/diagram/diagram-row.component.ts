@@ -28,6 +28,7 @@ export class DiagramRowComponent implements OnChanges {
   @Input() row: Tile[];
   @Input() selection: DiagramSelection;
   @Input() rowIndex: number;
+  @Input() isDragging: boolean;
   @HostBinding('class.is-readonly') @Input() isReadOnly = false;
   @Output() action = new EventEmitter<DiagramAction>();
 
@@ -39,6 +40,10 @@ export class DiagramRowComponent implements OnChanges {
 
   restrictTileDrop = (dragEvent: CdkDrag) => {
     return this.dragService.isTileAllowedToDropInRow(dragEvent.data, this.rowIndex);
+  };
+
+  disableTile = id => {
+    return id && !this.dragService.getTileDropAllowStatus(id).allow;
   };
 
   constructor(

@@ -36,6 +36,7 @@
       cdkDrag
       cdkDragBoundary="flogo-diagram"
       @tileTask
+      [class.is-disabled]="isDragging && disableTile(tile?.task?.id)"
       [tile]="tile"
       [cdkDragData]="tile?.task?.id"
       [currentSelection]="selection"
@@ -45,7 +46,17 @@
       (remove)="onTaskAction($event)"
       (configure)="onTaskAction($event)"
       (cdkDragStarted)="onTaskDragStart($event)"
-    ></flogo-diagram-tile-task>
+    >
+      <flogo-diagram-tile-placeholder
+        *cdkDragPlaceholder
+      ></flogo-diagram-tile-placeholder>
+      <ng-template cdkDragPreview [matchSize]="true">
+        <flogo-diagram-tile-preview
+          [id]="tile?.task?.id"
+          [title]="tile?.task?.title"
+        ></flogo-diagram-tile-preview>
+      </ng-template>
+    </flogo-diagram-tile-task>
   </ng-template>
 </div>
 <ng-template
@@ -57,6 +68,7 @@
   <flogo-diagram-tile-task
     *ngIf="tile.type === tileTypes.Task"
     @tileTask
+    [class.is-disabled]="isDragging"
     [tile]="tile"
     [currentSelection]="selection"
     [isReadOnly]="isReadOnly"
@@ -70,12 +82,16 @@
     @tileGeneric
     [@.disabled]="tile.type === tileTypes.Placeholder"
     class="tile tile--slot"
-    [class.tile--placeholder]="tile.type === tileTypes.Placeholder"
+    [ngClass]="{
+      'tile--placeholder': tile.type === tileTypes.Placeholder,
+      'is-hidden': isDragging
+    }"
   ></div>
   <flogo-diagram-tile-insert
     *ngIf="tile.type === tileTypes.Insert"
     @tileInsert
     class="tile--slot"
+    [class.is-hidden]="isDragging"
     [tile]="tile"
     [currentSelection]="selection"
     (select)="onInsertSelected($event)"
