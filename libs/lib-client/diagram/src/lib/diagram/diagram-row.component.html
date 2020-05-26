@@ -36,7 +36,7 @@
       cdkDrag
       cdkDragBoundary="flogo-diagram"
       @tileTask
-      [class.disable-tile]="isDragging && disableTile(tile?.task?.id)"
+      [class.is-disabled]="isDragging && disableTile(tile?.task?.id)"
       [tile]="tile"
       [cdkDragData]="tile?.task?.id"
       [currentSelection]="selection"
@@ -68,7 +68,7 @@
   <flogo-diagram-tile-task
     *ngIf="tile.type === tileTypes.Task"
     @tileTask
-    [class.disable-tile]="isDragging"
+    [class.is-disabled]="isDragging"
     [tile]="tile"
     [currentSelection]="selection"
     [isReadOnly]="isReadOnly"
@@ -84,14 +84,14 @@
     class="tile tile--slot"
     [ngClass]="{
       'tile--placeholder': tile.type === tileTypes.Placeholder,
-      'hide-tile': isDragging
+      'is-hidden': isDragging
     }"
   ></div>
   <flogo-diagram-tile-insert
     *ngIf="tile.type === tileTypes.Insert"
     @tileInsert
     class="tile--slot"
-    [class.hide-tile]="isDragging"
+    [class.is-hidden]="isDragging"
     [tile]="tile"
     [currentSelection]="selection"
     (select)="onInsertSelected($event)"
