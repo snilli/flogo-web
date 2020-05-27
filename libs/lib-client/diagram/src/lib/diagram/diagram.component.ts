@@ -52,9 +52,7 @@ export class DiagramComponent implements OnChanges, OnDestroy {
     this.trackRowBy = diagramRowTracker(this);
     this.dragService.isDragging$
       .pipe(takeUntil(this.ngDestroy$))
-      .subscribe(isDragging => {
-        this.isDragging = isDragging;
-      });
+      .subscribe(isDragging => (this.isDragging = isDragging));
   }
 
   ngOnChanges({ flow: flowChange, isReadOnly: readOnlyChange }: SimpleChanges) {

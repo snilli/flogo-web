@@ -18,6 +18,7 @@
       (select)="selectStage($event)"
       (remove)="onDiagramAction($event)"
       (configure)="onDiagramAction($event)"
+      (cdkDragStarted)="onStageDragStart()"
     >
       <flogo-diagram-tile-placeholder
         *cdkDragPlaceholder
@@ -38,8 +39,13 @@
     [currentSelection]="currentSelection"
     (select)="addStage()"
     [class.visible-on-hover]="tiles.length"
+    [hidden]="isDragging"
   ></flogo-diagram-tile-insert>
   <div class="tile-placeholders">
-    <div class="tile-placeholder visible-on-hover" *ngFor="let i of placeholders"></div>
+    <div
+      class="tile-placeholder visible-on-hover"
+      [hidden]="isDragging"
+      *ngFor="let i of placeholders"
+    ></div>
   </div>
 </div>

@@ -42,6 +42,7 @@ export class StreamDiagramComponent implements OnDestroy {
   trackTileBy = trackTileByFn;
   availableSlots: number;
   placeholders = [];
+  isDragging: boolean;
   private ngOnDestroy$ = SingleEmissionSubject.create();
 
   constructor(
@@ -67,6 +68,9 @@ export class StreamDiagramComponent implements OnDestroy {
         };
         this.updateAvailableSlots(streamTiles);
       });
+    this.dragService.isDragging$
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(isDragging => (this.isDragging = isDragging));
   }
 
   ngOnDestroy(): void {
@@ -105,6 +109,10 @@ export class StreamDiagramComponent implements OnDestroy {
 
   updateDraggingState(pos: DragTilePosition, buttons: number) {
     this.dragService.changeDraggingTracker(pos, buttons);
+  }
+
+  onStageDragStart() {
+    this.dragService.updateDragAction(true);
   }
 
   private updateAvailableSlots(streamTiles) {

@@ -82,16 +82,14 @@
     @tileGeneric
     [@.disabled]="tile.type === tileTypes.Placeholder"
     class="tile tile--slot"
-    [ngClass]="{
-      'tile--placeholder': tile.type === tileTypes.Placeholder,
-      'is-hidden': isDragging
-    }"
+    [class.tile--placeholder]="tile.type === tileTypes.Placeholder"
+    [hidden]="isDragging"
   ></div>
   <flogo-diagram-tile-insert
     *ngIf="tile.type === tileTypes.Insert"
     @tileInsert
     class="tile--slot"
-    [class.is-hidden]="isDragging"
+    [hidden]="isDragging"
     [tile]="tile"
     [currentSelection]="selection"
     (select)="onInsertSelected($event)"
