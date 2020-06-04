@@ -324,6 +324,11 @@ export class DragTileService {
 
   updateDragAction(dragState) {
     this.isDraggingSubscriber.next(dragState);
+    this.toggleCursorStyle();
+  }
+
+  toggleCursorStyle() {
+    document.querySelector('body').classList.toggle('cursor-move');
   }
 
   resetDropAllowStatus() {
