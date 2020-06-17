@@ -9,6 +9,7 @@ export enum ValueType {
   Any = 'any',
   Params = 'params',
   Bytes = 'bytes',
+  Datetime = 'datetime',
 }
 
 const _allTypes: ReadonlyArray<ValueType> = Object.values(
@@ -25,6 +26,7 @@ const _defaultValuesForValueTypes: [ValueType, any][] = [
   [ValueType.Params, null],
   [ValueType.Any, null],
   [ValueType.Bytes, ''],
+  [ValueType.Datetime, ''],
 ];
 export namespace ValueType {
   export const allTypes = _allTypes;

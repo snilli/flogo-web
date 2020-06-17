@@ -17,6 +17,7 @@
         "array",
         "params",
         "bytes",
+        "datetime",
         "any"
       ]
     },
