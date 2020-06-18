@@ -22,8 +22,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
       version="1.1"
     >
       <defs>
-        <symbol id="flogo-mapper-icon-date" viewBox="0 0 32 32">
-          <title>icon-date</title>
+        <symbol id="flogo-mapper-icon-datetime" viewBox="0 0 32 32">
+          <title>icon-datetime</title>
           <path
             d="M20 24h4v-4h-4v4zM14 24h4v-4h-4v4zM8 24h4v-4h-4v4zM20 18h4v-4h-4v4zM14 18h4v-4h-4v4zM8 18h4v-4h-4v4zM26 25c0 0.552-0.448 1-1 1h-18c-0.552 0-1-0.448-1-1v-12c0-0.552 0.448-1 1-1h18c0.552 0 1 0.448 1 1v12zM26 8h-2v-3c0-0.552-0.448-1-1-1h-2c-0.552 0-1 0.448-1 1v3h-8v-3c0-0.552-0.448-1-1-1h-2c-0.552 0-1 0.448-1 1v3h-2c-1.105 0-2 0.895-2 2v16c0 1.105 0.895 2 2 2h20c1.105 0 2-0.895 2-2v-16c0-1.105-0.895-2-2-2z"
           ></path>
@@ -166,4 +166,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
   `,
   /* tslint:enable */
 })
-export class IconsComponent {}
+export class MapperIconsComponent {}

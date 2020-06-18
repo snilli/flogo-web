@@ -6,6 +6,8 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { TreeModule } from 'primeng/components/tree/tree';
 
 import { MonacoEditorModule } from '@flogo-web/editor';
+import { MapperIconsModule } from '@flogo-web/lib-client/mapper-icons';
+
 import { MappingParser } from './services/map.parser';
 import { FunctionsComponent } from './functions-list/functions.component';
 
@@ -20,9 +22,7 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 
 import { TreeNodeFactoryService } from './services/tree-node-factory.service';
 import { TreeService } from './services/tree.service';
-import { IconsComponent } from './shared/icons.component';
 import { InlineHrefDirective } from './shared/inline-href.directive';
-import { IconsService } from './services/icons.service';
 import { ClickOutsideDirective } from './shared/click-outside.directive';
 import { ExpressionProcessorService } from './services/expression-processor.service';
 import { MapperControllerFactory } from './services/mapper-controller';
@@ -35,6 +35,7 @@ import { MapperControllerFactory } from './services/mapper-controller';
     PerfectScrollbarModule,
     TreeModule,
     MonacoEditorModule,
+    MapperIconsModule,
   ],
   exports: [FunctionsComponent, MapperComponent],
   declarations: [
@@ -44,7 +45,6 @@ import { MapperControllerFactory } from './services/mapper-controller';
     InputListComponent,
     OutputListComponent,
     FunctionDetailsComponent,
-    IconsComponent,
     BreadcrumbsComponent,
     InlineHrefDirective,
     ClickOutsideDirective,
@@ -55,7 +55,6 @@ import { MapperControllerFactory } from './services/mapper-controller';
   providers: [
     TreeNodeFactoryService,
     TreeService,
-    IconsService,
     ExpressionProcessorService,
     MappingParser,
     MapperControllerFactory,
