@@ -233,14 +233,6 @@ export class AppsService {
     return this.appExporter.export(app, exportOptions);
   }
 
-  validate(app, { clean } = { clean: false }) {
-    let options;
-    if (clean) {
-      options = { removeAdditional: true, useDefaults: true };
-    }
-    return Promise.resolve(Validator.validateFullApp(app, options));
-  }
-
   /**
    * Alias for AppsManager::find
    * @param args

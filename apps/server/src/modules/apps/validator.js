@@ -3,7 +3,6 @@ import Ajv from 'ajv';
 
 import {
   appSchema,
-  fullAppSchema,
   handlerEditableSchema,
   triggerSchemaCreate,
   triggerSchemaUpdate,
@@ -56,57 +55,5 @@ export class Validator {
       useDefaults: true,
       allErrors: true,
     });
-  }
-
-  static validateFullApp(data, options, contribVerify) {
-    options = defaults({}, options, {
-      removeAdditional: false,
-      useDefaults: false,
-      allErrors: true,
-      verbose: true,
-    });
-    let customValidations;
-    if (contribVerify) {
-      const makeInstalledValidator = (keyword, collection, type) =>
-        function validator(schema, vData) {
-          const isInstalled = collection.includes(vData);
-          if (!isInstalled) {
-            validator.errors = [
-              { keyword, message: `${type} "${vData}" is not installed`, data },
-            ];
-          }
-          return isInstalled;
-        };
-
-      customValidations = [
-        {
-          keyword: 'trigger-installed',
-          validate: makeInstalledValidator(
-            'trigger-installed',
-            contribVerify.triggers || [],
-            'Trigger'
-          ),
-        },
-        {
-          keyword: 'activity-installed',
-          validate: makeInstalledValidator(
-            'activity-installed',
-            contribVerify.activities || [],
-            'Activity'
-          ),
-        },
-      ];
-    }
-
-    const errors = validate(fullAppSchema, data, options, customValidations);
-    if (errors && errors.length > 0) {
-      // get rid of some info we don't want to expose
-      errors.forEach(e => {
-        delete e.params;
-        delete e.schema;
-        delete e.parentSchema;
-      });
-    }
-    return errors;
   }
 }
