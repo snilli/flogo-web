@@ -24,6 +24,8 @@ export function normalizeValueType(type) {
       return FLOGO_TASK_ATTRIBUTE_TYPE.ARRAY;
     case 'params':
       return FLOGO_TASK_ATTRIBUTE_TYPE.PARAMS;
+    case 'datetime':
+      return FLOGO_TASK_ATTRIBUTE_TYPE.DATETIME;
     default:
       return FLOGO_TASK_ATTRIBUTE_TYPE.ANY;
   }

@@ -47,6 +47,7 @@
       "@flogo-web/lib-client/resource-interface-builder": [
         "libs/lib-client/resource-interface-builder/src/index.ts"
       ],
+      "@flogo-web/lib-client/mapper-icons": ["libs/lib-client/mapper-icons/src/index.ts"],
       "@flogo-web/lib-client/search": ["libs/lib-client/search/src/index.ts"],
       "@flogo-web/lib-client/trigger-selector": [
         "libs/lib-client/trigger-selector/src/index.ts"

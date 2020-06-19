@@ -25,8 +25,7 @@ export function apps(router: Router, container: Container) {
     .get('/:appId', getApp)
     .get('/:appId/build', buildApp)
     .patch('/:appId', updateApp)
-    .del('/:appId', deleteApp)
-    .post('\\:validate', validateApp);
+    .del('/:appId', deleteApp);
   router.use('/apps', appsRouter.routes(), appsRouter.allowedMethods());
 }
 
@@ -137,20 +136,5 @@ async function importApp(ctx: AppsContext) {
       });
     }
     throw error;
-  }
-}
-
-async function validateApp(ctx: AppsContext) {
-  const data = ctx.request.body || {};
-  const errors = await ctx.appsService.validate(data, { clean: true });
-  ctx.status = 200;
-  if (errors && errors.length > 0) {
-    ctx.status = 400;
-    ctx.body = {
-      errors,
-    };
-  } else {
-    ctx.status = 200;
-    ctx.body = data;
   }
 }

@@ -11,9 +11,10 @@ import {
 } from '@angular/core';
 import { PerfectScrollbarDirective as ScrollbarDirective } from 'ngx-perfect-scrollbar';
 
+import { MapperIconsService as IconsService } from '@flogo-web/lib-client/mapper-icons';
+
 import { MapperTreeNode } from '../models/mapper-treenode.model';
 import { DraggingService } from '../services/dragging.service';
-import { IconsService } from '../services/icons.service';
 
 @Component({
   selector: 'flogo-stream-mapper-tree',

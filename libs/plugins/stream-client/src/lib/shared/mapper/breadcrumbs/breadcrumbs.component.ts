@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { IconsService } from '../services/icons.service';
+import { MapperIconsService as IconsService } from '@flogo-web/lib-client/mapper-icons';
 import { MapperTreeNode } from '../models';
 
 @Component({

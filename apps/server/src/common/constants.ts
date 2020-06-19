@@ -17,6 +17,7 @@ export const FLOGO_TASK_ATTRIBUTE_TYPE = {
   PARAMS: 'params',
   ANY: 'any',
   BYTES: 'bytes',
+  DATETIME: 'datetime',
 };
 
 export const TYPE_UNKNOWN = 'unknown';
