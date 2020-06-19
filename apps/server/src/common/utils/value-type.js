@@ -18,6 +18,8 @@ export function normalizeValueType(type) {
     case 'boolean':
     case 'bool':
       return FLOGO_TASK_ATTRIBUTE_TYPE.BOOLEAN;
+    case 'object':
+      return FLOGO_TASK_ATTRIBUTE_TYPE.OBJECT;
     case 'bytes':
       return FLOGO_TASK_ATTRIBUTE_TYPE.BYTES;
     case 'array':
