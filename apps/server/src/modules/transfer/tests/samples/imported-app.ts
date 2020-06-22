@@ -58,7 +58,7 @@ const expectedResource = {
     output: [
       {
         name: 'status',
-        type: 'any',
+        type: 'object',
       },
       {
         name: 'code',
