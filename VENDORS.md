@@ -2,10 +2,62 @@
 
 All notable changes to this project's dependencies will be documented in this file.
 
+## v0.11.0
+
+- **New**
+  - [@angular/compiler@~9.0.0](https://github.com/angular/angular) [MIT]
+  - [@angular/compiler-cli@~9.0.0](https://github.com/angular/angular) [MIT]
+  - [@koa/router@^8.0.7](https://github.com/koajs/router) [MIT]
+- **Upgraded**
+  - [@angular-devkit/build-angular@0.900.2](https://github.com/angular/angular-cli) [MIT] - Was ^0.801.1
+  - [@angular/animations@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@angular/cdk@~9.1.3](https://github.com/angular/angular) [MIT] - Was ~8.0.1
+  - [@angular/cli@9.0.2](https://github.com/angular/angular) [MIT] - Was 8.1.1
+  - [@angular/common@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@angular/core@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@angular/forms@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@angular/language-service@^9.0.0](https://github.com/angular/angular) [MIT] - Was ^8.2.3
+  - [@angular/platform-browser@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@angular/platform-browser-dynamic@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@angular/router@~9.0.0](https://github.com/angular/angular) [MIT] - Was ~8.2.3
+  - [@finos/perspective@^0.4.2](https://github.com/finos/perspective) [Apache-2.0] - Was ^0.4.1
+  - [@finos/perspective-viewer@^0.4.3](https://github.com/finos/perspective) [Apache-2.0] - Was ^0.4.1
+  - [@finos/perspective-viewer-d3fc@^0.4.3](https://github.com/finos/perspective) [Apache-2.0] - Was ^0.4.1
+  - [@finos/perspective-webpack-plugin@^0.3.8](https://github.com/finos/perspective) [Apache-2.0] - Was ^0.4.1
+  - [@ngrx/effects@8.6.0](https://github.com/ngrx/platform) [MIT] - Was 8.0.1
+  - [@ngrx/store@8.6.0](https://github.com/ngrx/platform) [MIT] - Was 8.0.1
+  - [@ngrx/store-devtools@8.6.0](https://github.com/ngrx/platform) [MIT] - Was 8.0.1
+  - [@ngx-translate/core@^12.1.1](https://github.com/ngx-translate) [MIT] - Was 11.0.1
+  - [@nrwl/angular@9.0.1](https://nx.dev) [MIT] - Was ^8.4.12
+  - [@nrwl/cypress@9.0.1](https://nx.dev) [MIT] - Was 8.4.12
+  - [@nrwl/jest@9.0.1](https://nx.dev) [MIT] - Was 8.4.12
+  - [@nrwl/node@9.0.1](https://nx.dev) [MIT] - Was 8.4.12
+  - [@nrwl/workspace@9.0.1](https://nx.dev) [MIT] - Was 8.4.12
+  - [@schematics/angular@9.0.2]( https://github.com/angular/angular-cli) [MIT] - Was ^8.2.2
+  - [@types/node@~10.12.20](https://github.com/DefinitelyTyped/DefinitelyType) [MIT] - Was 10.12.10
+  - [cypress@^3.8.2](https://github.com/cypress-io/cypress) [MIT] - Was 3.4.0
+  - [jest-preset-angular@8.0.0](https://github.com/thymikee/jest-preset-angular) [MIT] - Was 7.1.1
+  - [koa@2.11.0](https://github.com/koajs/koa) [MIT] - Was 2.7.0
+  - [koa-body@4.1.1](https://github.com/dlau/koa-body) [MIT] - Was 4.1.0
+  - [ngx-perfect-scrollbar@^9.0.0](https://github.com/mdbootstrap/perfect-scrollbar) [MIT] - Was ^8.0.0
+  - [prettier@1.19.1](https://prettier.io) [MIT] - Was 1.16.4
+  - [primeng@8.1.1](https://github.com/primefaces/primeng) [MIT] - Was ^7.0.0
+  - [rxjs@^6.5.4](https://github.com/ReactiveX/RxJS) [Apache-2.0] - Was ^6.5.2
+  - [socket.io@2.3.0](https://github.com/socketio/socket.io) [MIT] - Was 2.2.0
+  - [socket.io-client@2.3.0](https://github.com/socketio/socketMIT.io) [MIT] - Was 2.2.0
+  - [ts-node@~8.6.2](https://github.com/whitecolor/ts-node-dev) [MIT] - Was ~8.3.0
+  - [typescript@3.7.5](https://www.typescriptlang.org/) [Apache-2.0] - Was ~3.5.3
+  - [zone.js@~0.10.2](https://github.com/angular/angular) [MIT] - Was ~0.9.1
+- **Removed**
+  - @angular/compiler
+  - @angular/compiler-cli
+  - koa-router
+
+
 ## v0.10.0
 
-- ** New **
-  - [@angular-builders/custom-webpack@^8.2.0](https://github.com/finos/perspective) [Apache-2.0]
+- **New**
+  - [@angular-builders/custom-webpack@^8.2.0](https://github.com/just-jeb/angular-builders/tree/master/packages/custom-webpack) [Apache-2.0]
   - [@finos/perspective@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
   - [@finos/perspective-viewer@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
   - [@finos/perspective-d3fc@^0.4.1](https://github.com/finos/perspective) [Apache-2.0]
@@ -20,7 +72,7 @@ All notable changes to this project's dependencies will be documented in this fi
   - [@types/socket.io@2.1.2](https://github.com/DefinitelyTyped/DefinitelyTyped) [MIT]
   - [@types/ws@6.0.3](https://github.com/DefinitelyTyped/DefinitelyTyped) [MIT]
   - [ws@^7.1.2](https://github.com/websockets/ws) [MIT]
-- ** Upgraded **
+- **Upgraded**
   - [@angular-devkit/build-angular@~0.801.1](https://github.com/angular/angular-cli) [MIT] (Was ~0.13.0)
   - [@angular/animations@~8.2.3](https://github.com/angular/angular) [MIT] (Was ~7.2.10)
   - [@angular/cdk@~8.0.1](https://github.com/angular/components) [MIT] (Was ~7.3.5)
@@ -63,7 +115,7 @@ All notable changes to this project's dependencies will be documented in this fi
   - [typescript@~3.5.3](https://github.com/Microsoft/TypeScript) [Apache-2.0] (Was ~3.2.4)
   - [web-animations-js@^2.3.2](https://github.com/web-animations/web-animations-js) [Apache-2.0] (Was ^2.3.1)
   - [zone.js@~0.9.1](https://github.com/angular/zone.js) [MIT] (Was ^0.8.29)
-- ** Removed **
+- **Removed**
   - @nrwl/nx
   - source-map-support
   - @nrwl/builders

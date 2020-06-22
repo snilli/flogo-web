@@ -1,6 +1,6 @@
 {
   "name": "flogo-web",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Web-based design tool for the Project Flogo open source framework",
   "license": "BSD-3-Clause",
   "private": true,
