@@ -12,16 +12,18 @@ import {
   take,
   takeUntil,
   withLatestFrom,
+  tap,
 } from 'rxjs/operators';
 
-import { ActivitySchema } from '@flogo-web/core';
+import { ActivitySchema, ICON_ACTIVITY_DEFAULT } from '@flogo-web/core';
 import {
   Dictionary,
   StepAttribute,
   SingleEmissionSubject,
+  HttpUtilsService,
 } from '@flogo-web/lib-client/core';
 
-import { isMapperActivity } from '@flogo-web/plugins/flow-core';
+import { isMapperActivity, isSubflowTask } from '@flogo-web/plugins/flow-core';
 import { FlowSelectors, FlowState } from '../core/state';
 import { TestRunnerService } from '../core/test-runner/test-runner.service';
 import { ItemActivityTask } from '../core/interfaces/flow';
@@ -32,6 +34,7 @@ import { debugPanelAnimations } from './debug-panel.animations';
 import { mergeFormWithOutputs } from './utils';
 import { FieldsInfo } from './fields-info';
 import { DebugActivityTask, combineToDebugActivity } from './debug-activity-task';
+import { ICON_SUBFLOW } from '../core';
 
 const mapFormInputChangesToSaveAction = (
   store,
@@ -69,6 +72,7 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
   executionErrors: Array<string>;
   isEndOfFlow$: Observable<boolean>;
   isRestartableTask$: Observable<boolean>;
+  iconUrl = ICON_ACTIVITY_DEFAULT;
 
   private destroy$ = SingleEmissionSubject.create();
 
@@ -76,7 +80,8 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
     private store: Store<FlowState>,
     private formBuilder: FormBuilder,
     private attributeFormBuilder: FormBuilderService,
-    private testRunner: TestRunnerService
+    private testRunner: TestRunnerService,
+    private httpUtilsService: HttpUtilsService
   ) {}
 
   ngOnInit() {
@@ -95,7 +100,8 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
     this.activity$ = combineLatest([schema$, selectedActivity$]).pipe(
       combineToDebugActivity(),
       shareReplay(1),
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$),
+      tap(activity => this.updateIcon(activity))
     );
     this.isEndOfFlow$ = schema$.pipe(map(isMapperActivity));
     const form$: Observable<null | FieldsInfo> = schema$.pipe(
@@ -196,5 +202,17 @@ export class DebugPanelComponent implements OnInit, OnDestroy {
         output: outputs && outputs.fieldsWithControlType,
       },
     };
+  }
+
+  private updateIcon(activity: DebugActivityTask) {
+    let iconUrl = ICON_ACTIVITY_DEFAULT;
+    if (activity) {
+      if (activity.icon) {
+        iconUrl = this.httpUtilsService.apiPrefix(activity.icon);
+      } else if (isSubflowTask(activity)) {
+        iconUrl = ICON_SUBFLOW;
+      }
+    }
+    this.iconUrl = iconUrl;
   }
 }

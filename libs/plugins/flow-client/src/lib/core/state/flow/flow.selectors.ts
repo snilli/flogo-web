@@ -22,6 +22,7 @@ import { FLOGO_TASK_TYPE } from '../../constants';
 
 import { FlowState } from './flow.state';
 import { determineRunnableStatus } from './views/determine-runnable-status';
+import { FlowSelectors } from '../index';
 
 export const selectFlowState = createFeatureSelector<FlowState>('flow');
 export const selectCurrentSelection = createSelector(
@@ -165,6 +166,19 @@ export const getCurrentNodes: MemoizedSelector<
       : null
 );
 
+export const getCurrentItemsAndSchemas: MemoizedSelector<
+  FlowState,
+  [Dictionary<Item>, Dictionary<ContribSchema>]
+> = createSelector(
+  selectFlowState,
+  getCurrentHandlerId,
+  selectSchemas,
+  (flowState, handlerId, schemas) => {
+    const items = flowState[getItemsDictionaryName(handlerId)];
+    return [items, schemas];
+  }
+);
+
 const isTaskSelection = (selection): selection is TaskSelection =>
   selection && selection.type === SelectionType.Task;
 export const getSelectedActivity = createSelector(
@@ -278,6 +292,7 @@ export const getInstalledActivities = createSelector(
       .map(schema => ({
         title: schema.title,
         ref: schema.ref,
+        icon: schema.icon,
       }))
       .sort((activity1, activity2) => {
         if (activity1.ref === CONTRIB_REFS.SUBFLOW) {
