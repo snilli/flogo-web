@@ -48,7 +48,7 @@ jobs:
         if [ ! -z "$TRAVIS_TAG" ]; then
           echo "Tag detected, pushing tag '${TRAVIS_TAG}' to docker hub"
           docker tag flogo/flogo-web:latest "flogo/flogo-docker:${TRAVIS_TAG}"
-          docker tag flogo/flogo-web:latest "flogo/flogo-docker:latest
+          docker tag flogo/flogo-web:latest "flogo/flogo-docker:latest"
           docker push "flogo/flogo-docker:${TRAVIS_TAG}"
-          docker push "flogo/flogo-docker:latest
+          docker push "flogo/flogo-docker:latest"
         fi
