@@ -4,6 +4,7 @@ import {
   ContributionSchema as ContribSchema,
   FunctionsSchema,
   CONTRIB_REFS,
+  ActivitySchema,
 } from '@flogo-web/core';
 import { Dictionary, FlowGraph, GraphNodeDictionary } from '@flogo-web/lib-client/core';
 import { DiagramSelectionType } from '@flogo-web/lib-client/diagram';
@@ -22,7 +23,7 @@ import { FLOGO_TASK_TYPE } from '../../constants';
 
 import { FlowState } from './flow.state';
 import { determineRunnableStatus } from './views/determine-runnable-status';
-import { FlowSelectors } from '../index';
+import { isInsertBetween } from '../../models/flow/is-insert-between';
 
 export const selectFlowState = createFeatureSelector<FlowState>('flow');
 export const selectCurrentSelection = createSelector(
@@ -144,6 +145,18 @@ export const getCurrentHandlerType = createSelector(
   }
 );
 
+export const getTaskInsertType = createSelector(
+  selectCurrentSelection,
+  selectFlowState,
+  (currentSelection: InsertTaskSelection, flowState: FlowState) => {
+    if (currentSelection && currentSelection.type === SelectionType.InsertTask) {
+      return isInsertBetween(currentSelection.parentId, flowState.mainGraph);
+    } else {
+      return null;
+    }
+  }
+);
+
 export const getCurrentItems: MemoizedSelector<
   FlowState,
   Dictionary<Item>
@@ -240,13 +253,6 @@ export const getCurrentActivityExecutionErrors = createSelector(
   }
 );
 
-export const getAllNodes = createSelector(selectFlowState, flowState => {
-  return {
-    errorNodes: flowState.errorGraph.nodes,
-    mainNodes: flowState.mainGraph.nodes,
-  };
-});
-
 export const getGraph = (handlerType: HandlerType) => {
   const graphName = getGraphName(handlerType);
   return createSelector(selectFlowState, flowState => flowState[graphName] as FlowGraph);
@@ -289,9 +295,10 @@ export const getInstalledActivities = createSelector(
   (schemas: Dictionary<ContribSchema>): Activity[] => {
     const activities = Object.values(schemas)
       .filter(schema => schema.type === ContributionType.Activity)
-      .map(schema => ({
+      .map((schema: ActivitySchema) => ({
         title: schema.title,
         ref: schema.ref,
+        isReturnType: !!schema.return,
         icon: schema.icon,
       }))
       .sort((activity1, activity2) => {

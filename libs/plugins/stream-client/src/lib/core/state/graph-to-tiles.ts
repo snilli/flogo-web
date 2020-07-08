@@ -6,6 +6,7 @@ export const graphToTiles = (graph: DiagramGraph, maxTileCount: number) => {
   const tiles: TaskTile[] = [];
   while (currentId) {
     const currentStage = graph.nodes[currentId];
+    const parentId = currentStage && currentStage.parents[0];
     if (
       tiles.length >= maxTileCount - 1 &&
       currentStage &&
@@ -15,11 +16,13 @@ export const graphToTiles = (graph: DiagramGraph, maxTileCount: number) => {
         type: TileType.Task,
         task: currentStage,
         isTerminalInRow: true,
+        parentId,
       });
     } else if (currentStage) {
       tiles.push({
         type: TileType.Task,
         task: currentStage,
+        parentId,
       });
     }
     let nextStageId = null;

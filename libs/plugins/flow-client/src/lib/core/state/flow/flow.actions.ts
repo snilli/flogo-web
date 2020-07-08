@@ -48,7 +48,12 @@ export class SelectItem implements BaseFlowAction {
 
 export class SelectCreateItem implements BaseFlowAction {
   readonly type = ActionType.SelectCreateItem;
-  constructor(public payload: { handlerType: HandlerType; parentItemId: string }) {}
+  constructor(
+    public payload: {
+      handlerType: HandlerType;
+      parentItemId: string;
+    }
+  ) {}
 }
 
 export class ClearSelection implements BaseFlowAction {
