@@ -1,5 +1,6 @@
 @import (reference) '~@flogo-web/assets/styles/_variables';
 @import '~@flogo-web/assets/styles/_drag-drop-animation';
+@import '~@flogo-web/assets/styles/_mixins';
 
 :host {
   background-color: #eaeaea;;
@@ -18,13 +19,13 @@
 
 .tiles-wrapper{
   display: flex;
-  padding: 8px;
+  padding: 8px 15px;
   margin-top: 24px;
   width: 100%;
   z-index: 0;
   &:hover {
     background-color:rgba(255, 255, 255, 0.3);
-    .visible-on-hover{
+    .visible-on-hover {
       opacity: 1;
     }
     .add-button:before {
@@ -34,16 +35,7 @@
 }
 
 .tile__add-between {
-  position: absolute;
-  z-index: 6;
-  height: 18px;
-  width: 18px;
-  margin: 20px 0 0 2px;
-  background-color: #f0f0f0;
-  opacity: 0;
-  &.is-selected {
-    opacity: 1;
-  }
+  .btn-insert-between(#f0f0f0);
 }
 
 flogo-diagram {
@@ -59,10 +51,10 @@ flogo-diagram {
     display: block;
     background: #96a7f8;
     opacity: 0.5;
-    width: 18px;
+    width: 36px;
     height: 8px;
     top: 44%;
-    left: -2px;
+    left: -22px;
     z-index: -1;
   }
 }

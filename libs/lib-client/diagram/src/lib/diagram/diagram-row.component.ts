@@ -23,6 +23,7 @@ import { RowIndexService } from '../shared';
 import { rowAnimations } from './diagram-row.animations';
 import { trackTileByFn } from '../tiles/track-tile-by';
 import { DragTileService, DragTilePosition, TilesGroupedByZone } from '../drag-tiles';
+import { BRANCH_PREFIX } from '../constants';
 
 @Component({
   selector: 'flogo-diagram-row',
@@ -56,8 +57,21 @@ export class DiagramRowComponent implements OnChanges {
     return id && !this.dragService.getTileDropAllowStatus(id).allow;
   };
 
-  hideInsertTile = id =>
-    !this.dragService.getTileDropAllowStatus(id).allow || this.isDragging;
+  showInsertBtn = id =>
+    this.dragService.getTileDropAllowStatus(id).allow && !this.isDragging;
+
+  isPrevTileHasBranch = (tile: TaskTile) => {
+    const parent = tile.parentId;
+    if (parent && !parent.startsWith(BRANCH_PREFIX)) {
+      const parentTile: TaskTile = <TaskTile>(
+        this.groupedTiles.dropZone.find(
+          (eachTile: TaskTile) => eachTile.task.id === parent
+        )
+      );
+      return parentTile.task.children.find(child => child.startsWith(BRANCH_PREFIX));
+    }
+    return false;
+  };
 
   constructor(
     private rowIndexService: RowIndexService,

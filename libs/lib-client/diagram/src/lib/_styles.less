@@ -3,6 +3,7 @@
 @tile-height: 60px;
 @tile-placeholder-dimension: 40px;
 @tile-radius: 8px;
+@tile-left-margin: 12px;
 @tile-color-bg: #fff;
 @tile-color-bg--selected: #055dab;
 @branch-color-primary: #afbbda;
@@ -15,7 +16,7 @@
 }
 
 .tile-placeholder() {
-  border-radius: 3px;
+  border-radius: 5px;
   height: @tile-placeholder-dimension;
   width: @tile-placeholder-dimension;
 }
@@ -43,7 +44,7 @@
 
 .row() {
   height: 78px;
-  padding: 8px 10px;
+  padding: 8px 15px;
   display: flex;
   background-color: transparent;
   transition: background-color 0.15s ease;

@@ -1,5 +1,6 @@
 @import '../_styles';
 @import '~@flogo-web/assets/styles/_drag-drop-animation';
+@import '~@flogo-web/assets/styles/_mixins';
 
 :host {
   .row();
@@ -11,31 +12,23 @@
 
 .tile--group {
   display: flex;
+  position: relative;
+}
+
+.tile__add-between {
+  .btn-insert-between(#e2e9ed);
+  &--align-center {
+    left: -2px;
+  }
 }
 
 .tile--slot {
   flex-shrink: 0;
   opacity: 0;
   transition: opacity 0.25s ease-out;
-  margin-left: 13px;
+  margin-left: @tile-left-margin;
   &.is-selected {
     opacity: 1;
-  }
-}
-
-.tile__add-between {
-  position: absolute;
-  z-index: 1;
-  width: 16px;
-  height: 16px;
-  margin: 20px 0 0 2px;
-  .btn-insert {
-    height: 18px;
-    width: 18px;
-  }
-  .btn-insert__icon {
-    height: 5.5px;
-    width: 5.5px;
   }
 }
 
@@ -48,9 +41,8 @@
   }
 }
 
-.tile--branch {
-  z-index: 2;
-  margin-left: 13px;
+.tile--task-placeholder {
+  margin-left: @tile-left-margin;
 }
 
 :host:not(.is-readonly) {
@@ -60,7 +52,7 @@
 
   &:hover {
     background-color: rgba(182, 217, 237, 0.2);
-    .tile--slot {
+    .tile--slot, .tile__add-between {
       opacity: 1;
     }
   }
