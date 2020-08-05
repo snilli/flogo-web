@@ -18,15 +18,10 @@
     fill: @color-trigger-bg-color;
   }
 
-  .flogo-icon-trigger {
-    display: block;
-    color: #1b4874;
-    font-size: 20px;
-  }
-
-  .flogo-icon-trigger {
-    margin: (14px - @trigger-icon-clickable-padding)
-      (16px - @trigger-icon-clickable-padding);
+  &:hover {
+    .bg-placeholder {
+      fill: @color-trigger-hover-bg-color;
+    }
   }
 }
 
@@ -38,23 +33,11 @@
 .trigger-content {
   z-index: 1;
   margin-right: 3px;
-}
-
-.icon-svg__def {
-  display: block;
+  margin-bottom: 2px;
 }
 
 .trigger_block {
   position: relative;
-
-  &:hover {
-    .flogo-icon-trigger {
-      color: #fff;
-      &:hover {
-        color: @pumpkin-orange;
-      }
-    }
-  }
 
   .trigger_menu {
     transform: scale(0);
@@ -91,25 +74,9 @@
 }
 
 .trigger_block--menu-open {
-  .trigger {
-    z-index: 3;
-  }
-
   .trigger_menu {
     transform: scale(1);
     opacity: 1;
     z-index: 2;
-  }
-}
-
-.trigger_block--selected {
-  .trigger {
-    .flogo-icon-trigger {
-      color: #fff;
-    }
-  }
-
-  .bg-placeholder {
-    fill: @color-trigger-selected-bg-color;
   }
 }

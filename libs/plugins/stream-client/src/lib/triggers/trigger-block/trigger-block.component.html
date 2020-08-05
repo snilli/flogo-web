@@ -1,7 +1,6 @@
 <div
   class="trigger_block"
   [class.trigger_block--menu-open]="isShowingMenu"
-  [class.trigger_block--selected]="isSelected"
   (mouseenter)="handleTriggerMenuShow()"
   (mouseleave)="handleTriggerMenuHide()"
 >
@@ -18,7 +17,7 @@
   </div>
   <div class="trigger" title="{{ trigger.name }}" (click)="handleTriggerSelection()">
     <div class="trigger-content">
-      <i class="flogo-icon-trigger"></i>
+      <flogo-trigger-icon [iconUrl]="iconIndex[trigger.id]"></flogo-trigger-icon>
     </div>
   </div>
 </div>

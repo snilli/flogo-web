@@ -1,5 +1,5 @@
 import { fromPairs, isArray, uniq } from 'lodash';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   HandlersService,
   SingleEmissionSubject,
@@ -14,8 +14,9 @@ import {
   TriggerActions,
   TRIGGER_MENU_OPERATION,
   MicroServiceModelConverter,
+  selectSchemas,
 } from '../core';
-import { filter, mergeMap, reduce, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { getTriggersState } from '../core/state/triggers/triggers.selectors';
 import { ModalService, ModalControl } from '@flogo-web/lib-client/modal';
 import {
@@ -24,8 +25,7 @@ import {
 } from '@flogo-web/lib-client/confirmation';
 import { LanguageService } from '@flogo-web/lib-client/language';
 import { TriggerMenuSelectionEvent } from './trigger-block/models';
-import { from } from 'rxjs';
-import { TriggerSchema } from '@flogo-web/core';
+import { ContributionSchema, TriggerSchema } from '@flogo-web/core';
 import { TriggerConfigureActions } from '../core/state/triggers-configure';
 import {
   TriggerSelectorComponent,
@@ -45,6 +45,8 @@ function settingsToObject(
   styleUrls: ['triggers.component.less'],
 })
 export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
+  @Input() iconIndex: { [itemId: string]: string };
+
   appId: string;
   actionId: string;
   triggersList: RenderableTrigger[] = [];
@@ -66,7 +68,6 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
       .subscribe(triggerState => {
         this.triggersList = triggerState.triggers;
         this.actionId = triggerState.actionId;
-        //this.currentTrigger = triggerState.currentTrigger;
         this.appId = triggerState.appId;
       });
   }
@@ -132,22 +133,28 @@ export class FlogoStreamTriggersPanelComponent implements OnInit, OnDestroy {
   }
 
   private openTriggerMapper(selectedTrigger: Trigger) {
+    let allContribSchemas: Dictionary<ContributionSchema>;
+    this.store.pipe(
+      select(selectSchemas),
+      takeUntil(this.ngDestroy$)
+    ).subscribe(schemas => {
+      allContribSchemas = schemas;
+    })
+
     const refs = uniq(this.triggersList.map(trigger => trigger.ref));
-    from(refs)
-      .pipe(
-        mergeMap(ref => this.converterService.getTriggerSchema({ ref })),
-        reduce((schemas: Dictionary<TriggerSchema>, schema: TriggerSchema) => {
-          return { ...schemas, [schema.ref]: schema };
-        }, {})
-      )
-      .subscribe(triggerSchemas => {
-        this.store.dispatch(
-          new TriggerConfigureActions.OpenConfigureWithSelection({
-            triggerId: selectedTrigger.id,
-            triggerSchemas,
-          })
-        );
-      });
+    const triggerSchemas = refs.reduce((schemas, ref) => {
+      if(this.converterService.validateTriggerSchema( {ref})) {
+        const triggerSchema = <TriggerSchema>allContribSchemas[ref];
+        schemas[ref] = this.converterService.normalizeTriggerSchema(triggerSchema);
+      }
+      return schemas;
+    }, {});
+    this.store.dispatch(
+      new TriggerConfigureActions.OpenConfigureWithSelection({
+        triggerId: selectedTrigger.id,
+        triggerSchemas,
+      })
+    );
   }
 
   private deleteHandlerForTrigger(triggerId) {

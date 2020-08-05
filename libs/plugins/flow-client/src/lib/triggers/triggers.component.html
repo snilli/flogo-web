@@ -24,8 +24,8 @@
   </svg>
   <flogo-flow-triggers-trigger-block
     *ngFor="let trigger of triggersList; trackBy: trackTriggerBy"
-    [isSelected]="currentTrigger?.id === trigger.id"
     [trigger]="trigger"
+    [iconProvider]="iconProvider"
     (menuItemSelected)="handleMenuSelection($event)"
   ></flogo-flow-triggers-trigger-block>
   <div class="trigger trigger--add" title="Add Trigger" (click)="openAddTriggerModal()">
@@ -41,5 +41,7 @@
     </svg>
     <div class="trigger-content"><i class="flogo-icon-add"></i></div>
   </div>
-  <flogo-triggers-configuration></flogo-triggers-configuration>
+  <flogo-triggers-configuration
+    [iconProvider]="iconProvider"
+  ></flogo-triggers-configuration>
 </div>
