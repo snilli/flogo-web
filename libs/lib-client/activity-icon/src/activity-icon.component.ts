@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  HostBinding,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 enum Mode {
   Default = 'default',
@@ -8,18 +14,23 @@ enum Mode {
 }
 
 @Component({
-  selector: 'flogo-diagram-tile-icon',
-  templateUrl: './tile-icon.component.html',
-  styleUrls: ['./tile-icon.component.less'],
+  selector: 'flogo-activity-icon',
+  templateUrl: './activity-icon.component.html',
+  styleUrls: ['./activity-icon.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TileIconComponent implements OnChanges {
+export class ActivityIconComponent implements OnChanges {
   @Input() isSubflow?: boolean;
   @Input() isTerminal?: boolean;
   @Input() iconUrl?: string;
-
+  @Input() customAltText?: string;
   Mode = Mode;
   mode: Mode = Mode.Default;
+
+  @HostBinding('class.is-default')
+  get isDefault() {
+    return this.mode === Mode.Default;
+  }
 
   ngOnChanges() {
     if (this.iconUrl) {

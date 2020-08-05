@@ -9,7 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Highlightable } from '@angular/cdk/a11y';
-import { CONTRIB_REFS, ICON_ACTIVITY_DEFAULT } from '@flogo-web/core';
+import { CONTRIB_REFS } from '@flogo-web/core';
 import { ICON_SUBFLOW } from '../../core';
 import { Activity } from '../core/task-add-options';
 
@@ -23,14 +23,13 @@ export class ActivityComponent implements Highlightable, OnChanges {
   @Output() selected = new EventEmitter();
   @HostBinding('class.is-active') isHighlighted = false;
   @HostBinding('class.is-subflow') isSubflow: boolean;
+  @Input() iconUrl: string;
   disabled = false;
-  iconUrl: string;
 
   ngOnChanges({ activity: activityChange }: SimpleChanges) {
     if (activityChange) {
       const activity = activityChange.currentValue;
       this.isSubflow = activity.ref === CONTRIB_REFS.SUBFLOW;
-      this.iconUrl = ICON_ACTIVITY_DEFAULT;
       if (activity.icon) {
         this.iconUrl = activity.icon;
       } else if (this.isSubflow) {

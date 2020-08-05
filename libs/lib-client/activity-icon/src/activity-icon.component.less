@@ -1,0 +1,25 @@
+@import '~@flogo-web/assets/styles/_variables';
+
+:host {
+  background-color: @color-bg;
+  border-radius: 4px;
+  display:inline-flex;
+  align-items: center;
+}
+
+:host(.is-default) {
+  background-color: @color-secondary;
+}
+
+.icon {
+  width: 100%;
+}
+
+.icon--subflow, .icon--custom {
+  padding: 3px;
+}
+
+.icon--return {
+  background-color: #36bfbb;
+}
+
