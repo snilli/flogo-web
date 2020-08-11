@@ -7,13 +7,17 @@ import { ICON_TRIGGER_DEFAULT } from '@flogo-web/core';
   styles: [
     `
       .icon {
-        height: 20px;
-        width: 20px;
+        width: 100%;
+        height: auto;
+      }
+
+      .default-icon {
+        padding: 0 4px;
       }
 
       :host {
         display: flex;
-        padding: 6px;
+        padding: 4px;
         background-color: #ffffff;
         border-radius: 50%;
         height: 32px;
