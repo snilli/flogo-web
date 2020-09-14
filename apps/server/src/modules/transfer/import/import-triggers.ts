@@ -1,7 +1,18 @@
 import { flow, map, filter } from 'lodash/fp';
 
-import { FlogoAppModel, Handler, Trigger, ContributionType } from '@flogo-web/core';
-import { ImportsRefAgent, ValidationErrorDetail } from '@flogo-web/lib-server/core';
+import {
+  FlogoAppModel,
+  Handler,
+  Trigger,
+  ContributionType,
+  ContributionSchema,
+  TriggerSchema,
+} from '@flogo-web/core';
+import {
+  ImportsRefAgent,
+  transformConnectionTypeSettings,
+  ValidationErrorDetail,
+} from '@flogo-web/lib-server/core';
 
 import { normalizeHandlerMappings } from '../common/normalize-handler-mappings';
 import { tryAndAccumulateValidationErrors } from '../common/try-validation-errors';
@@ -16,6 +27,7 @@ type ImportHandlerFn = (
 export function importTriggers(
   rawTriggers: FlogoAppModel.Trigger[],
   normalizedResourceIds: Map<string, string>,
+  contributions: Map<string, ContributionSchema>,
   importHandler: ImportHandlerFn,
   generateId: () => string,
   createdAt: string = null,
@@ -45,6 +57,20 @@ export function importTriggers(
     newTrigger.ref = importsRefAgent.getPackageRef(
       ContributionType.Trigger,
       newTrigger.ref
+    );
+    const triggerSchema = <TriggerSchema>contributions.get(newTrigger.ref);
+    if (newTrigger.settings) {
+      newTrigger.settings = transformConnectionTypeSettings(
+        newTrigger.settings,
+        triggerSchema?.settings,
+        importsRefAgent,
+        true
+      );
+    }
+    newTrigger.handlers = transformHandlerSettings(
+      newTrigger.handlers,
+      triggerSchema,
+      importsRefAgent
     );
     const { errors: handlerErrors, handlers } = importAllHandlers(
       rawTrigger.id,
@@ -121,4 +147,22 @@ function preNormalizeHandler(
     createdAt,
     updatedAt: null,
   };
+}
+
+function transformHandlerSettings(
+  handlers: Handler[],
+  triggerSchema: TriggerSchema,
+  importsRefAgent: ImportsRefAgent
+) {
+  return handlers.map(handler => {
+    if (handler?.settings) {
+      handler.settings = transformConnectionTypeSettings(
+        handler.settings,
+        triggerSchema?.handler?.settings,
+        importsRefAgent,
+        true
+      );
+    }
+    return handler;
+  });
 }

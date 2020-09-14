@@ -11,13 +11,14 @@ import {
   Dictionary,
   HttpUtilsService,
 } from '@flogo-web/lib-client/core';
+import { NotificationsService } from '@flogo-web/lib-client/notifications';
+import { formatConnectionTypeSettings } from '@flogo-web/lib-client/activity-configuration';
 import {
   isMapperActivity,
   isAcceptableIterateValue,
   isIterableTask,
   hasTaskWithSameName,
 } from '@flogo-web/plugins/flow-core';
-import { NotificationsService } from '@flogo-web/lib-client/notifications';
 
 import {
   MapperTranslator,
@@ -108,6 +109,7 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
   appId: string;
   actionId: string;
   currentTile: Task;
+  activitySchema: ActivitySchema;
   activitySchemaUrl: string;
   iteratorModeOn = false;
   iterableValue: string;
@@ -212,6 +214,17 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
   save() {
     const isIterable =
       this.iteratorModeOn && isAcceptableIterateValue(this.iterableValue);
+    let activitySettings = this.settingsController
+      ? MapperTranslator.translateMappingsOut(
+          this.settingsController.getCurrentState().mappings
+        )
+      : undefined;
+    if (activitySettings) {
+      activitySettings = formatConnectionTypeSettings(
+        activitySettings,
+        this.activitySchema
+      );
+    }
     createSaveAction(this.store, {
       tileId: this.currentTile.id,
       name: this.title,
@@ -225,11 +238,7 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
       inputMappings: MapperTranslator.translateMappingsOut(
         this.inputMapperController.getCurrentState().mappings
       ),
-      activitySettings: this.settingsController
-        ? MapperTranslator.translateMappingsOut(
-            this.settingsController.getCurrentState().mappings
-          )
-        : undefined,
+      activitySettings,
     }).subscribe(action => {
       this.store.dispatch(action);
     });
@@ -313,10 +322,9 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
     const selectedItem = <ItemTask>(
       cloneDeep(state.mainItems[itemId] || state.errorItems[itemId])
     );
-    const activitySchema: ActivitySchema = (state.schemas[selectedItem.ref] ||
-      {}) as ActivitySchema;
-    this.activitySchemaUrl = activitySchema.homepage;
-    this.currentTile = mergeItemWithSchema(selectedItem, activitySchema);
+    this.activitySchema = (state.schemas[selectedItem.ref] || {}) as ActivitySchema;
+    this.activitySchemaUrl = this.activitySchema.homepage;
+    this.currentTile = mergeItemWithSchema(selectedItem, this.activitySchema);
 
     this.inputScope = getInputContext(itemId, state);
     this.isSubflowType = isSubflowTask(this.currentTile.type);
@@ -328,8 +336,8 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
     this.isSubflowType = isSubflowItem(selectedItem);
     let subflowSchema = null;
     this.iconUrl = ICON_ACTIVITY_DEFAULT;
-    if (activitySchema.icon) {
-      this.iconUrl = this.httpUtilsService.apiPrefix(activitySchema.icon);
+    if (this.activitySchema.icon) {
+      this.iconUrl = this.httpUtilsService.apiPrefix(this.activitySchema.icon);
     }
 
     if (isSubflowItem(selectedItem)) {
@@ -348,14 +356,14 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
 
     const flowMetadata = getFlowMetadata(state);
     const { propsToMap, mappings } = this.getInputMappingsInfo({
-      activitySchema,
+      activitySchema: this.activitySchema,
       subflowSchema,
       flowMetadata,
     });
     this.resetInputMappingsController(propsToMap, this.inputScope, mappings);
     this.initIterator(selectedItem);
 
-    if (isMapperActivity(activitySchema)) {
+    if (isMapperActivity(this.activitySchema)) {
       this.configureOutputMapperLabels();
       this.ismapperActivity = true;
     }
@@ -364,7 +372,7 @@ export class TaskConfiguratorComponent implements OnInit, OnDestroy {
 
     if (this.tabs.get(TASK_TABS.SETTINGS)) {
       const { settingPropsToMap, activitySettings } = this.getActivitySettingsInfo(
-        activitySchema
+        this.activitySchema
       );
       if (settingPropsToMap) {
         this.initActivitySettings(settingPropsToMap, activitySettings);

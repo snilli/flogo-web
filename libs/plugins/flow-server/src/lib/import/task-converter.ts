@@ -5,6 +5,7 @@ import {
   TASK_TYPE,
   EXPRESSION_TYPE,
   parseResourceIdFromResourceUri,
+  transformConnectionTypeSettings,
 } from '@flogo-web/lib-server/core';
 import {
   isMapperActivity,
@@ -56,14 +57,16 @@ export class TaskConverter {
     this.activitySchema = activitySchema;
   }
 
-  convert() {
+  convert(importsRefAgent) {
     const {
       id,
       name,
       description,
       activity: { ref: activityRef },
     } = this.resourceTask;
-    const { type, settings, activitySettings } = this.resolveTypeAndSettings();
+    const { type, settings, activitySettings } = this.resolveTypeAndSettings(
+      importsRefAgent
+    );
     const inputMappings = this.prepareInputMappings();
     return {
       id,
@@ -77,7 +80,7 @@ export class TaskConverter {
     };
   }
 
-  resolveTypeAndSettings() {
+  resolveTypeAndSettings(importsRefAgent) {
     const settings: { [key: string]: any } = {};
     let activitySettings: { [settingName: string]: any } = {};
     let type = FLOGO_TASK_TYPE.TASK;
@@ -86,6 +89,14 @@ export class TaskConverter {
       settings.flowPath = this.extractSubflowPath();
     } else if (!isMapperActivity(this.activitySchema)) {
       activitySettings = this.resourceTask.activity.settings;
+      if (activitySettings) {
+        activitySettings = transformConnectionTypeSettings(
+          activitySettings,
+          this.activitySchema?.settings,
+          importsRefAgent,
+          true
+        );
+      }
     }
     if (this.isIteratorTask()) {
       settings.iterate = normalizeIteratorValue(this.resourceTask.settings.iterate);

@@ -1,4 +1,4 @@
-import { ValueType } from '../../value-types';
+import { ValueType, TypeConnection } from '../../value-types';
 
 export interface BaseContributionSchema {
   name: string;
@@ -18,8 +18,20 @@ export interface SchemaOutput {
 
 export interface SchemaAttributeDescriptor {
   name: string;
-  // todo: use enum
   type: ValueType;
+  required?: boolean;
+  allowed?: any[];
+  value?: any;
+  display?: {
+    name?: string;
+    type: string;
+    mapperOutputScope?: string;
+  };
+}
+
+export interface SchemaSettingAttributeDescriptor {
+  name: string;
+  type: ValueType | TypeConnection;
   required?: boolean;
   allowed?: any[];
   value?: any;

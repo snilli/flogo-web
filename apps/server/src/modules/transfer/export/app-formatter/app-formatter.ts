@@ -5,6 +5,7 @@ import {
   ExportRefAgent,
   ExportActionAgent,
   ResourceConfiguration,
+  transformConnectionTypeSettings,
 } from '@flogo-web/lib-server/core';
 import {
   App,
@@ -13,6 +14,7 @@ import {
   ContributionType,
   Handler,
   Trigger,
+  TriggerSchema,
 } from '@flogo-web/core';
 
 import { ResourceExporterFn, HandlerExporterFn } from '../resource-exporter-fn';
@@ -59,6 +61,7 @@ export class AppFormatter {
     const formattedTriggers = this.formatTriggers(
       app.triggers,
       refAgent,
+      this.contributionSchemas,
       this.makeHandlerFormatter(
         resourceIdReconciler,
         resourceInfoLookup,
@@ -103,15 +106,25 @@ export class AppFormatter {
   formatTriggers(
     triggers: Trigger[],
     refAgent: ExportRefAgent,
+    contributionSchemas: Map<string, ContributionSchema>,
     handlerFormatter: (trigger: Trigger) => (handler: Handler) => FlogoAppModel.Handler
   ): FlogoAppModel.Trigger[] {
     return triggers
       .filter(trigger => !isEmpty(trigger.handlers))
       .map(trigger => {
+        const triggerSchema = <TriggerSchema>this.contributionSchemas.get(trigger.ref);
+        const triggerSettings = !isEmpty(trigger.settings)
+          ? transformConnectionTypeSettings(
+              trigger.settings,
+              triggerSchema?.settings,
+              refAgent,
+              false
+            )
+          : undefined;
         return pick(
           {
             ...trigger,
-            settings: !isEmpty(trigger.settings) ? trigger.settings : undefined,
+            settings: triggerSettings,
             handlers: trigger.handlers.map(handlerFormatter(trigger)),
             ref: refAgent.getAliasRef(ContributionType.Trigger, trigger.ref),
           },

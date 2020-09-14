@@ -5,8 +5,13 @@ import {
   Resource,
   MapperUtils,
   ContributionType,
+  ActivitySchema,
 } from '@flogo-web/core';
-import { TASK_TYPE, ExportRefAgent } from '@flogo-web/lib-server/core';
+import {
+  TASK_TYPE,
+  ExportRefAgent,
+  transformConnectionTypeSettings,
+} from '@flogo-web/lib-server/core';
 import { Task, isSubflowTask, isIterableTask } from '@flogo-web/plugins/flow-core';
 
 interface Mappings {
@@ -39,7 +44,7 @@ export class TaskFormatter {
     return this;
   }
 
-  convert(isMapperType: boolean) {
+  convert(isMapperType: boolean, contributionSchema: ActivitySchema) {
     const { id, name, description, activityRef } = this.sourceTask;
     const {
       type,
@@ -47,7 +52,7 @@ export class TaskFormatter {
       activitySettings,
       input,
     } = this.resolveActivityProperties(isMapperType);
-    return {
+    const task = {
       id,
       type,
       name: !isEmpty(name) ? name : undefined,
@@ -59,6 +64,16 @@ export class TaskFormatter {
         settings: !isEmpty(activitySettings) ? activitySettings : undefined,
       },
     };
+    const taskActivitySettings = task.activity.settings;
+    if (taskActivitySettings) {
+      task.activity.settings = transformConnectionTypeSettings(
+        taskActivitySettings,
+        contributionSchema?.settings,
+        this.refAgent,
+        false
+      );
+    }
+    return task;
   }
 
   resolveActivityProperties(isMapperType) {

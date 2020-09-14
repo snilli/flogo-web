@@ -6,8 +6,13 @@ import {
   ContributionSchema,
   ContributionType,
   MapperUtils,
+  TriggerSchema,
 } from '@flogo-web/core';
-import { ExportRefAgent, ExportActionAgent } from '@flogo-web/lib-server/core';
+import {
+  ExportRefAgent,
+  ExportActionAgent,
+  transformConnectionTypeSettings,
+} from '@flogo-web/lib-server/core';
 import { HandlerExporterFn } from '../resource-exporter-fn';
 import { ExportedResourceInfo } from './exported-resource-info';
 
@@ -27,10 +32,15 @@ export function makeHandlerFormatter({
   getResourceInfo,
 }: HandlerFormatterParams) {
   return (trigger: Trigger) => {
-    const triggerSchema = contributionSchemas.get(trigger.ref);
+    const triggerSchema = <TriggerSchema>contributionSchemas.get(trigger.ref);
     return (handler: Handler) => {
       const resourceInfo = getResourceInfo(handler.resourceId);
-      const formattedHandler = preFormatHandler(handler, resourceInfo.ref, refAgent);
+      const formattedHandler = preFormatHandler(
+        handler,
+        resourceInfo.ref,
+        refAgent,
+        triggerSchema
+      );
       return exportHandler(resourceInfo.type, formattedHandler, {
         triggerSchema,
         resource: resourceInfo.resource,
@@ -48,14 +58,24 @@ export function makeHandlerFormatter({
 export function preFormatHandler(
   handler: Handler,
   ref: string,
-  refAgent: ExportRefAgent
+  refAgent: ExportRefAgent,
+  triggerSchema: TriggerSchema
 ): FlogoAppModel.NewHandler {
   const { settings, actionMappings } = handler;
   const registerFunctions = (fn: string) => refAgent.registerFunctionName(fn);
   extractFunctions(actionMappings && actionMappings.input).forEach(registerFunctions);
   extractFunctions(actionMappings && actionMappings.output).forEach(registerFunctions);
+  let handlerSettings = !isEmpty(settings) ? { ...settings } : undefined;
+  if (handlerSettings) {
+    handlerSettings = transformConnectionTypeSettings(
+      handlerSettings,
+      triggerSchema.handler?.settings,
+      refAgent,
+      false
+    );
+  }
   return {
-    settings: !isEmpty(settings) ? { ...settings } : undefined,
+    settings: handlerSettings,
     action: {
       ref: refAgent.getAliasRef(ContributionType.Action, ref),
       settings: null,

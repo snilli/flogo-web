@@ -1,4 +1,9 @@
-import { ContributionSchema, CONTRIB_REFS, Resource } from '@flogo-web/core';
+import {
+  ContributionSchema,
+  CONTRIB_REFS,
+  Resource,
+  ActivitySchema,
+} from '@flogo-web/core';
 import { ExportRefAgent } from '@flogo-web/lib-server/core';
 import { isMapperActivity, isSubflowTask } from '@flogo-web/plugins/flow-core';
 import { TaskFormatter } from './task-formatter';
@@ -14,7 +19,10 @@ export function formatTasks(
     if (isSubflowTask(task)) {
       task = { ...task, activityRef: CONTRIB_REFS.SUBFLOW };
     }
-    const isMapperType = isMapperActivity(contributions.get(task.activityRef));
-    return taskFormatter.setSourceTask(task).convert(isMapperType);
+    const contributionSchema = contributions.get(task.activityRef);
+    const isMapperType = isMapperActivity(contributionSchema);
+    return taskFormatter
+      .setSourceTask(task)
+      .convert(isMapperType, <ActivitySchema>contributionSchema);
   });
 }
