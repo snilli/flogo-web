@@ -1,6 +1,7 @@
 import {
   Component,
   HostBinding,
+  HostListener,
   Input,
   Output,
   EventEmitter,
@@ -40,4 +41,11 @@ export class ModalComponent {
   @Output() close = new EventEmitter<void>();
 
   @HostBinding('@modalAnimate') animate = true;
+
+  /**
+   * close the modal on escape keypress
+   */
+  @HostListener('document:keydown.escape') closeModal() {
+    this.close.emit();
+  }
 }
