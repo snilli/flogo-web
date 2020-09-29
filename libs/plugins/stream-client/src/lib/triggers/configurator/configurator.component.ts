@@ -9,6 +9,11 @@ import {
   ConfirmationResult,
   ConfirmationService,
 } from '@flogo-web/lib-client/confirmation';
+import {
+  ConfirmationComponent,
+  TRIGGER_STATUS_TOKEN,
+  TriggerStatus,
+} from '@flogo-web/lib-client/trigger-shared';
 
 import { TriggerConfigureSelectors } from '../../core/state/triggers-configure';
 import * as TriggerConfigureActions from '../../core/state/triggers-configure/trigger-configure.actions';
@@ -16,9 +21,6 @@ import { FlogoStreamState } from '../../core/state';
 
 import { configuratorAnimations } from './configurator.animations';
 import { ConfiguratorService as TriggerConfiguratorService } from './services/configurator.service';
-import { TriggerStatus } from './interfaces';
-import { ConfirmationComponent } from './confirmation';
-import { TRIGGER_STATUS_TOKEN } from './confirmation/status.token';
 
 @Component({
   selector: 'flogo-stream-triggers-configuration',
