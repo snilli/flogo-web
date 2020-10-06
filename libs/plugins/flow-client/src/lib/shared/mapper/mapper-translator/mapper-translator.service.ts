@@ -1,30 +1,27 @@
+import { Injectable } from '@angular/core';
 import { isString, isObject, isArray, fromPairs } from 'lodash';
+
 import { resolveExpressionType } from '@flogo-web/parser';
 import { EXPR_PREFIX, ValueType } from '@flogo-web/core';
 import { Dictionary } from '@flogo-web/lib-client/core';
+import {
+  Mappings,
+  MapExpression,
+  MapperSchema,
+  Properties as MapperSchemaProperties,
+  AttributeDescriptor,
+  IMapperTranslator,
+  MappingsValidatorFn,
+} from '@flogo-web/lib-client/mapper';
 
-import { ROOT_TYPES } from '../constants';
 import {
   Task,
   FLOGO_ERROR_ROOT_NAME,
   FLOGO_TASK_TYPE,
   MAPPING_TYPE,
+  ROOT_TYPES,
 } from '../../../core';
-// todo: shared models should be moved to core
-import {
-  FlowMetadata,
-  MapperSchema,
-  Properties as MapperSchemaProperties,
-} from '../../../task-configurator/models';
-import { Mappings, MapExpression } from '../models';
-
-export type MappingsValidatorFn = (mappings: Mappings) => boolean;
-export interface AttributeDescriptor {
-  name: string;
-  type: ValueType;
-  required?: boolean;
-  allowed?: any[];
-}
+import { FlowMetadata } from '../../../task-configurator/models';
 
 const stringify = v => JSON.stringify(v, null, 2);
 
@@ -40,16 +37,9 @@ function getEnumDescriptor(attr: AttributeDescriptor) {
   return Array.from(new Set(allowed).values());
 }
 
-export class MapperTranslator {
-  static createInputSchema(tile: Task) {
-    let attributes = [];
-    if (tile.attributes && tile.attributes.inputs) {
-      attributes = tile.attributes.inputs;
-    }
-    return MapperTranslator.attributesToObjectDescriptor(attributes);
-  }
-
-  static createOutputSchema(
+@Injectable()
+export class MapperTranslator implements IMapperTranslator {
+  createOutputSchema(
     tiles: Array<Task | FlowMetadata>,
     additionalSchemas?: MapperSchemaProperties,
     includeEmptySchemas = false
@@ -60,10 +50,10 @@ export class MapperTranslator {
         case FLOGO_TASK_TYPE.TASK:
         case FLOGO_TASK_TYPE.TASK_SUB_PROC:
         case FLOGO_TASK_TYPE.TASK_ROOT:
-          MapperTranslator.addTileToOutputContext(rootSchema, tile, includeEmptySchemas);
+          this.addTileToOutputContext(rootSchema, tile, includeEmptySchemas);
           break;
         case 'metadata':
-          MapperTranslator.addFlowMetadataToOutputSchema(rootSchema, tile);
+          this.addFlowMetadataToOutputSchema(rootSchema, tile);
           break;
         default:
           rootSchema.properties[tile.name] = { type: tile.type };
@@ -75,17 +65,17 @@ export class MapperTranslator {
     return rootSchema;
   }
 
-  private static addFlowMetadataToOutputSchema(rootSchema, flowMetadata: FlowMetadata) {
+  private addFlowMetadataToOutputSchema(rootSchema, flowMetadata: FlowMetadata) {
     const flowInputs = flowMetadata.input;
     if (flowInputs && flowInputs.length > 0) {
-      const flowInputsSchema = MapperTranslator.attributesToObjectDescriptor(flowInputs);
+      const flowInputsSchema = this.attributesToObjectDescriptor(flowInputs);
       flowInputsSchema.rootType = 'flow';
       flowInputsSchema.title = 'flow';
       rootSchema.properties['flow'] = flowInputsSchema;
     }
   }
 
-  static attributesToObjectDescriptor(
+  attributesToObjectDescriptor(
     attributes: AttributeDescriptor[],
     additionalProps?: { [key: string]: any }
   ): MapperSchema {
@@ -112,18 +102,16 @@ export class MapperTranslator {
     };
   }
 
-  static translateMappingsIn(inputMappings: any) {
+  translateMappingsIn(inputMappings: any) {
     inputMappings = inputMappings || {};
     return Object.keys(inputMappings).reduce((mappings, input) => {
-      const { value, mappingType } = MapperTranslator.processInputValue(
-        inputMappings[input]
-      );
+      const { value, mappingType } = this.processInputValue(inputMappings[input]);
       mappings[input] = { expression: value, mappingType };
       return mappings;
     }, {});
   }
 
-  static rawExpressionToString(
+  rawExpressionToString(
     rawExpression: any,
     inputType: number = MAPPING_TYPE.LITERAL_ASSIGNMENT
   ) {
@@ -146,7 +134,7 @@ export class MapperTranslator {
     }
   }
 
-  static translateMappingsOut(mappings: {
+  translateMappingsOut(mappings: {
     [attr: string]: { expression: string; mappingType?: number };
   }): Dictionary<any> {
     return (
@@ -158,14 +146,14 @@ export class MapperTranslator {
         )
         .reduce((inputs, attrName) => {
           const mapping = mappings[attrName];
-          const { value } = MapperTranslator.parseExpression(mapping.expression);
+          const { value } = this.parseExpression(mapping.expression);
           inputs[attrName] = value;
           return inputs;
         }, {})
     );
   }
 
-  static parseExpression(expression: string) {
+  parseExpression(expression: string) {
     const mappingType = mappingTypeFromExpression(expression);
     let value: any = expression;
     if (mappingType === MAPPING_TYPE.LITERAL_ASSIGNMENT) {
@@ -181,7 +169,7 @@ export class MapperTranslator {
     return { mappingType, value };
   }
 
-  static getRootType(tile: Task | FlowMetadata) {
+  getRootType(tile: Task | FlowMetadata): string {
     if (tile.type === FLOGO_TASK_TYPE.TASK_ROOT) {
       return tile.triggerType === FLOGO_ERROR_ROOT_NAME
         ? ROOT_TYPES.ERROR
@@ -192,7 +180,7 @@ export class MapperTranslator {
     return ROOT_TYPES.ACTIVITY;
   }
 
-  static makeValidator(): MappingsValidatorFn {
+  makeValidator(): MappingsValidatorFn {
     return (mappings: Mappings) => {
       if (!mappings) {
         return true;
@@ -204,20 +192,16 @@ export class MapperTranslator {
     };
   }
 
-  static isValidExpression(expression: any) {
-    return isValidExpression(MapperTranslator.rawExpressionToString(expression));
+  isValidExpression(expression: any): boolean {
+    return isValidExpression(this.rawExpressionToString(expression));
   }
 
-  private static processInputValue(inputValue: any) {
-    const value = MapperTranslator.rawExpressionToString(inputValue);
+  private processInputValue(inputValue: any) {
+    const value = this.rawExpressionToString(inputValue);
     return { value, mappingType: mappingTypeFromExpression(value) };
   }
 
-  private static addTileToOutputContext(
-    rootSchema,
-    tile,
-    includeEmptySchemas: boolean = false
-  ) {
+  private addTileToOutputContext(rootSchema, tile, includeEmptySchemas: boolean = false) {
     const attributes = tile.attributes;
     let outputs;
     if (
@@ -233,8 +217,8 @@ export class MapperTranslator {
     }
     const hasAttributes = outputs && outputs.length > 0;
     if (hasAttributes || includeEmptySchemas) {
-      const tileSchema = MapperTranslator.attributesToObjectDescriptor(outputs || []);
-      tileSchema.rootType = MapperTranslator.getRootType(tile);
+      const tileSchema = this.attributesToObjectDescriptor(outputs || []);
+      tileSchema.rootType = this.getRootType(tile);
       tileSchema.title = tile.name;
       const propName = tileSchema.rootType === ROOT_TYPES.ERROR ? 'error' : tile.id;
       rootSchema.properties[propName] = tileSchema;

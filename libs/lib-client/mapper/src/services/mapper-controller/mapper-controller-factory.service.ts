@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { InstalledFunctionSchema } from '@flogo-web/lib-client/core';
-import { ROOT_TYPES } from '../../constants';
 import {
   MapperContext,
   MapperTreeNode,
   Mappings,
   MapExpression,
   MapperState,
+  MapperSchema,
   OutputContext,
 } from '../../models';
-import { MapperSchema } from '../../../../task-configurator/models';
 import { ArrayMappingHelper, ArrayMappingInfo } from '../../models/array-mapping';
-import { AttributeDescriptor } from '../../utils';
+import { AttributeDescriptor, IMapperTranslator } from '../../utils';
 import { TreeService } from '../tree.service';
 import { TreeNodeFactoryService } from '../tree-node-factory.service';
 import { MapperController } from './mapper-controller';
 import { createMapperContext } from './create-mapper-context';
+
+type CreateSnippetFn = (nodes: MapperTreeNode[]) => string;
 
 @Injectable()
 export class MapperControllerFactory {
@@ -28,22 +29,33 @@ export class MapperControllerFactory {
     input: AttributeDescriptor[],
     output: AttributeDescriptor[],
     mappings: any,
-    functions: InstalledFunctionSchema[]
+    functions: InstalledFunctionSchema[],
+    makeSnippet: CreateSnippetFn,
+    mapperTranslator: IMapperTranslator
   ): MapperController {
-    const context = createMapperContext(input, output, mappings, functions);
+    const context = createMapperContext(
+      input,
+      output,
+      mappings,
+      functions,
+      mapperTranslator
+    );
     return new MapperController(
-      this.createStateFromContext(context),
+      this.createStateFromContext(context, makeSnippet),
       this.nodeFactory,
       this.treeService
     );
   }
 
-  createNodeFromSchema(schema: MapperSchema): MapperTreeNode {
-    const [node] = this.createOutputTree(schema);
+  createNodeFromSchema(
+    schema: MapperSchema,
+    makeSnippet: CreateSnippetFn
+  ): MapperTreeNode {
+    const [node] = this.createOutputTree(schema, makeSnippet);
     return node;
   }
 
-  private createStateFromContext(context: MapperContext) {
+  private createStateFromContext(context: MapperContext, makeSnippet: CreateSnippetFn) {
     const newState = this.getInitialState();
     newState.mappings = context.mappings || {};
     const flattenedMappings = this.nodeFactory.flatMappings(newState.mappings);
@@ -63,7 +75,8 @@ export class MapperControllerFactory {
       const { outputs, functions } = this.getSelectionContext(
         firstNode,
         newState.mappings,
-        context
+        context,
+        makeSnippet
       );
       newState.outputs.nodes = outputs;
       newState.functions.nodes = functions;
@@ -78,10 +91,16 @@ export class MapperControllerFactory {
   private getSelectionContext(
     node: MapperTreeNode,
     mappings: Mappings,
-    context: MapperContext
+    context: MapperContext,
+    makeSnippet: CreateSnippetFn
   ): { functions: MapperTreeNode[]; outputs: MapperTreeNode[] } {
     if (node) {
-      const outputContext = this.makeOutputContext(node, context.outputSchemas, mappings);
+      const outputContext = this.makeOutputContext(
+        node,
+        context.outputSchemas,
+        mappings,
+        makeSnippet
+      );
       return {
         outputs: outputContext.tree,
         functions: this.nodeFactory.fromFunctions(context.functions),
@@ -94,7 +113,8 @@ export class MapperControllerFactory {
   private makeOutputContext(
     selectedNode: MapperTreeNode,
     outputSchemas: any,
-    allMappings: Mappings
+    allMappings: Mappings,
+    makeSnippet: CreateSnippetFn
   ): OutputContext {
     const arrayParentsOfSelectedNode = this.treeService.extractArrayParents(selectedNode);
     let mappings = allMappings;
@@ -138,7 +158,7 @@ export class MapperControllerFactory {
         mappings
       );
     }
-    const tree = this.createOutputTree(outputSchemas);
+    const tree = this.createOutputTree(outputSchemas, makeSnippet);
 
     /// SYMBOL TABLE necessary for validation only, disabling for now
     const symbolTable = {};
@@ -151,7 +171,7 @@ export class MapperControllerFactory {
     };
   }
 
-  private createOutputTree(outputSchemas: MapperSchema) {
+  private createOutputTree(outputSchemas: MapperSchema, makeSnippet: CreateSnippetFn) {
     return this.nodeFactory.fromJsonSchema(
       outputSchemas,
       (
@@ -161,7 +181,7 @@ export class MapperControllerFactory {
         parents: MapperTreeNode[]
       ): MapperTreeNode => {
         const parentsAndCurrentNode = parents.concat(treeNode);
-        treeNode.snippet = this.makeSnippet(parentsAndCurrentNode);
+        treeNode.snippet = makeSnippet(parentsAndCurrentNode);
         return treeNode;
       }
     );
@@ -256,41 +276,6 @@ export class MapperControllerFactory {
       );
 
     return resultSubmappings.mappings;
-  }
-
-  private makeSnippet(nodes: MapperTreeNode[]) {
-    const [root, propName] = nodes;
-    let expressionHead = '';
-    let expressionTailParts;
-    const resolver = root.data.rootType;
-    const nodeName = root.data.nodeName;
-    const makeResolvable = expr => '$' + expr;
-
-    if (resolver === ROOT_TYPES.TRIGGER || resolver === ROOT_TYPES.ERROR) {
-      expressionHead = resolver;
-      expressionHead += propName ? `.${propName.data.nodeName}` : '';
-      expressionHead = makeResolvable(expressionHead);
-      expressionTailParts = nodes.slice(2);
-    } else if (resolver === ROOT_TYPES.ACTIVITY) {
-      expressionHead = `${ROOT_TYPES.ACTIVITY}[${root.data.nodeName}]`;
-      expressionHead += propName ? `.${propName.data.nodeName}` : '';
-      expressionHead = makeResolvable(expressionHead);
-      expressionTailParts = nodes.slice(2);
-    } else if (resolver === ROOT_TYPES.FLOW) {
-      expressionHead = makeResolvable(nodeName);
-      expressionTailParts = nodes.slice(1);
-    } else if (resolver === ROOT_TYPES.ITERATOR) {
-      expressionHead = `${nodeName}`;
-      expressionHead += propName ? `[${propName.data.nodeName}]` : '';
-      expressionHead = makeResolvable(expressionHead);
-      expressionTailParts = nodes.slice(2);
-    } else {
-      expressionHead = nodeName.indexOf('$') === -1 ? '$.' + nodeName : nodeName;
-      expressionTailParts = nodes.slice(1);
-    }
-    return [expressionHead]
-      .concat(expressionTailParts.map(n => n.data.nodeName))
-      .join('.');
   }
 
   private getInitialState(): MapperState {
