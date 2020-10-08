@@ -14,6 +14,7 @@ import {
   InstalledFunctionSchema,
 } from '@flogo-web/lib-client/core';
 import { formatConnectionTypeSettings } from '@flogo-web/lib-client/activity-configuration';
+import { MapperControllerFactory, MapperController } from '@flogo-web/lib-client/mapper';
 import { hasStageWithSameName } from '@flogo-web/plugins/stream-core';
 
 import {
@@ -26,14 +27,10 @@ import {
   CommitStageConfiguration,
   ROOT_TYPES,
 } from '../core';
-import {
-  MapperTranslator,
-  MapperControllerFactory,
-  MapperController,
-} from '../shared/mapper';
+import { makeSnippet, MapperTranslator } from '../shared/mapper';
 import { Tabs } from '../shared/tabs/models/tabs.model';
 import { StreamMetadata } from './models';
-import { SchemaOutputs } from '../core/interfaces/schema-outputs';
+import { SchemaOutputs } from '../core/interfaces';
 
 const TASK_TABS = {
   INPUT_MAPPINGS: 'inputMappings',
@@ -99,7 +96,8 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<FlogoStreamState>,
     private mapperControllerFactory: MapperControllerFactory,
-    private httpUtilsService: HttpUtilsService
+    private httpUtilsService: HttpUtilsService,
+    private mapperTranslator: MapperTranslator
   ) {}
 
   ngOnInit(): void {
@@ -301,7 +299,9 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
       propsToMap,
       scope,
       mappings,
-      this.installedFunctions
+      this.installedFunctions,
+      makeSnippet,
+      this.mapperTranslator
     );
     const subscription = controller.status$
       .pipe(skip(1), takeUntil(this.contextChange$))
@@ -371,7 +371,7 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
 
   save() {
     let activitySettings = this.settingsController
-      ? MapperTranslator.translateMappingsOut(
+      ? this.mapperTranslator.translateMappingsOut(
           this.settingsController.getCurrentState().mappings
         )
       : undefined;
@@ -385,11 +385,11 @@ export class StageConfiguratorComponent implements OnInit, OnDestroy {
       id: this.currentTile.id,
       name: this.title,
       description: this.currentTile.description,
-      inputMappings: MapperTranslator.translateMappingsOut(
+      inputMappings: this.mapperTranslator.translateMappingsOut(
         this.inputMapperController.getCurrentState().mappings
       ),
       activitySettings,
-      output: MapperTranslator.translateMappingsOut(
+      output: this.mapperTranslator.translateMappingsOut(
         this.outputMapperController.getCurrentState().mappings
       ),
     };
