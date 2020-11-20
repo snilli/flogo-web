@@ -48,7 +48,8 @@ export class StreamSaveEffects {
       StreamActionType.StageItemCreated,
       StreamActionType.DeleteStage,
       StreamActionType.CommitStageConfiguration,
-      StreamActionType.UpdateMetadata
+      StreamActionType.UpdateMetadata,
+      StreamActionType.MoveStage
     ),
     tap(() => {
       this.stopSimulation();
