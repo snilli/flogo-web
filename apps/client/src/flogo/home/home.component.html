@@ -33,9 +33,11 @@
       <ul class="recent-flows__list">
         <li *ngFor="let item of recent" class="recent-flows__list__item">
           <span class="recent-flows__flow__name"
-            ><a [routerLink]="['/resources', item.id, item.type]" class="flogo-link">{{
-              item.name
-            }}</a></span
+            ><a
+              [routerLink]="['/resources', item.id, item.type]"
+              class="flogo-link recent-flows__list__resource"
+              >{{ item.name }}</a
+            ></span
           >
           <span
             >in
