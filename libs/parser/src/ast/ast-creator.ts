@@ -226,7 +226,7 @@ export function astCreatorFactory(BaseCstVisitorClass: CstVisitorBase): CstVisit
     array(ctx): JsonNodes.ArrayNode {
       return {
         type: AstNodeType.JsonArray,
-        children: ctx.jsonValue.map(valueNode => this.visit(valueNode)),
+        children: ctx.jsonValue?.map(valueNode => this.visit(valueNode)),
       };
     }
 
