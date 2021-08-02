@@ -1,6 +1,6 @@
 # Flogo Web UI
 
-[![DockerHub](https://images.microbadger.com/badges/version/flogo/flogo-docker.svg)](https://hub.docker.com/r/flogo/flogo-docker/)
+[![DockerHub](https://img.shields.io/badge/docker-flogo%2Fflogo--docker-blue)](https://hub.docker.com/r/flogo/flogo-docker/)
 [![Build Status](https://travis-ci.com/project-flogo/flogo-web.svg?branch=master)](https://travis-ci.com/project-flogo/flogo-web)
 [![Github License](https://img.shields.io/badge/license-BSD%20style-blue.svg)](./LICENSE)
 [![Gitter | Join Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/project-flogo/Lobby)
@@ -109,7 +109,7 @@ chunk {home-home-module} home-home-module.j
 
 </details>
 
-### Building and running the development docker image
+### Building and running the docker image
 
 Before starting make sure you have Docker installed and then from a terminal run:
 
@@ -122,10 +122,10 @@ cd flogo-web
 
 # Build the docker image
 # Note that depending on your machine resources this might take several minutes
-docker build -f tools/docker/dev.Dockerfile -t flogo/flogo-web:dev-build .
+docker build -t flogo/flogo-web -f tools/docker/Dockerfile .
 
 # Start the container
-docker run -it -p 5033:3303 flogo/flogo-web:dev-build
+docker run -it -p 5033:3303 flogo/flogo-web
 
 ```
 
