@@ -1,9 +1,9 @@
 import { join as joinPath } from 'path';
-import { runShellCMD } from '../../../common/utils/process';
 import { logger } from '../../../common/logging';
+import { runShellCMD } from '../../../common/utils/process';
 
-import { mergeEnvWithOpts } from './merge-env-with-opts';
 import { BuildOptions } from '../options';
+import { mergeEnvWithOpts } from './merge-env-with-opts';
 
 /**
  * Build the engine.
@@ -26,7 +26,7 @@ import { BuildOptions } from '../options';
  *
  * @returns {Promise<{path: string}>} path to generated binary
  */
-export function build(enginePath, opts: BuildOptions) {
+export async function build(enginePath, opts: BuildOptions) {
   const defaultEnginePath = joinPath(enginePath);
 
   opts = _mergeOpts(opts);
@@ -34,9 +34,11 @@ export function build(enginePath, opts: BuildOptions) {
   const args = _translateOptsToCommandArgs(opts);
   const env = mergeEnvWithOpts(opts, process.env);
 
-  logger.info(`[log] Build flogo: "flogo build ${args}" compileOpts:`);
+  logger.info('Exec command: go mod tidy');
+  await runShellCMD('go', ['mod', 'tidy'], { cwd: joinPath(enginePath, 'src') });
 
-  return runShellCMD('flogo', ['build'].concat(args), {
+  logger.info(`[log] Build flogo: "flogo build ${args}" compileOpts:`);
+  return await runShellCMD('flogo', ['build'].concat(args), {
     cwd: defaultEnginePath,
     env,
   });
