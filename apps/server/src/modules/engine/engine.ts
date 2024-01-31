@@ -2,19 +2,19 @@ import * as path from 'path';
 
 import { FlogoError } from '@flogo-web/lib-server/core';
 
-import { createFolder as ensureDir, copyFile, fileExists } from '../../common/utils/file';
+import { copyFile, createFolder as ensureDir, fileExists } from '../../common/utils/file';
 
-import { copyBinaryToDestination, removeDir } from './file-utils';
-import { processHost } from '../../common/utils/process';
 import { ERROR_TYPES } from '../../common/errors';
+import { processHost } from '../../common/utils/process';
 import { buildAndCopyBinary } from './build/binary';
 import { buildPlugin } from './build/plugin';
+import { copyBinaryToDestination, removeDir } from './file-utils';
 
 import { logger } from '../../common/logging';
 
-import { loader } from './loader';
 import { commander } from './commander';
-import { TYPE_BUILD, TYPE_TEST, BuildOptions, Options } from './options';
+import { loader } from './loader';
+import { BuildOptions, Options, TYPE_BUILD, TYPE_TEST } from './options';
 
 const DIR_TEST_BIN = 'bin-test';
 const DIR_BUILD_BIN = 'bin-build';
@@ -171,6 +171,10 @@ class Engine {
    */
   addFlow(flowPath: string) {
     return commander.add.flow(this.path, flowPath);
+  }
+
+  updateGoMod() {
+    return commander.updateDep(this.path);
   }
 
   /**

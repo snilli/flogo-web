@@ -1,8 +1,8 @@
 import { ContributionType, __DEV_RESOURCE_REF_PLACEHOLDER } from '@flogo-web/core';
-import { Engine } from './engine';
-import { logger, engineLogger } from '../../common/logging';
+import { engineLogger, logger } from '../../common/logging';
 import { config } from '../../config/app-config';
 import { ContribInstallController } from '../contrib-install-controller';
+import { Engine } from './engine';
 import { installResourceTypes } from './install-resource-types';
 import { EngineProcessDirector } from './process/engine-process-director';
 
@@ -114,6 +114,9 @@ async function createEngine(
     }
     if (useEngineConfig) {
       await engine.updateEngineConfig(config.defaultFlogoEngineConfigPath);
+    }
+    if (engine.path.includes('flogo-web')) {
+      await engine.updateGoMod();
     }
   } catch (e) {
     logger.error('Found error while initializing engine:');

@@ -1,6 +1,6 @@
 import { ContributionType } from '@flogo-web/core';
-import { parseJSON } from '../../../common/utils';
 import { logger } from '../../../common/logging';
+import { parseJSON } from '../../../common/utils';
 import { runShellCMD } from '../../../common/utils/process';
 import { build } from './build';
 
@@ -55,6 +55,7 @@ export const commander = {
   list(enginePath) {
     return _exec(enginePath, ['list']).then(parseContributionList);
   },
+  updateDep: updateDep,
 };
 
 function install(
@@ -95,4 +96,9 @@ function parseContributionList(cmdResult: string): ListContributionDetails[] {
 function _exec(enginePath, params) {
   logger.info(`Exec command: flogo ${params && params.join(' ')} in ${enginePath}`);
   return runShellCMD('flogo', params, { cwd: enginePath });
+}
+
+function updateDep(enginePath) {
+  logger.info('Exec command: go mod tidy');
+  return runShellCMD('go', ['mod', 'tidy'], { cwd: path.join(enginePath, 'src') });
 }

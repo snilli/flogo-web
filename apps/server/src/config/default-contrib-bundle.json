@@ -30,9 +30,6 @@
     "github.com/project-flogo/contrib/trigger/rest",
     "github.com/project-flogo/contrib/trigger/tcpudp",
     "github.com/project-flogo/contrib/trigger/timer",
-    "github.com/project-flogo/flow/activity/subflow",
-    "github.com/project-flogo/stream/activity/aggregate",
-    "github.com/project-flogo/stream/activity/filter",
-    "github.com/project-flogo/stream/trigger/streamtester"
+    "github.com/project-flogo/flow/activity/subflow"
   ]
 }

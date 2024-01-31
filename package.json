@@ -111,7 +111,7 @@
     "@finos/perspective-viewer": "^0.4.3",
     "@finos/perspective-viewer-d3fc": "^0.4.3",
     "@finos/perspective-viewer-hypergrid": "^0.4.1",
-    "@finos/perspective-webpack-plugin": "^0.3.8",
+    "@finos/perspective-webpack-plugin": "0.5.6",
     "@ngrx/effects": "8.6.0",
     "@ngrx/store": "8.6.0",
     "@ngrx/store-devtools": "8.6.0",
@@ -175,5 +175,9 @@
     "web-animations-js": "^2.3.2",
     "write-pkg": "^3.2.0",
     "zone.js": "~0.10.2"
+  },
+  "volta": {
+    "node": "16.20.1",
+    "yarn": "1.22.19"
   }
 }
