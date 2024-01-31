@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  flogo-web:
+    build:
+      context: .
+      dockerfile: tools/docker/Dockerfile
+    ports:
+      - "5033:3303"
+    command: "eula-accept"

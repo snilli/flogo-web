@@ -32,9 +32,6 @@ RUN go install github.com/project-flogo/cli/...@latest
 RUN flogo --version
 RUN go install github.com/project-flogo/services/flow-store/...@latest
 
-#    && mkdir -p $GOPATH/src/github.com/project-flogo \
-#    && cd $GOPATH/src/github.com/project-flogo \
-#    && git clone https://github.com/project-flogo/cli.git \
 COPY / ${BUILD_DIR}/
 WORKDIR ${BUILD_DIR}
 RUN yarn --pure-lockfile 
