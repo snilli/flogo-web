@@ -15,7 +15,6 @@ RUN set -ex \
   ca-certificates \
   procps \
   g++ \
-  bash \
   && mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 775 "$GOPATH" \
   && rm -rf /var/cache/apk/*
 
@@ -30,7 +29,8 @@ ENV CGO_ENABLED 1
 RUN go env -w GOFLAGS="-buildvcs=false"
 RUN go install github.com/project-flogo/cli/...@latest
 RUN flogo --version
-RUN go install github.com/project-flogo/services/flow-store/...@latest
+RUN go install github.com/project-flogo/services/flow-store/...@master
+RUN go install github.com/project-flogo/services/flow-state/...@master
 
 COPY / ${BUILD_DIR}/
 WORKDIR ${BUILD_DIR}
@@ -52,5 +52,4 @@ COPY ./tools/docker/flogo-eula /flogo-web/flogo-eula
 COPY ./tools/docker/docker-start.sh /flogo-web/docker-start.sh
 
 WORKDIR /flogo-web/
-RUN cd local/engines/flogo-web && flogo build
 ENTRYPOINT ["/flogo-web/docker-start.sh"]

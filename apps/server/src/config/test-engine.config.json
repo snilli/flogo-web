@@ -2,6 +2,7 @@
   "type": "flogo:engine",
   "imports": [
     "github.com/project-flogo/services/flow-state/store/mem",
+    "github.com/project-flogo/stream/service/telemetry",
     "github.com/project-flogo/flow/tester"
   ],
   "actionSettings": {
@@ -33,6 +34,11 @@
       "settings": {
         "port": "9190"
       }
+    },
+    {
+      "name": "telemetry",
+      "ref": "github.com/project-flogo/stream/service/telemetry",
+      "enabled": true
     }
   ]
 }

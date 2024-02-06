@@ -173,10 +173,6 @@ class Engine {
     return commander.add.flow(this.path, flowPath);
   }
 
-  updateGoMod() {
-    return commander.updateDep(this.path);
-  }
-
   /**
    * Add/install a contrib bundle
    * @param bundlePath Path to contrib bundle

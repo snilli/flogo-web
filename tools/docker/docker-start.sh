@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ash
 
-if [[ "$1" != "eula-accept" ]]; then
+if [ "$1" != "eula-accept" ]; then
   cat << EulaMessage
 +-------------------------------------------------------------+
 |                          ERROR!                             |
@@ -9,7 +9,7 @@ if [[ "$1" != "eula-accept" ]]; then
 |    read and accepted the End User License Agreement at      |
 |          http://flogo.io/flogo-docker_eula.pdf :            |
 |                                                             |
-| docker run -it -p 3303:3303 flogo/flogo-web eula-accept  |
+| docker run -it -p 3303:3303 flogo/flogo-web eula-accept     |
 |                                                             |
 +-------------------------------------------------------------+
 EulaMessage
@@ -17,8 +17,8 @@ EulaMessage
   exit 0
 fi
 
-flow-store > local/logs/flow-store 2>&1 &
-echo "started flow store service (pid: $!)"
+# flow-store > local/logs/flow-store 2>&1 &
+# echo "started flow store service (pid: $!)"
 
 cd apps/server
 node main.js

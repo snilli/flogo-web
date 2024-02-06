@@ -115,9 +115,6 @@ async function createEngine(
     if (useEngineConfig) {
       await engine.updateEngineConfig(config.defaultFlogoEngineConfigPath);
     }
-    if (engine.path.includes('flogo-web')) {
-      await engine.updateGoMod();
-    }
   } catch (e) {
     logger.error('Found error while initializing engine:');
     logger.error(e);
